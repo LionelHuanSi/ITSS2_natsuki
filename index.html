@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Natsuki (菜月) Scholar — Nền tảng Nghiên cứu Học thuật AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="text-slate-800 h-screen flex overflow-hidden selection:bg-indigo-600 selection:text-white">
+
+  <!-- =====================================================================
+       LEFT SIDEBAR NAVIGATION (GIỐNG CÁC TRANG WEB SAAS CHUYÊN NGHIỆP)
+       ===================================================================== -->
+  <aside class="w-64 bg-white border-r border-slate-200/90 flex flex-col justify-between shrink-0 hidden md:flex z-20">
+    <div>
+      <!-- Brand Logo -->
+      <div class="h-16 px-6 flex items-center gap-3 border-b border-slate-100 cursor-pointer" onclick="goToScreen('S1')">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/25">
+          <span class="text-lg">🌙</span>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="font-extrabold text-base text-slate-900 tracking-tight">Natsuki</span>
+            <span class="text-[11px] font-bold px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200">菜月</span>
+          </div>
+          <p class="text-[11px] text-slate-400 font-medium">Academic Workspace</p>
+        </div>
+      </div>
+
+      <!-- Menu Nhóm theo Solution -->
+      <div class="p-4 space-y-6">
+        <!-- Khởi tạo -->
+        <div>
+          <div class="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
+            Khởi đầu nghiên cứu
+          </div>
+          <button id="side-S1" onclick="goToScreen('S1')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-r-xl text-sm text-slate-600 hover:bg-slate-50">
+            <span class="text-base">🏠</span>
+            <span>Trang chủ & Chủ đề</span>
+          </button>
+        </div>
+
+        <!-- Solution 1: Tiền nghiên cứu -->
+        <div>
+          <div class="px-3 flex items-center justify-between mb-2">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-indigo-600">Solution 1 • Khám phá</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-600 font-semibold">Challenge ①</span>
+          </div>
+          <div class="space-y-1">
+            <button id="side-S2" onclick="goToScreen('S2')" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-r-xl text-sm text-slate-600 hover:bg-slate-50">
+              <div class="flex items-center gap-3">
+                <span>🗺️</span>
+                <span>Sơ đồ từ khóa</span>
+              </div>
+              <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-slate-100 text-slate-500">F1.1</span>
+            </button>
+            <button id="side-S3" onclick="goToScreen('S3')" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-r-xl text-sm text-slate-600 hover:bg-slate-50">
+              <div class="flex items-center gap-3">
+                <span>📘</span>
+                <span>Giải thích & Bài báo</span>
+              </div>
+              <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-slate-100 text-slate-500">F1.2•1.3</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Solution 2: Đọc & Xử lý khép kín -->
+        <div>
+          <div class="px-3 flex items-center justify-between mb-2">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-600">Solution 2 • Đọc sâu</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-600 font-semibold">Challenge ②</span>
+          </div>
+          <div class="space-y-1">
+            <button id="side-S4" onclick="goToScreen('S4')" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-r-xl text-sm text-slate-600 hover:bg-slate-50">
+              <div class="flex items-center gap-3">
+                <span>📖</span>
+                <span>Trình đọc tích hợp</span>
+              </div>
+              <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-slate-100 text-slate-500">F2.1</span>
+            </button>
+            <button id="side-S5" onclick="goToScreen('S5')" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-r-xl text-sm text-slate-600 hover:bg-slate-50">
+              <div class="flex items-center gap-3">
+                <span>✨</span>
+                <span>Giải thích ngữ cảnh</span>
+              </div>
+              <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-slate-100 text-slate-500">F2.2</span>
+            </button>
+            <button id="side-S6" onclick="goToScreen('S6')" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-r-xl text-sm text-slate-600 hover:bg-slate-50">
+              <div class="flex items-center gap-3">
+                <span>🗂️</span>
+                <span>Kho lưu trữ</span>
+              </div>
+              <span id="saved-count-badge" class="bg-emerald-600 text-white px-2 py-0.5 rounded-full text-xs font-bold leading-none">1</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Profile Footer in Sidebar -->
+    <div class="p-4 border-t border-slate-100 bg-slate-50/60">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-full bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center text-xs border border-indigo-200">
+          菜月
+        </div>
+        <div class="min-w-0 flex-1">
+          <p class="text-xs font-bold text-slate-900 truncate">Team 菜月 (Natsuki)</p>
+          <p class="text-[11px] text-emerald-600 font-medium flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            <span>Flow State Active</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- =====================================================================
+       MAIN CONTENT COLUMN (TOPBAR + SCROLLABLE WORKSPACE)
+       ===================================================================== -->
+  <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+    <!-- TOP HEADER BAR -->
+    <header class="h-16 bg-white/90 backdrop-blur-md border-b border-slate-200/80 px-6 flex items-center justify-between gap-4 shrink-0 z-10">
+      <!-- Breadcrumb / Flow Indicator -->
+      <div class="flex items-center gap-1.5 text-xs overflow-x-auto py-1">
+        <span class="text-slate-400 font-semibold mr-1 hidden xl:inline">Luồng màn hình:</span>
+        <button id="step-S1" onclick="goToScreen('S1')" class="step-pill px-2.5 py-1 rounded-lg border border-slate-200 text-slate-600 shrink-0">
+          1. Trang chủ
+        </button>
+        <span class="text-slate-300">→</span>
+        <button id="step-S2" onclick="goToScreen('S2')" class="step-pill px-2.5 py-1 rounded-lg border border-slate-200 text-slate-600 shrink-0">
+          2. Sơ đồ từ khóa
+        </button>
+        <span class="text-slate-300">→</span>
+        <button id="step-S3" onclick="goToScreen('S3')" class="step-pill px-2.5 py-1 rounded-lg border border-slate-200 text-slate-600 shrink-0">
+          3. Giải thích & Bài báo
+        </button>
+        <span class="text-slate-300">→</span>
+        <button id="step-S4" onclick="goToScreen('S4')" class="step-pill px-2.5 py-1 rounded-lg border border-slate-200 text-slate-600 shrink-0">
+          4. Đọc bài báo
+        </button>
+        <span class="text-slate-300">→</span>
+        <button id="step-S5" onclick="goToScreen('S5')" class="step-pill px-2.5 py-1 rounded-lg border border-slate-200 text-slate-600 shrink-0">
+          5. Khung giải thích
+        </button>
+        <span class="text-slate-300">→</span>
+        <button id="step-S6" onclick="goToScreen('S6')" class="step-pill px-2.5 py-1 rounded-lg border border-slate-200 text-slate-600 shrink-0">
+          6. Kho lưu trữ
+        </button>
+      </div>
+
+      <!-- Right Actions -->
+      <div class="flex items-center gap-3 shrink-0">
+        <button onclick="goToScreen('S6')" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200/80 text-slate-700 text-xs font-semibold flex items-center gap-1.5 transition">
+          <span>🔖 Đã lưu</span>
+          <span id="top-saved-count" class="px-1.5 py-0.2 rounded-full bg-emerald-600 text-white text-[11px]">1</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- SCROLLABLE WORKSPACE AREA -->
+    <main class="flex-1 overflow-y-auto p-6 lg:p-8">
+      <div class="max-w-6xl mx-auto">
+
+        <!-- =========================================================
+             MÀN HÌNH S1: TRANG CHỦ NGHIÊN CỨU (PORTAL LANDING PAGE)
+             ========================================================= -->
+        <section id="screen-S1" class="screen-section space-y-8">
+          <!-- Hero Search Card -->
+          <div class="relative rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white p-8 sm:p-10 shadow-xl overflow-hidden border border-indigo-500/20">
+            <!-- Decorative Glow -->
+            <div class="absolute -top-24 -right-24 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-24 -left-24 w-80 h-80 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="relative z-10 max-w-3xl">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-indigo-200 text-xs font-semibold mb-4">
+                <span>🌙 Natsuki Research AI</span> • <span>Không gian Nghiên cứu Học thuật Khép kín</span>
+              </div>
+              <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight mb-3">
+                Bạn đang tìm hiểu chủ đề nghiên cứu nào hôm nay?
+              </h1>
+              <p class="text-slate-300 text-sm sm:text-base leading-relaxed mb-6">
+                Không cần biết trước thuật ngữ tiếng Anh chuyên sâu. Hãy nhập mô tả ý tưởng còn mơ hồ bằng tiếng Việt, hệ thống sẽ xây dựng <strong>bản đồ từ khóa học thuật</strong> và đề xuất <strong>bài báo nền tảng</strong> phù hợp nhất.
+              </p>
+
+              <!-- Search Box giống Perplexity / Elicit -->
+              <div class="bg-white rounded-2xl p-2 shadow-2xl border border-white/20">
+                <textarea
+                  id="topic-input"
+                  rows="2"
+                  placeholder="Nhập ý tưởng nghiên cứu... (VD: Ứng dụng AI nhận diện bệnh trên lá cây)"
+                  class="w-full px-4 py-2.5 text-slate-800 text-sm sm:text-base focus:outline-none resize-none rounded-xl"
+                ></textarea>
+                <div class="flex flex-wrap items-center justify-between gap-2 px-3 pt-2 pb-1 border-t border-slate-100">
+                  <div class="flex items-center gap-1.5 text-xs text-slate-400">
+                    <span>🌐 Tự động dịch & Chuẩn hóa thuật ngữ IEEE / ACM / Springer</span>
+                  </div>
+                  <button
+                    onclick="handleAnalyzeTopic()"
+                    class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-2.5 rounded-xl text-xs sm:text-sm shadow-md shadow-indigo-600/25 transition flex items-center gap-2"
+                  >
+                    <span>Khám phá Sơ đồ Từ khóa</span>
+                    <span>→</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Cảnh báo khi để trống -->
+              <div id="s1-error" class="hidden mt-3 flex items-center gap-2 text-xs text-rose-200 bg-rose-500/20 border border-rose-400/40 rounded-xl px-4 py-2.5">
+                <span>⚠️</span>
+                <span>Vui lòng nhập mô tả chủ đề nghiên cứu (tối thiểu 3 ký tự) trước khi phân tích!</span>
+              </div>
+
+              <!-- Quick Topic Chips -->
+              <div class="mt-5 flex flex-wrap items-center gap-2">
+                <span class="text-xs text-slate-400 font-medium mr-1">Chủ đề gợi ý:</span>
+                <button onclick="selectPresetTopic('ai-vision')" class="text-xs bg-white/10 hover:bg-white/20 text-white border border-white/15 px-3 py-1.5 rounded-full transition">
+                  🌿 AI nhận diện bệnh lá cây (Computer Vision)
+                </button>
+                <button onclick="selectPresetTopic('llm-rag')" class="text-xs bg-white/10 hover:bg-white/20 text-white border border-white/15 px-3 py-1.5 rounded-full transition">
+                  🤖 Giảm ảo giác LLM bằng RAG
+                </button>
+                <button onclick="selectPresetTopic('empty-test')" class="text-xs bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-400/30 px-3 py-1.5 rounded-full transition">
+                  🧪 Chủ đề hẹp (Test không có bài báo)
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2 Cards giới thiệu 2 Solution của Nhóm Natsuki -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">
+                    Solution 1 • Tiền nghiên cứu chủ động
+                  </span>
+                  <span class="text-xs text-slate-400">Màn hình 2 & 3</span>
+                </div>
+                <h3 class="font-bold text-lg text-slate-900 mb-2">
+                  Xóa bỏ cảm giác hoang mang khi thiếu từ khóa
+                </h3>
+                <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                  Phân rã chủ đề mơ hồ thành sơ đồ các từ khóa học thuật trực quan (F1.1), giải thích khái niệm chuyên ngành (F1.2) và gợi ý các bài báo nền tảng đáng đọc nhất (F1.3).
+                </p>
+              </div>
+              <button onclick="goToScreen('S2')" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
+                <span>Mở Sơ đồ Từ khóa Học thuật</span>
+                <span>→</span>
+              </button>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">
+                    Solution 2 • Đọc & Xử lý khép kín
+                  </span>
+                  <span class="text-xs text-slate-400">Màn hình 4, 5 & 6</span>
+                </div>
+                <h3 class="font-bold text-lg text-slate-900 mb-2">
+                  Duy trì trạng thái tập trung sâu (Flow State)
+                </h3>
+                <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                  Đọc bài báo tiếng Anh và bôi đen đoạn khó hiểu (F2.1), nhận giải thích chuẩn ngữ cảnh ngay tại điểm đọc (F2.2) và lưu trữ hệ thống hóa vào kho tri thức cá nhân (F2.3).
+                </p>
+              </div>
+              <div class="flex items-center gap-4">
+                <button onclick="goToScreen('S4')" class="text-xs font-bold text-emerald-600 hover:text-emerald-800 flex items-center gap-1">
+                  <span>Mở Trình đọc Bài báo</span>
+                  <span>→</span>
+                </button>
+                <button onclick="goToScreen('S6')" class="text-xs font-semibold text-slate-500 hover:text-slate-800">
+                  Xem Kho lưu trữ →
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- =========================================================
+             MÀN HÌNH S2: SƠ ĐỒ TỪ KHÓA HỌC THUẬT (F1.1)
+             ========================================================= -->
+        <section id="screen-S2" class="screen-section hidden space-y-6">
+          <div class="bg-white rounded-2xl border border-slate-200/80 p-6 sm:p-8 shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-5 mb-6">
+              <div>
+                <div class="flex items-center gap-2 mb-1.5">
+                  <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
+                    Màn hình 2 • Chức năng F1.1
+                  </span>
+                  <span class="text-xs text-slate-400">学術キーワードマップ画面</span>
+                </div>
+                <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">
+                  Sơ đồ Từ khóa Học thuật: <span id="s2-topic-title" class="text-indigo-600"></span>
+                </h2>
+                <p class="text-xs text-slate-500 mt-1">
+                  Chọn một nhánh từ khóa bên dưới để xem giải thích chuyên môn và các bài báo nền tảng của nhánh đó.
+                </p>
+              </div>
+              <button
+                onclick="goToScreen('S1')"
+                class="px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold transition"
+              >
+                ← Đổi chủ đề nghiên cứu
+              </button>
+            </div>
+
+            <div id="keyword-map-container" class="py-2"></div>
+          </div>
+        </section>
+
+        <!-- =========================================================
+             MÀN HÌNH S3: GIẢI THÍCH TỪ KHÓA & ĐỀ XUẤT BÀI BÁO (F1.2 & F1.3)
+             ========================================================= -->
+        <section id="screen-S3" class="screen-section hidden space-y-6">
+          <div class="bg-white rounded-2xl border border-slate-200/80 p-6 sm:p-8 shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-5 mb-6">
+              <div>
+                <div class="flex items-center gap-2 mb-1.5">
+                  <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
+                    Màn hình 3 • Chức năng F1.2 & F1.3
+                  </span>
+                  <span class="text-xs text-slate-400">キーワード解説・基礎論文画面</span>
+                </div>
+                <h2 id="s3-keyword-title" class="text-2xl font-extrabold text-slate-900"></h2>
+              </div>
+              <button
+                onclick="goToScreen('S2')"
+                class="px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold transition"
+              >
+                ← Quay lại Sơ đồ Từ khóa (S2)
+              </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              <!-- Cột trái: Giải thích từ khóa (F1.2) -->
+              <div class="lg:col-span-5 bg-slate-50/80 border border-slate-200/80 rounded-2xl p-6">
+                <div class="text-xs font-bold uppercase tracking-wider text-indigo-600 mb-2">
+                  📘 F1.2 • Giải thích thuật ngữ chuyên ngành
+                </div>
+                <h3 id="s3-keyword-vi" class="text-lg font-extrabold text-slate-900 mb-3"></h3>
+                <p id="s3-keyword-desc" class="text-sm text-slate-700 leading-relaxed mb-5"></p>
+                <div class="bg-white rounded-xl p-4 border border-slate-200/70 text-xs text-slate-600">
+                  <p class="font-bold text-slate-900 mb-1">💡 Ý nghĩa trong nghiên cứu của bạn:</p>
+                  <p id="s3-keyword-why" class="leading-relaxed"></p>
+                </div>
+              </div>
+
+              <!-- Cột phải: Đề xuất bài báo nền tảng (F1.3) -->
+              <div class="lg:col-span-7">
+                <div class="text-xs font-bold uppercase tracking-wider text-indigo-600 mb-3">
+                  📄 F1.3 • Danh sách Bài báo Học thuật Nền tảng (Foundational Papers)
+                </div>
+                <div id="s3-papers-list" class="space-y-4"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- =========================================================
+             MÀN HÌNH S4 & S5: TRÌNH ĐỌC BÀI BÁO & KHUNG GIẢI THÍCH NGỮ CẢNH
+             ========================================================= -->
+        <section id="screen-S4" class="screen-section hidden space-y-5">
+          <!-- Reader Top Toolbar -->
+          <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  Màn hình 4 & 5 • Chức năng F2.1 & F2.2
+                </span>
+                <span id="s4-paper-meta" class="text-xs text-slate-400 font-medium"></span>
+              </div>
+              <h2 id="s4-paper-title" class="text-lg sm:text-xl font-extrabold text-slate-900"></h2>
+            </div>
+            <div class="flex items-center gap-2">
+              <button
+                onclick="goToScreen('S3')"
+                class="px-3.5 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold transition"
+              >
+                ← Đổi bài báo
+              </button>
+              <button
+                onclick="goToScreen('S6')"
+                class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm transition"
+              >
+                🗂️ Mở Kho lưu trữ →
+              </button>
+            </div>
+          </div>
+
+          <!-- Split View: Paper Document (Left) + AI Contextual Assistant (Right) -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <!-- Left: Academic Paper Sheet -->
+            <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden">
+              <div class="bg-slate-50 border-b border-slate-200/80 px-6 py-3 flex items-center justify-between text-xs text-slate-500">
+                <span class="font-semibold text-slate-700">📄 Bản thảo Bài báo Gốc (English Full-text)</span>
+                <span>💡 Bôi đen văn bản hoặc bấm vào từ tô vàng để dịch ngữ cảnh</span>
+              </div>
+              <div class="p-6 sm:p-8 bg-[#fcfbf9]">
+                <article
+                  id="s4-paper-content"
+                  onmouseup="handleTextSelection()"
+                  class="font-serif-paper text-slate-900 leading-8 text-[17px] select-text space-y-5"
+                ></article>
+              </div>
+            </div>
+
+            <!-- Right: AI Contextual Explanation Panel (Màn hình 5) -->
+            <div class="lg:col-span-5 sticky top-6">
+              <div id="s5-panel" class="rounded-2xl border border-slate-200/90 bg-white p-6 shadow-sm transition-all">
+                <!-- Trạng thái chờ -->
+                <div id="s5-empty-state" class="text-center py-10 px-4">
+                  <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center text-xl mx-auto mb-3">
+                    ✨
+                  </div>
+                  <h3 class="font-bold text-slate-800 text-sm mb-1">
+                    Trợ lý Giải thích Ngữ cảnh Học thuật (F2.2)
+                  </h3>
+                  <p class="text-xs text-slate-500 leading-relaxed mb-4">
+                    Hãy dùng chuột <strong>bôi đen</strong> bất kỳ câu hoặc thuật ngữ nào trong bài báo bên trái (hoặc nhấp vào các cụm từ tô vàng) để xem giải thích chuyên sâu ngay tại chỗ.
+                  </p>
+                </div>
+
+                <!-- Trạng thái lỗi bôi đen quá ngắn -->
+                <div id="s5-error-state" class="hidden bg-rose-50 border border-rose-200 rounded-xl p-4 text-xs text-rose-700">
+                  <p class="font-bold mb-1">⚠️ Đoạn văn bản chọn quá ngắn!</p>
+                  <p>Vui lòng bôi đen ít nhất 1 cụm từ (tối thiểu 4 ký tự) để hệ thống đối chiếu ngữ cảnh bài báo chính xác.</p>
+                </div>
+
+                <!-- Trạng thái hiển thị giải thích (Màn hình 5 Active) -->
+                <div id="s5-active-state" class="hidden space-y-4">
+                  <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <div class="flex items-center gap-2">
+                      <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                      <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-700">
+                        Màn hình 5 (F2.2) • Giải thích Ngữ cảnh
+                      </span>
+                    </div>
+                    <button onclick="closeS5Panel()" class="text-xs text-slate-400 hover:text-slate-700 font-semibold">
+                      ✕ Đóng
+                    </button>
+                  </div>
+
+                  <div>
+                    <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Đoạn trích dẫn đã chọn:</span>
+                    <blockquote id="s5-selected-text" class="mt-1.5 p-3.5 bg-amber-50/80 border-l-4 border-amber-400 text-slate-900 text-xs italic rounded-r-xl font-serif-paper"></blockquote>
+                  </div>
+
+                  <div>
+                    <span class="text-[11px] font-bold text-emerald-700 uppercase tracking-wider">Phân tích theo ngữ cảnh chuyên ngành:</span>
+                    <div id="s5-explanation-text" class="mt-1.5 p-4 bg-slate-50 border border-slate-200/80 rounded-xl text-sm text-slate-800 leading-relaxed"></div>
+                  </div>
+
+                  <div class="pt-2 flex items-center gap-2">
+                    <button
+                      onclick="saveCurrentExplanation()"
+                      class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs shadow-md shadow-emerald-600/20 transition flex items-center justify-center gap-1.5"
+                    >
+                      <span>💾 Lưu vào Kho lưu trữ (Sang S6)</span>
+                      <span>→</span>
+                    </button>
+                    <button
+                      onclick="closeS5Panel()"
+                      class="px-3.5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-semibold transition"
+                    >
+                      Đóng
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- =========================================================
+             MÀN HÌNH S6: KHO LƯU TRỮ NGỮ CẢNH ĐÃ GIẢI THÍCH (F2.3)
+             ========================================================= -->
+        <section id="screen-S6" class="screen-section hidden space-y-6">
+          <div class="bg-white rounded-2xl border border-slate-200/80 p-6 sm:p-8 shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-5 mb-6">
+              <div>
+                <div class="flex items-center gap-2 mb-1.5">
+                  <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    Màn hình 6 • Chức năng F2.3
+                  </span>
+                  <span class="text-xs text-slate-400">保存済み解説一覧画面</span>
+                </div>
+                <h2 class="text-2xl font-extrabold text-slate-900">
+                  Kho Lưu trữ Tri thức & Ngữ cảnh Đã bôi đen
+                </h2>
+                <p class="text-xs text-slate-500 mt-1">
+                  Toàn bộ các đoạn trích dẫn và lời giải thích ngữ cảnh bạn đã lưu trong quá trình đọc bài báo.
+                </p>
+              </div>
+
+              <div class="flex items-center gap-2.5">
+                <button
+                  onclick="goToScreen('S4')"
+                  class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm transition"
+                >
+                  ← Quay lại đọc bài báo (S4)
+                </button>
+                <button
+                  onclick="goToScreen('S1')"
+                  class="px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold transition"
+                >
+                  🏠 Về Trang chủ
+                </button>
+              </div>
+            </div>
+
+            <div id="s6-saved-list" class="space-y-4"></div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-5 right-5 hidden bg-slate-900 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-xl z-50"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
