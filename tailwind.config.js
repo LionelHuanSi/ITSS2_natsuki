@@ -8,8 +8,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Plus Jakarta Sans", "Inter", "sans-serif"],
-        serif: ["Newsreader", "Georgia", "serif"],
+        sans: ["var(--font-be-vietnam)", "system-ui", "-apple-system", "sans-serif"],
       },
     },
   },
