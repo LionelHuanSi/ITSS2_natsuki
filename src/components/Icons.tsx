@@ -6,45 +6,21 @@ interface IconProps extends React.SVGProps<SVGSVGElement> {
 }
 
 /**
- * Logo tự thiết kế theo Phương án 1 của người dùng:
- * Biểu tượng Flow Node & Trang sách (Dark Slate + Nhánh cây tri thức + Accent xanh dương nhạt).
+ * Logo chính thức của Natsuki Scholar:
+ * Biểu tượng Vầng trăng Natsuki (菜月) & Kính lúp nghiên cứu học thuật trên nền trời đêm.
  */
 export const NatsukiScholarLogo: React.FC<{ className?: string }> = ({
   className = "",
 }) => (
   <div className={`flex items-center gap-2.5 ${className}`}>
     <div className="w-9 h-9 shrink-0 flex items-center justify-center">
-      <svg
-        width="36"
-        height="36"
-        viewBox="0 0 36 36"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <rect width="36" height="36" rx="8" fill="#0F172A" />
-        <path
-          d="M12 13C16 13 17 18 22 18"
-          stroke="#64748B"
-          strokeWidth="1.75"
-          strokeLinecap="round"
-        />
-        <path
-          d="M12 23C16 23 17 18 22 18"
-          stroke="#64748B"
-          strokeWidth="1.75"
-          strokeLinecap="round"
-        />
-        <path
-          d="M12 13V23"
-          stroke="#94A3B8"
-          strokeWidth="1.75"
-          strokeLinecap="round"
-        />
-        <circle cx="12" cy="13" r="2.75" fill="#F8FAFC" />
-        <circle cx="12" cy="23" r="2.75" fill="#F8FAFC" />
-        <circle cx="23.5" cy="18" r="3.5" fill="#38BDF8" />
-        <circle cx="23.5" cy="18" r="1.5" fill="#0F172A" />
-      </svg>
+      <img
+        src="/logos/natsuki-icon.png"
+        alt="Natsuki Scholar Logo"
+        width={36}
+        height={36}
+        className="w-9 h-9 rounded-xl shadow-sm object-cover border border-slate-200"
+      />
     </div>
     <div className="flex flex-col leading-none">
       <span className="font-bold text-sm tracking-wider uppercase text-slate-900 font-mono">

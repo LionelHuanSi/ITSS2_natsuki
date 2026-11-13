@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <title>Natsuki Scholar - Moon &amp; Research Lens Icon</title>
+  <defs>
+    <!-- Gradient bầu trời đêm -->
+    <linearGradient id="nightSky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1E2A59" />
+      <stop offset="100%" stop-color="#121B3B" />
+    </linearGradient>
+
+    <!-- Gradient vầng trăng vàng -->
+    <linearGradient id="moonGold" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#FEF08A" />
+      <stop offset="50%" stop-color="#FCD34D" />
+      <stop offset="100%" stop-color="#F59E0B" />
+    </linearGradient>
+
+    <!-- Gradient mặt kính lúp -->
+    <linearGradient id="lensGlass" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6" />
+      <stop offset="100%" stop-color="#1D4ED8" />
+    </linearGradient>
+  </defs>
+
+  <!-- Nền Squircle đêm huyền ảo -->
+  <rect width="256" height="256" rx="56" fill="url(#nightSky)" />
+
+  <!-- Đám mây đêm ở chân icon -->
+  <path d="M0 236 C35 204, 75 212, 110 230 C150 204, 190 208, 226 226 C238 220, 248 224, 256 236 L256 256 L0 256 Z" fill="#141E43" opacity="0.85" />
+  <path d="M0 246 C40 224, 80 232, 130 245 C170 224, 210 232, 256 248 L256 256 L0 256 Z" fill="#0F172A" />
+
+  <!-- Vầng trăng khuyết Natsuki (Crescent Moon) -->
+  <path d="M152 48 C94.56 48 48 94.56 48 152 C48 178.6 57.9 202.8 74.4 221 C62.8 202.8 56 181.2 56 158 C56 100.56 102.56 54 160 54 C175.5 54 190.2 57.4 203.4 63.6 C188.2 53.6 170.8 48 152 48 Z" fill="url(#moonGold)" />
+
+  <!-- Ngôi sao lấp lánh (Sparkle Stars) -->
+  <!-- Ngôi sao lớn -->
+  <path d="M198 56 Q198 70 208 70 Q198 70 198 84 Q198 70 188 70 Q198 70 198 56 Z" fill="#FDE047" />
+  <!-- Ngôi sao nhỏ -->
+  <path d="M174 86 Q174 94 180 94 Q174 94 174 102 Q174 94 168 94 Q174 94 174 86 Z" fill="#FEF08A" />
+
+  <!-- Kính lúp nghiên cứu (Scholar Lens) -->
+  <!-- Tay cầm kính lúp -->
+  <line x1="176" y1="172" x2="204" y2="200" stroke="#E2E8F0" stroke-width="16" stroke-linecap="round" />
+  <line x1="176" y1="172" x2="204" y2="200" stroke="#CBD5E1" stroke-width="10" stroke-linecap="round" />
+
+  <!-- Vành ngoài kim loại trắng của kính lúp -->
+  <circle cx="152" cy="148" r="36" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="3" />
+
+  <!-- Mặt kính thủy tinh xanh sâu thẳm -->
+  <circle cx="152" cy="148" r="28" fill="url(#lensGlass)" />
+
+  <!-- Ánh sáng phản chiếu trên mặt kính lúp (Reflection Glint) -->
+  <path d="M138 132 A16 16 0 0 1 154 126" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.85" />
+  <circle cx="162" cy="158" r="3" fill="#93C5FD" opacity="0.7" />
+</svg>

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 256" width="920" height="256">
+  <title>Natsuki Scholar Flow - Concept B Lockup</title>
+  <!-- Biểu tượng Concept B -->
+  <g transform="translate(0, 0)">
+    <rect width="256" height="256" rx="56" fill="#0F172A" />
+    <path d="M76 80 C116 80, 130 128, 172 128" stroke="#F8FAFC" stroke-width="14" stroke-linecap="round" fill="none" opacity="0.6" />
+    <path d="M76 176 C116 176, 130 128, 172 128" stroke="#F8FAFC" stroke-width="14" stroke-linecap="round" fill="none" opacity="0.6" />
+    <path d="M76 80 L76 176" stroke="#F8FAFC" stroke-width="14" stroke-linecap="round" fill="none" opacity="0.6" />
+    <circle cx="76" cy="80" r="22" fill="#F8FAFC" />
+    <circle cx="76" cy="176" r="22" fill="#F8FAFC" />
+    <circle cx="180" cy="128" r="30" fill="#38BDF8" />
+    <circle cx="180" cy="128" r="12" fill="#0F172A" />
+  </g>
+  
+  <!-- Nhãn chữ Thương hiệu (Wordmark) -->
+  <text x="310" y="130" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="76" font-weight="800" letter-spacing="3" fill="#0F172A">NATSUKI</text>
+  <text x="314" y="195" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="34" font-weight="500" letter-spacing="8" fill="#64748B">SCHOLAR FLOW</text>
+</svg>

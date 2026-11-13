@@ -1,0 +1,52 @@
+{
+  "brand": "Natsuki Scholar",
+  "tagline": "Academic Research Flow Workspace",
+  "brief": "Không gian nghiên cứu học thuật tập trung dành cho sinh viên và nhà nghiên cứu CNTT. Hệ thống giải quyết 2 bài toán cốt lõi: phân giải ý tưởng mơ hồ thành cây từ khóa tiếng Anh chuẩn quốc tế và đọc hiểu tài liệu tại chỗ không đứt mạch tư duy.",
+  "adjectives": [
+    "academic",
+    "clarity",
+    "rigorous",
+    "minimalist",
+    "connected"
+  ],
+  "criteria": "Tiêu chí: Nhận diện rõ nét ở kích thước favicon 16px, hoạt động hoàn hảo ở chế độ đơn sắc, thể hiện tinh thần dòng chảy tri thức (Scholar Flow).",
+  "industry": "software",
+  "nav": [
+    "Đề tài",
+    "Sơ đồ từ khóa",
+    "Bài báo nền tảng",
+    "Không gian đọc"
+  ],
+  "brand_color": "#0F172A",
+  "greyscale": false,
+  "round": 1,
+  "concepts": [
+    {
+      "name": "Phương án B: Scholar Nodes & Branches",
+      "symbol": "concept-b.svg",
+      "lockup": "concept-b-lockup.svg",
+      "idea": "Trang tài liệu học thuật kết hợp mạng lưới phân nhánh từ khóa đa tầng, dẫn lối đến bài báo nền tảng.",
+      "rationale": [
+        "Biểu đạt trực tiếp chức năng cốt lõi của sản phẩm: Concept Map và Knowledge Graph",
+        "Tạo hình học chuẩn xác với 3 node tròn kết nối bằng các đường cong hội tụ vào tiêu điểm",
+        "Cực kỳ trực quan khi làm Icon ứng dụng và Favicon trình duyệt (nhìn thấy rõ các điểm nút)"
+      ]
+    },
+    {
+      "name": "Phương án C: Natsuki Crescent & Focal Lens",
+      "symbol": "concept-c.svg",
+      "lockup": "concept-c-lockup.svg",
+      "idea": "Vầng trăng khuyết Natsuki (菜月) ôm trọn thấu kính tiêu điểm đọc hiểu tại chỗ.",
+      "rationale": [
+        "Gắn kết sâu sắc với tên gọi Natsuki (vầng trăng soi rọi con đường nghiên cứu)",
+        "Đường cong hình học Boolean tinh tế, mang đậm phong cách tối giản thanh lịch Nhật Bản (Zen)",
+        "Điểm hội tụ xanh dương biểu trưng cho trạng thái tập trung sâu (Flow State)"
+      ]
+    }
+  ],
+  "recommendation": "Cả hai phương án đều đạt điểm kiểm chuẩn cao (97/100 và 99/100). Nếu ưu tiên tính 'Công nghệ & Mạng lưới phân nhánh từ khóa' thì Phương án B là chuẩn xác nhất. Nếu ưu tiên 'Bản sắc thương hiệu Natsuki & Thẩm mỹ tối giản nghệ thuật' thì Phương án C là tuyệt phẩm.",
+  "next_steps": [
+    "Xem hình ảnh đối chiếu thực tế giữa Phương án B và C trên các bề mặt",
+    "Chọn 1 phương án ưng ý nhất để xuất trọn bộ Logo Kit sản xuất hoàn chỉnh"
+  ]
+}

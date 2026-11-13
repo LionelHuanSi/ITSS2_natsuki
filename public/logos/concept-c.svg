@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <title>Natsuki Scholar Flow - Concept C (Natsuki Crescent &amp; Focal Lens)</title>
+  <!-- Concept C: Natsuki Crescent & Focal Reading Lens -->
+  <rect width="256" height="256" rx="56" fill="#0F172A" />
+  
+  <!-- Vầng trăng khuyết Natsuki (Boolean difference of two circles) -->
+  <path d="M128 36 C77.19 36 36 77.19 36 128 C36 178.81 77.19 220 128 220 C162.77 220 192.93 200.7 208.28 172.5 C164.28 170.5 128.5 134.2 128.5 90 C128.5 68.2 136.8 48.3 150.5 33.5 C143.2 35.1 135.7 36 128 36 Z" fill="#F8FAFC" />
+  
+  <!-- Điểm sáng tiêu điểm đọc hiểu tại chỗ (Focus Lens) -->
+  <circle cx="178" cy="128" r="26" fill="#38BDF8" />
+  <circle cx="178" cy="128" r="10" fill="#0F172A" />
+</svg>

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <title>Natsuki Scholar Flow - Concept A (N-Flow Monogram)</title>
+  <!-- Concept A: N-Flow Monogram -->
+  <!-- Nền tròn/bo góc thương hiệu Dark Slate -->
+  <rect width="256" height="256" rx="56" fill="#0F172A" />
+  
+  <!-- Hai trụ dọc biểu trưng cho 2 trụ cột tri thức -->
+  <rect x="52" y="52" width="24" height="152" rx="12" fill="#F8FAFC" />
+  <rect x="180" y="52" width="24" height="152" rx="12" fill="#F8FAFC" />
+  
+  <!-- Đường sóng chéo kết nối dòng chảy tri thức (Scholar Flow) -->
+  <path d="M64 64 C96 64, 120 192, 192 192" stroke="#38BDF8" stroke-width="24" stroke-linecap="round" fill="none" />
+  
+  <!-- Node tiêu điểm hội tụ ở đỉnh phải -->
+  <circle cx="192" cy="64" r="16" fill="#38BDF8" />
+  <circle cx="192" cy="64" r="7" fill="#0F172A" />
+</svg>

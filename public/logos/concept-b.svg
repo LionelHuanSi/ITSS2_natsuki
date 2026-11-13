@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <title>Natsuki Scholar Flow - Concept B (Flow Nodes &amp; Paper)</title>
+  <!-- Concept B: Flow Nodes & Research Paper -->
+  <rect width="256" height="256" rx="56" fill="#0F172A" />
+  
+  <!-- Đường liên kết mạng lưới tri thức (Tree Branches) -->
+  <path d="M76 80 C116 80, 130 128, 172 128" stroke="#F8FAFC" stroke-width="14" stroke-linecap="round" fill="none" opacity="0.6" />
+  <path d="M76 176 C116 176, 130 128, 172 128" stroke="#F8FAFC" stroke-width="14" stroke-linecap="round" fill="none" opacity="0.6" />
+  <path d="M76 80 L76 176" stroke="#F8FAFC" stroke-width="14" stroke-linecap="round" fill="none" opacity="0.6" />
+  
+  <!-- Các Node phân giải từ khóa bên trái -->
+  <circle cx="76" cy="80" r="22" fill="#F8FAFC" />
+  <circle cx="76" cy="176" r="22" fill="#F8FAFC" />
+  
+  <!-- Node đích bài báo đề xuất bên phải -->
+  <circle cx="180" cy="128" r="30" fill="#38BDF8" />
+  <circle cx="180" cy="128" r="12" fill="#0F172A" />
+</svg>
