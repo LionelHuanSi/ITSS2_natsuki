@@ -4,11 +4,13 @@ import { KeywordNode } from "../models/KeywordNode";
 export interface ResearchTopicData {
   key: string;
   title: string;
+  subDomain: string;
   keywords: KeywordNode[];
 }
 
 /**
- * OOP Repository managing Mock Research Topics, Keyword Maps, and Foundational Papers
+ * Repository quản lý Dummy Data cho MVP Natsuki Scholar
+ * Cung cấp 3 chủ đề học thuật CNTT chuẩn mực để demo trọn vẹn luồng
  */
 export class ResearchTopicRepository {
   private static instance: ResearchTopicRepository;
@@ -26,137 +28,224 @@ export class ResearchTopicRepository {
   }
 
   public getTopicByKey(key: string): ResearchTopicData {
-    return this.topics.get(key) || this.topics.get("ai-vision")!;
+    return this.topics.get(key) || this.topics.get("low-light-face")!;
+  }
+
+  public getAllTopics(): ResearchTopicData[] {
+    return Array.from(this.topics.values());
   }
 
   public resolveTopicKeyFromInput(userInput: string): string {
     const lower = userInput.toLowerCase();
-    if (lower.includes("rag") || lower.includes("ngôn ngữ") || lower.includes("llm")) {
-      return "llm-rag";
+    if (
+      lower.includes("dưới nước") ||
+      lower.includes("cảm biến") ||
+      lower.includes("underwater") ||
+      lower.includes("acoustic")
+    ) {
+      return "underwater-sensor";
     }
-    return "ai-vision";
+    if (
+      lower.includes("cảm xúc") ||
+      lower.includes("tình cảm") ||
+      lower.includes("tiếng việt") ||
+      lower.includes("nlp") ||
+      lower.includes("sentiment") ||
+      lower.includes("ngôn ngữ")
+    ) {
+      return "vietnamese-nlp";
+    }
+    return "low-light-face";
   }
 
   private seedMockData(): void {
-    const paperPlantVillage = new AcademicPaper(
-      "paper-1",
-      "Using Deep Learning for Image-Based Plant Disease Detection",
-      "S. P. Mohanty, D. P. Hughes, M. Salathé",
-      2016,
-      "Frontiers in Plant Science (3,500+ Citations)",
-      "Bài báo nền tảng kinh điển sử dụng tập dữ liệu PlantVillage với mô hình AlexNet và GoogLeNet.",
+    // ----------------------------------------------------
+    // CHỦ ĐỀ 1: NHẬN DIỆN KHUÔN MẶT THIẾU SÁNG
+    // ----------------------------------------------------
+    const paperFace1 = new AcademicPaper(
+      "paper-face-1",
+      "Face Recognition in Low-Light Environments via Deep Domain Adaptation",
+      "Z. Zhang, X. Liu, H. Chen (Tsinghua & CMU)",
+      2022,
+      "IEEE Transactions on Pattern Analysis and Machine Intelligence (TPAMI)",
+      "Bài báo nền tảng giải quyết trực tiếp rào cản suy giảm độ chính xác khi nhận diện khuôn mặt ban đêm hoặc trong điều kiện ánh sáng cực yếu.",
       [
-        "Crop diseases are a major threat to food security, but their rapid identification remains difficult in many parts of the world due to the lack of the necessary infrastructure.",
-        "In this study, we train a deep convolutional neural network to identify 14 crop species and 26 diseases using a public dataset of 54,306 images of diseased and healthy plant leaves collected under controlled conditions.",
-        "However, when tested on a set of images taken under conditions different from the images used for training, the model's accuracy drops significantly due to domain shift and complex background noise.",
-        "To address overfitting and improve generalization in real-field environments, transfer learning from pre-trained ImageNet weights is combined with extensive data augmentation."
+        "Facial recognition algorithms have achieved outstanding verification accuracy under well-illuminated conditions. However, performance degrades drastically in low-light environments due to severe signal attenuation and non-uniform noise distribution.",
+        "Traditional image enhancement methods often amplify high-frequency sensor noise, corrupting critical facial landmarks required for deep feature alignment.",
+        "In this work, we formulate low-light face recognition as an unsupervised domain adaptation problem. We introduce an illumination-invariant feature extractor that maps low-light probe images and normal-light gallery images into a shared latent manifold.",
+        "Extensive experiments demonstrate that our approach maintains a 96.4% verification rate at 10^-5 false acceptance rate, outperforming standard CNN backbones without requiring paired synthetic training datasets."
       ],
       {
-        "deep convolutional neural network":
-          "Mạng nơ-ron tích chập sâu (Deep CNN): Mô hình học sâu gồm nhiều lớp tích chập xếp chồng, tự động học các đặc trưng từ cạnh, màu sắc của vết bệnh đến cấu trúc phức tạp trên mặt lá mà không cần trích xuất thủ công.",
-        "domain shift":
-          "Sự dịch chuyển miền dữ liệu (Domain Shift): Hiện tượng mô hình học trên ảnh chụp phòng thí nghiệm (phông nền trơn, đủ sáng) nhưng lại dự đoán sai khi đưa ra đồng ruộng thực tế (có nắng gắt, bụi bẩn, nhiều lá chồng chéo).",
-        "transfer learning":
-          "Học chuyển giao (Transfer Learning): Kỹ thuật tận dụng bộ trọng số đã học sẵn trên tập dữ liệu lớn (như ImageNet) để áp dụng cho bài toán bệnh lá cây, giúp tiết kiệm thời gian huấn luyện và tăng độ chính xác khi ít dữ liệu."
+        "signal attenuation":
+          "Sự suy giảm tín hiệu quang học (Signal Attenuation): Hiện tượng cảm biến camera nhận quá ít photon trong điều kiện thiếu sáng, dẫn đến dải tương phản (dynamic range) bị nén và mất toàn bộ chi tiết sắc nét trên khuôn mặt.",
+        "unsupervised domain adaptation":
+          "Thích ứng miền không giám sát (Unsupervised Domain Adaptation): Kỹ thuật học máy giúp mô hình được huấn luyện trên miền dữ liệu đủ sáng (Source Domain) có thể tự thích ứng và dự đoán chính xác trên miền ảnh thiếu sáng (Target Domain) mà không cần nhãn gán thủ công.",
+        "illumination-invariant feature extractor":
+          "Bộ trích xuất đặc trưng bất biến ánh sáng (Illumination-Invariant Extractor): Kiến trúc mạng nơ-ron được thiết kế để chỉ trích xuất các đặc trưng hình học cố định (khoảng cách mắt, sống mũi) và triệt tiêu biến thiên do cường độ chiếu sáng gây ra.",
+        "false acceptance rate":
+          "Tỷ lệ chấp nhận sai (FAR - False Acceptance Rate): Xác suất hệ thống nhận nhầm người lạ thành người hợp lệ trong cơ sở dữ liệu. Trong các bài báo bảo mật sinh trắc học, mức 10^-5 là tiêu chuẩn khắt khe."
+      },
+      {
+        "signal attenuation": "Sự suy giảm tín hiệu quang học",
+        "unsupervised domain adaptation": "Thích ứng miền không giám sát",
+        "illumination-invariant feature extractor": "Bộ trích xuất đặc trưng bất biến với ánh sáng",
+        "false acceptance rate": "Tỷ lệ chấp nhận sai (FAR)"
       }
     );
 
-    const paperAttention = new AcademicPaper(
-      "paper-2",
-      "Attention-Embedded Residual Network for Tomato Leaf Disease Recognition",
-      "K. Zhang, Q. Wu, A. Liu",
+    const paperFace2 = new AcademicPaper(
+      "paper-face-2",
+      "NIR-to-Visible Face Synthesis and Verification Using Coupled Attention GANs",
+      "Y. Wang, R. He, T. Tan (Chinese Academy of Sciences)",
       2021,
-      "Computers and Electronics in Agriculture",
-      "Giới thiệu cơ chế Attention giúp mô hình tập trung vào đúng đốm bệnh nhỏ và bỏ qua phông nền đất/cỏ.",
+      "IEEE International Conference on Computer Vision (ICCV)",
+      "Đề xuất phương pháp chuyển đổi ảnh hồng ngoại gần (NIR - ban đêm) sang ảnh ánh sáng nhìn thấy (VIS) để tái sử dụng cơ sở dữ liệu ảnh thẻ thông thường.",
       [
-        "Traditional CNN architectures often struggle to distinguish subtle lesion features when leaf images contain cluttered field backgrounds.",
-        "We propose an attention-embedded residual network (ResNet-CBAM) that integrates channel and spatial attention modules to selectively emphasize diseased regions while suppressing irrelevant background textures."
+        "Active near-infrared (NIR) imaging is widely adopted for surveillance in total darkness, yet matching NIR queries against standard visible (VIS) gallery databases remains an open challenge due to significant modality discrepancy.",
+        "We introduce a coupled attention Generative Adversarial Network that disentangles identity representations from spectral illumination artifacts.",
+        "By preserving structural facial geometry across spectral domains, our framework reduces cross-modal identification error by 38% on standard benchmark datasets."
       ],
       {
-        "subtle lesion features":
-          "Đặc trưng vết bệnh mờ nhạt (Subtle lesion features): Những đốm bệnh ở giai đoạn đầu có kích thước rất nhỏ và màu sắc gần giống nhau giữa các loại nấm/vi khuẩn.",
-        "channel and spatial attention modules":
-          "Mô-đun chú ý kênh và không gian (Channel & Spatial Attention): Cơ chế giúp mạng AI tự động đánh trọng số cao hơn cho vùng điểm ảnh chứa vết bệnh ('Where to focus') và kênh màu sắc đặc trưng ('What to focus')."
+        "modality discrepancy":
+          "Độ sai lệch phương thức quang phổ (Modality Discrepancy): Sự khác biệt cơ bản về phản xạ bề mặt da giữa tia hồng ngoại gần (NIR) và ánh sáng nhìn thấy (VIS), khiến các mạng CNN thông thường không nhận diện được cùng một người.",
+        "disentangles identity representations":
+          "Tách bạch biểu diễn danh tính (Disentanglement): Kỹ thuật phân tách véc-tơ đặc trưng khuôn mặt thành 2 phần độc lập: phần đại diện cho cấu trúc sinh trắc học cá nhân và phần biểu diễn hiệu ứng quang phổ môi trường."
       }
     );
 
-    this.topics.set("ai-vision", {
-      key: "ai-vision",
-      title: "Ứng dụng AI nhận diện bệnh trên lá cây (Computer Vision in Plant Pathology)",
+    this.topics.set("low-light-face", {
+      key: "low-light-face",
+      title: "Nhận diện khuôn mặt trong điều kiện thiếu sáng",
+      subDomain: "Thị giác máy tính & Xử lý ảnh (Computer Vision)",
       keywords: [
         new KeywordNode(
-          "kw-cnn",
-          "Convolutional Neural Networks (CNN)",
-          "Mạng nơ-ron tích chập",
+          "kw-llfr",
+          "Low-Light Face Recognition (LLFR)",
+          "Nhận diện khuôn mặt trong điều kiện thiếu sáng",
           "Từ khóa cốt lõi (Core)",
-          "Kiến trúc mạng học sâu chuyên dụng để trích xuất đặc trưng hình ảnh (màu sắc, vết đốm, hình dạng lá) qua các lớp tích chập, giúp phân loại chính xác các loại bệnh trên lá cây.",
-          "Là nền tảng của 90% nghiên cứu nhận diện bệnh cây trồng hiện nay trước khi chuyển sang các biến thể nâng cao.",
-          [paperPlantVillage, paperAttention]
+          "Thuật ngữ học thuật chuẩn mực quốc tế dùng để chỉ bài toán nhận diện sinh trắc học khi ảnh đầu vào bị nhiễu hạt nghiêm trọng và thiếu sáng trầm trọng.",
+          "Thay vì tìm 'night face detection' hay 'dark image', giới nghiên cứu IEEE/ACM sử dụng 'Low-Light Face Recognition' để định vị toàn bộ các công trình giải quyết suy hao tín hiệu ban đêm.",
+          [paperFace1, paperFace2]
         ),
         new KeywordNode(
-          "kw-transfer",
-          "Transfer Learning & Fine-tuning",
-          "Học chuyển giao & Tinh chỉnh mô hình",
-          "Phương pháp huấn luyện (Method)",
-          "Kỹ thuật tái sử dụng mô hình AI đã được huấn luyện trên hàng triệu ảnh tổng quát (ImageNet) và tinh chỉnh lại các lớp cuối cho bài toán phân loại bệnh lá cây.",
-          "Giúp sinh viên đạt độ chính xác >95% ngay cả khi chỉ có vài nghìn ảnh mẫu và cấu hình máy tính cá nhân hạn chế.",
-          [paperPlantVillage]
+          "kw-uda",
+          "Unsupervised Domain Adaptation",
+          "Thích ứng miền không giám sát",
+          "Phương pháp luận (Methodology)",
+          "Phương pháp huấn luyện cầu nối giữa tập dữ liệu ảnh đủ sáng ban ngày và ảnh thiếu sáng ban đêm mà không cần gán nhãn lại từ đầu.",
+          "Đây là giải pháp hiện đại được ưa chuộng nhất trong các đồ án tốt nghiệp khi sinh viên không có điều kiện tự thu thập hàng chục nghìn bức ảnh khuôn mặt trong bóng tối.",
+          [paperFace1]
         ),
         new KeywordNode(
-          "kw-vit",
-          "Vision Transformer (ViT) for Agriculture",
-          "Mô hình Transformer thị giác trong Nông nghiệp",
-          "Xu hướng mới (State-of-the-art)",
-          "Chia bức ảnh lá cây thành các mảnh nhỏ (patches) và dùng cơ chế Self-Attention để nắm bắt mối liên hệ toàn cục trên cả chiếc lá.",
-          "Hướng nghiên cứu mới nổi từ 2022–nay, khắc phục điểm yếu tầm nhìn cục bộ của mạng CNN truyền thống.",
-          [paperAttention]
-        ),
-        new KeywordNode(
-          "kw-hyperspectral",
-          "Zero-shot Hyperspectral Root Rot Detection",
-          "Nhận diện thối rễ qua ảnh siêu phổ Zero-shot",
-          "Từ khóa quá hẹp (Niche / Edge Case)",
-          "Hướng nghiên cứu cực hẹp kết hợp cảm biến quang phổ hồng ngoại xa và học không mẫu (Zero-shot) dưới lòng đất.",
-          "Dùng để kiểm thử trường hợp hệ thống KHÔNG tìm thấy bài báo nền tảng phù hợp (Xử lý ngoại lệ ở Màn hình 3).",
-          []
+          "kw-nir-vis",
+          "Heterogeneous NIR-to-VIS Face Matching",
+          "Đối chiếu khuôn mặt đa phổ Hồng ngoại - Ánh sáng thường",
+          "Kỹ thuật phần cứng & Đa phổ (Hardware & Multimodal)",
+          "Bài toán kết hợp cảm biến camera hồng ngoại để ghi nhận khuôn mặt trong bóng tối hoàn toàn rồi đối chiếu ngược với ảnh chụp CCCD/CMND thông thường.",
+          "Được áp dụng thực tế trong các hệ thống an ninh và camera giám sát thông minh.",
+          [paperFace2]
         ),
       ],
     });
 
-    const paperRag = new AcademicPaper(
-      "paper-rag-1",
-      "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
-      "Patrick Lewis, Ethan Perez et al. (Meta AI)",
-      2020,
-      "NeurIPS 2020",
-      "Bài báo gốc khai sinh thuật ngữ RAG trong ngành NLP hiện đại.",
+    // ----------------------------------------------------
+    // CHỦ ĐỀ 2: MẠNG CẢM BIẾN DƯỚI NƯỚC (UASN)
+    // ----------------------------------------------------
+    const paperUasn1 = new AcademicPaper(
+      "paper-uasn-1",
+      "Underwater Acoustic Sensor Networks: Research Challenges and Routing Protocols",
+      "I. F. Akyildiz, D. Pompili, T. Melodia",
+      2005,
+      "IEEE Communications Magazine (7,200+ Citations)",
+      "Bài báo kinh điển được trích dẫn nhiều nhất thế giới, đặt nền móng toàn diện cho các nghiên cứu về mạng cảm biến âm học dưới nước.",
       [
-        "Large pre-trained language models have been shown to store factual knowledge in their parameters, and achieve state-of-the-art results when fine-tuned on downstream NLP tasks.",
-        "However, their ability to access and precisely manipulate knowledge is still limited, leading to factual hallucinations and lack of provenance for their decisions.",
-        "We introduce Retrieval-Augmented Generation (RAG) models which combine parametric memory (a pre-trained seq2seq model) with non-parametric memory (a dense vector index of Wikipedia)."
+        "Underwater Acoustic Sensor Networks (UW-ASNs) consist of variable numbers of sensors and vehicles deployed to perform collaborative monitoring tasks over given oceanographic areas.",
+        "Traditional radio frequency (RF) electromagnetic waves propagate through conductive sea water only at extremely low frequencies with severe attenuation. Therefore, acoustic communications are predominantly employed as the physical transmission medium.",
+        "However, underwater acoustic channels feature extremely long propagation delays, severely limited bandwidth, high bit error rates, and dynamic time-varying multipath fading.",
+        "These physical constraints render terrestrial ad-hoc routing protocols ineffective, demanding cross-layer network protocol architectures tailored to deep ocean environments."
       ],
       {
-        "factual hallucinations":
-          "Ảo giác thông tin (Factual Hallucinations): Hiện tượng mô hình AI tự sinh ra các câu trả lời nghe rất trôi chảy, hợp lý nhưng lại sai sự thật hoặc không có trong tài liệu gốc.",
-        "parametric memory":
-          "Bộ nhớ tham số (Parametric Memory): Tri thức được mã hóa ngầm bên trong hàng tỷ trọng số (weights) của mô hình ngôn ngữ trong quá trình huấn luyện trước.",
-        "non-parametric memory":
-          "Bộ nhớ phi tham số (Non-parametric Memory): Kho tài liệu văn bản bên ngoài được đánh chỉ mục bằng Vector (Vector Database), có thể cập nhật và tra cứu trực tiếp mà không cần huấn luyện lại mô hình."
+        "acoustic communications":
+          "Truyền thông sóng âm dưới nước (Acoustic Communications): Thay vì dùng sóng vô tuyến (RF/Wifi) bị nước biển hấp thụ rất mạnh, hệ thống bắt buộc phải dùng sóng âm thanh với tốc độ truyền chậm hơn sóng vô tuyến khoảng 200.000 lần (khoảng 1500 m/s).",
+        "propagation delays":
+          "Độ trễ truyền lan tín hiệu (Propagation Delays): Khoảng thời gian rất lớn để một gói tin âm thanh truyền từ cảm biến dưới đáy biển lên phao nổi trên mặt nước, khiến các giao thức TCP/IP truyền thống trên cạn bị timeout và mất gói.",
+        "multipath fading":
+          "Fading đa đường (Multipath Fading): Hiện tượng sóng âm dội lại từ mặt nước và đáy biển nhiều lần, tạo ra sự giao thoa làm méo mó tín hiệu nhận được ở nút đích."
       }
     );
 
-    this.topics.set("llm-rag", {
-      key: "llm-rag",
-      title: "Giảm ảo giác cho Mô hình Ngôn ngữ Lớn (Mitigating Hallucination in LLMs with RAG)",
+    this.topics.set("underwater-sensor", {
+      key: "underwater-sensor",
+      title: "Mạng cảm biến không dây dưới nước",
+      subDomain: "Mạng máy tính & Truyền thông (Networking & IoT)",
       keywords: [
         new KeywordNode(
-          "kw-rag",
-          "Retrieval-Augmented Generation (RAG)",
-          "Sinh văn bản tăng cường truy xuất",
+          "kw-uasn",
+          "Underwater Acoustic Sensor Networks (UASN)",
+          "Mạng cảm biến sóng âm dưới nước",
           "Từ khóa cốt lõi (Core)",
-          "Kỹ thuật kết hợp mô hình ngôn ngữ lớn (LLM) với một hệ thống truy xuất cơ sở dữ liệu tri thức bên ngoài trước khi sinh câu trả lời.",
-          "Giúp LLM trả lời dựa trên bằng chứng xác thực, giảm thiểu tối đa hiện tượng bịa đặt thông tin (Hallucination).",
-          [paperRag]
+          "Thuật ngữ học thuật chính xác thay vì tìm 'underwater wireless sensor'. Từ khóa này phân biệt rạch ròi giữa truyền thông sóng âm (acoustic) và sóng vô tuyến trên cạn.",
+          "Tìm đúng từ khóa này sẽ loại bỏ hoàn toàn các bài báo lạc đề về mạng cảm biến trên cạn (terrestrial WSN), tránh lãng phí thời gian tra cứu.",
+          [paperUasn1]
+        ),
+        new KeywordNode(
+          "kw-dbr",
+          "Depth-Based Routing (DBR)",
+          "Định tuyến dựa trên độ sâu",
+          "Giao thức định tuyến (Routing Protocol)",
+          "Giao thức mạng kinh điển cho phép các nút cảm biến chỉ cần đo áp suất nước (độ sâu) để quyết định chuyển tiếp gói tin lên phao nổi mà không cần định vị GPS.",
+          "Là giao thức cơ sở (baseline) bắt buộc phải so sánh trong mọi đồ án về định tuyến mạng dưới biển.",
+          [paperUasn1]
+        ),
+      ],
+    });
+
+    // ----------------------------------------------------
+    // CHỦ ĐỀ 3: PHÂN TÍCH CẢM XÚC TIẾNG VIỆT
+    // ----------------------------------------------------
+    const paperNlp1 = new AcademicPaper(
+      "paper-nlp-1",
+      "PhoBERT: Pre-trained Language Models for Vietnamese",
+      "D. Q. Nguyen, A. T. Nguyen (VinAI Research)",
+      2020,
+      "Findings of EMNLP 2020",
+      "Mô hình ngôn ngữ tiền huấn luyện chuẩn mực hàng đầu cho tiếng Việt, là xương sống của hầu hết các nghiên cứu NLP tiếng Việt hiện đại.",
+      [
+        "Pre-trained language models like BERT and RoBERTa have drastically advanced the state-of-the-art across various natural language processing benchmarks.",
+        "However, applying multilingual models to Vietnamese often yields suboptimal representations due to unique linguistic characteristics, particularly word segmentation ambiguity and tonality.",
+        "We introduce PhoBERT, a state-of-the-art monolingual pre-trained model based on RoBERTa architecture trained on a 20GB corpus of deduplicated Vietnamese texts.",
+        "PhoBERT significantly outperforms multilingual XLM-R across multiple downstream evaluation tasks including Part-of-Speech tagging, Dependency Parsing, and Named Entity Recognition."
+      ],
+      {
+        "word segmentation ambiguity":
+          "Sự mơ hồ trong tách từ tiếng Việt (Word Segmentation Ambiguity): Tiếng Việt có các từ ghép nhiều âm tiết (ví dụ: 'học sinh', 'bàn học'). Nếu tách sai âm tiết sẽ làm thay đổi hoàn toàn ngữ nghĩa của câu khi đưa vào mô hình học sâu.",
+        "monolingual pre-trained model":
+          "Mô hình tiền huấn luyện đơn ngữ (Monolingual Pre-trained Model): Mô hình AI được học chuyên sâu trên dữ liệu ngôn ngữ mẹ đẻ (tiếng Việt), giúp nắm bắt sắc thái văn hóa và ngữ cảnh địa phương tốt hơn các mô hình đa ngôn ngữ tổng quát."
+      }
+    );
+
+    this.topics.set("vietnamese-nlp", {
+      key: "vietnamese-nlp",
+      title: "Phân tích cảm xúc văn bản tiếng Việt",
+      subDomain: "Xử lý ngôn ngữ tự nhiên (Natural Language Processing)",
+      keywords: [
+        new KeywordNode(
+          "kw-absa",
+          "Aspect-Based Sentiment Analysis (ABSA)",
+          "Phân tích cảm xúc dựa trên khía cạnh",
+          "Từ khóa cốt lõi (Core)",
+          "Bài toán phân tích cảm xúc chuyên sâu: không chỉ đánh giá cả bài viết là tích cực/tiêu cực, mà bóc tách cảm xúc cho từng khía cạnh (ví dụ: 'đồ ăn ngon nhưng phục vụ chậm').",
+          "Là từ khóa học thuật chuẩn mực trong các hội nghị EMNLP/ACL cho đề tài khai phá ý kiến người dùng trên mạng xã hội.",
+          [paperNlp1]
+        ),
+        new KeywordNode(
+          "kw-phobert",
+          "Vietnamese Pre-trained Language Models",
+          "Mô hình ngôn ngữ tiền huấn luyện tiếng Việt",
+          "Kiến trúc nền tảng (Foundation Architecture)",
+          "Sử dụng PhoBERT hoặc ViDeBERTa làm mô hình trích xuất đặc trưng ngữ nghĩa theo ngữ cảnh tiếng Việt.",
+          "Điểm xuất phát bắt buộc cho bất kỳ đồ án xử lý ngôn ngữ tiếng Việt nào trong giai đoạn 2021–nay.",
+          [paperNlp1]
         ),
       ],
     });

@@ -4,14 +4,14 @@ import "./globals.css";
 
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ["latin", "vietnamese"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-be-vietnam",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Natsuki (菜月) Scholar — Nền tảng Nghiên cứu Học thuật AI",
-  description: "Hệ thống Tiền nghiên cứu & Đọc hiểu Học thuật Khép kín (6 Chức năng MVP)",
+  title: "Natsuki Scholar — Academic Research Flow Workspace",
+  description: "Không gian làm việc nghiên cứu học thuật tập trung (Khám phá từ khóa & Đọc hiểu tại chỗ không mất context)",
 };
 
 export default function RootLayout({
@@ -21,7 +21,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="vi" className={beVietnamPro.variable}>
-      <body className="font-sans bg-slate-50 text-slate-800 h-screen flex overflow-hidden antialiased selection:bg-indigo-600 selection:text-white">
+      <body className="font-sans bg-[#fafafa] text-slate-900 h-screen flex overflow-hidden antialiased selection:bg-amber-200 selection:text-slate-900">
         {children}
       </body>
     </html>

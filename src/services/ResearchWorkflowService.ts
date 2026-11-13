@@ -4,7 +4,7 @@ import { SavedExplanation, SavedExplanationDTO } from "../models/SavedExplanatio
 import { ResearchTopicData, ResearchTopicRepository } from "../repositories/ResearchTopicRepository";
 
 /**
- * OOP Service encapsulating all 6 MVP features across Solution 1 and Solution 2
+ * Service điều phối toàn bộ 6 bước chức năng MVP theo đúng User Flow
  */
 export class ResearchWorkflowService {
   private static readonly STORAGE_KEY = "natsuki_mvp_saved_explanations";
@@ -15,7 +15,7 @@ export class ResearchWorkflowService {
   }
 
   // F1.1: Phân tích chủ đề & Sinh sơ đồ từ khóa học thuật
-  public analyzeTopic(input: string, fallbackKey = "ai-vision"): {
+  public analyzeTopic(input: string, fallbackKey = "low-light-face"): {
     isValid: boolean;
     errorMessage?: string;
     topicData?: ResearchTopicData;
@@ -24,7 +24,7 @@ export class ResearchWorkflowService {
     if (clean.length < 3) {
       return {
         isValid: false,
-        errorMessage: "Vui lòng nhập mô tả chủ đề nghiên cứu (tối thiểu 3 ký tự) trước khi phân tích!",
+        errorMessage: "Vui lòng nhập mô tả chủ đề nghiên cứu (tối thiểu 3 ký tự) để hệ thống phân giải từ khóa.",
       };
     }
 
@@ -39,32 +39,39 @@ export class ResearchWorkflowService {
     return this.repository.getTopicByKey(key);
   }
 
-  // F2.1 & F2.2: Kiểm tra đoạn bôi đen và giải thích theo ngữ cảnh bài báo
+  public getAllTopics(): ResearchTopicData[] {
+    return this.repository.getAllTopics();
+  }
+
+  // Bôi đen và giải thích/dịch thuật theo ngữ cảnh bài báo
   public explainHighlightedText(
     paper: AcademicPaper,
-    rawSelection: string
+    rawSelection: string,
+    customPrompt?: string
   ): {
     isValid: boolean;
     errorMessage?: string;
     selectedText?: string;
     explanation?: string;
+    translation?: string;
   } {
     const clean = rawSelection.trim();
-    if (clean.length < 4) {
+    if (clean.length < 3) {
       return {
         isValid: false,
-        errorMessage: "Vui lòng bôi đen ít nhất 1 cụm từ (tối thiểu 4 ký tự) để hệ thống đối chiếu ngữ cảnh bài báo chính xác.",
+        errorMessage: "Vui lòng bôi đen ít nhất 1 cụm từ trong bài báo để xem giải thích hoặc dịch thuật.",
       };
     }
 
     return {
       isValid: true,
       selectedText: clean,
-      explanation: paper.resolveContextualExplanation(clean),
+      explanation: paper.resolveContextualExplanation(clean, customPrompt),
+      translation: paper.resolveContextualTranslation(clean),
     };
   }
 
-  // F2.3: Quản lý lưu trữ phần giải thích của ngữ cảnh đã bôi đen
+  // F2.3: Quản lý lưu trữ phần giải thích ngữ cảnh
   public loadSavedExplanations(): SavedExplanation[] {
     if (typeof window === "undefined") return this.getDefaultSample();
     try {
@@ -91,7 +98,7 @@ export class ResearchWorkflowService {
       keyword.labelEn,
       selectedText,
       explanation,
-      new Date().toLocaleString("vi-VN")
+      new Date().toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" }) + " hôm nay"
     );
     const updated = [newItem, ...currentList];
     this.persistList(updated);
@@ -114,12 +121,12 @@ export class ResearchWorkflowService {
     return [
       new SavedExplanation(
         "sample-1",
-        "paper-1",
-        "Using Deep Learning for Image-Based Plant Disease Detection",
-        "Convolutional Neural Networks (CNN)",
-        "domain shift and complex background noise",
-        "Sự dịch chuyển miền dữ liệu (Domain Shift): Hiện tượng mô hình học trên ảnh chụp phòng thí nghiệm nhưng dự đoán sai khi đưa ra đồng ruộng thực tế có phông nền phức tạp.",
-        "Mẫu có sẵn"
+        "paper-face-1",
+        "Face Recognition in Low-Light Environments via Deep Domain Adaptation",
+        "Low-Light Face Recognition (LLFR)",
+        "unsupervised domain adaptation",
+        "Thích ứng miền không giám sát (Unsupervised Domain Adaptation): Kỹ thuật học máy giúp mô hình được huấn luyện trên ảnh đủ sáng ban ngày tự thích ứng tốt trên ảnh thiếu sáng ban đêm mà không cần gán nhãn thủ công.",
+        "Mẫu tham khảo"
       ),
     ];
   }
