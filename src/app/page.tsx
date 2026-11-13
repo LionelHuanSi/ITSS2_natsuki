@@ -23,6 +23,7 @@ import { ResearchWorkflowService } from "@/services/ResearchWorkflowService";
 import { KeywordNode } from "@/models/KeywordNode";
 import { AcademicPaper } from "@/models/AcademicPaper";
 import { SavedExplanation } from "@/models/SavedExplanation";
+import { InteractiveKeywordTree } from "@/components/InteractiveKeywordTree";
 
 export type ScreenId = "S1" | "S2" | "S3" | "S4" | "S6";
 
@@ -449,12 +450,12 @@ export default function NatsukiScholarApp() {
         )}
 
         {/* ==================================================== */}
-        {/* MÀN HÌNH 2: SƠ ĐỒ TỪ KHÓA DẠNG CÂY TRỰC QUAN (TREE VIEW) */}
+        {/* MÀN HÌNH 2: BẢN ĐỒ TỪ KHÓA DẠNG CÂY TƯƠNG TÁC (BEZIER TREE) */}
         {/* ==================================================== */}
         {activeScreen === "S2" && (
-          <div className="max-w-5xl mx-auto px-6 py-8">
+          <div className="max-w-6xl mx-auto px-6 py-6">
             {/* Header điều hướng */}
-            <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-200">
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-200">
               <button
                 onClick={() => setActiveScreen("S1")}
                 className="inline-flex items-center gap-1.5 text-xs text-slate-600 hover:text-slate-900 transition font-mono"
@@ -462,83 +463,19 @@ export default function NatsukiScholarApp() {
                 <IconArrowLeft size={14} />
                 <span>Quay lại nhập đề tài</span>
               </button>
-              <span className="text-xs font-mono text-slate-500 uppercase">
-                BẢN ĐỒ TỪ KHÓA HỌC THUẬT (SƠ ĐỒ CÂY)
-              </span>
-            </div>
-
-            {/* SƠ ĐỒ CÂY TRỰC QUAN (TREE DIAGRAM) */}
-            <div className="bg-white border border-slate-200 rounded-lg p-8 shadow-sm">
-              {/* NODE GỐC: CHỦ ĐỀ CHÍNH */}
-              <div className="flex flex-col items-center">
-                <div className="w-full max-w-md p-4 bg-slate-900 text-white rounded text-center shadow">
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400 block mb-1">
-                    Gốc đề tài nghiên cứu
-                  </span>
-                  <h2 className="text-base font-semibold leading-tight">{currentTopic.title}</h2>
-                </div>
-
-                {/* Đường nhánh dọc kết nối xuống phân ngành */}
-                <div className="w-0.5 h-7 bg-slate-300"></div>
-
-                {/* NODE TRUNG GIAN: PHÂN NGÀNH */}
-                <div className="px-4 py-2 bg-slate-100 border border-slate-300 rounded text-center">
-                  <span className="text-xs font-mono text-slate-600 font-medium">
-                    Lĩnh vực chuyên ngành: {currentTopic.subDomain}
-                  </span>
-                </div>
-
-                {/* Đường nhánh dọc kết nối xuống các nhánh con */}
-                <div className="w-0.5 h-7 bg-slate-300"></div>
-              </div>
-
-              {/* CÁC NHÁNH TỪ KHÓA CON (LEAF NODES) */}
-              <div className="relative pt-4">
-                {/* Đường kẻ ngang phân nhánh (Connector Bar) */}
-                <div className="hidden md:block absolute top-0 left-12 right-12 h-0.5 bg-slate-300"></div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
-                  {currentTopic.keywords.map((node) => (
-                    <div key={node.id} className="relative flex flex-col items-center">
-                      {/* Đường dọc từ thanh ngang xuống từng node */}
-                      <div className="hidden md:block w-0.5 h-4 bg-slate-300 mb-2"></div>
-
-                      {/* Card Node từ khóa */}
-                      <div
-                        onClick={() => handleSelectKeyword(node)}
-                        className="w-full p-5 bg-[#fafafa] hover:bg-white border border-slate-300 hover:border-slate-900 rounded cursor-pointer transition shadow-sm hover:shadow flex flex-col justify-between group h-full"
-                      >
-                        <div>
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-[10px] font-mono font-medium px-2 py-0.5 bg-white text-slate-700 border border-slate-200 rounded">
-                              {node.level}
-                            </span>
-                            <span className="text-[11px] font-mono text-slate-500">
-                              {node.papers.length} bài báo
-                            </span>
-                          </div>
-
-                          <h3 className="text-sm font-semibold text-slate-900 group-hover:text-black leading-snug mb-1">
-                            {node.labelEn}
-                          </h3>
-                          <div className="text-xs text-slate-500 mb-2.5 font-medium">
-                            {node.labelVi}
-                          </div>
-                          <p className="text-xs text-slate-600 leading-relaxed line-clamp-3">
-                            {node.explanation}
-                          </p>
-                        </div>
-
-                        <div className="pt-3 mt-4 border-t border-slate-200 flex items-center justify-between text-xs text-slate-900 font-medium group-hover:underline">
-                          <span>Xem bài báo đề xuất</span>
-                          <IconArrowRight size={13} />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-mono text-slate-500 uppercase">
+                  BẢN ĐỒ TỪ KHÓA HỌC THUẬT (SƠ ĐỒ CÂY TƯƠNG TÁC)
+                </span>
               </div>
             </div>
+
+            {/* SƠ ĐỒ CÂY TƯƠNG TÁC (HORIZONTAL BEZIER TREE CANVAS) */}
+            <InteractiveKeywordTree
+              topic={currentTopic}
+              selectedKeywordId={selectedKeyword.id}
+              onSelectKeyword={handleSelectKeyword}
+            />
           </div>
         )}
 
