@@ -35,9 +35,7 @@ export default function NatsukiScholarApp() {
   const [activeScreen, setActiveScreen] = useState<ScreenId>("S1");
 
   // State: Chủ đề và phân tích
-  const [topicInput, setTopicInput] = useState<string>(
-    "Nhận diện sâu bệnh nông nghiệp đa loài bằng thị giác máy tính"
-  );
+  const [topicInput, setTopicInput] = useState<string>("");
   const [topicKey, setTopicKey] = useState<string>("pest-vision");
   const [searchError, setSearchError] = useState<string | null>(null);
   const [s1Tab, setS1Tab] = useState<"idea" | "file">("idea");
@@ -77,14 +75,16 @@ export default function NatsukiScholarApp() {
     setTimeout(() => setToastMessage(null), 2500);
   };
 
-  // Xử lý Phân tích chủ đề (S1 -> S2)
+  // Xử lý Phân giải chủ đề (S1 -> S2)
   const handleAnalyze = () => {
-    const res = workflowService.analyzeTopic(topicInput, topicKey);
+    const raw = topicInput.trim() || "Nhận diện sâu bệnh nông nghiệp đa loài bằng thị giác máy tính";
+    const res = workflowService.analyzeTopic(raw, "pest-vision");
     if (!res.isValid || !res.topicData) {
-      setSearchError(res.errorMessage || "Vui lòng nhập mô tả chủ đề nghiên cứu.");
+      setSearchError(res.errorMessage || "Vui lòng nhập mô tả hoặc từ khóa nghiên cứu.");
       return;
     }
     setSearchError(null);
+    setTopicInput(raw);
     setTopicKey(res.topicData.key);
     setSelectedKeyword(res.topicData.keywords[0]);
     setActiveScreen("S2");
@@ -249,34 +249,34 @@ export default function NatsukiScholarApp() {
           </button>
 
           {/* Stepper dạng text học thuật */}
-          <nav className="hidden md:flex items-center gap-1.5 text-xs font-mono text-slate-500">
+          <nav className="hidden md:flex items-center gap-1.5 text-xs text-slate-500">
             <button
               onClick={() => setActiveScreen("S1")}
-              className={`px-2 py-1 rounded transition ${
+              className={`px-2.5 py-1 rounded-md transition ${
                 activeScreen === "S1"
-                  ? "bg-slate-900 text-white font-semibold"
+                  ? "bg-slate-900 text-white font-semibold shadow-sm"
                   : "hover:text-slate-900"
               }`}
             >
-              01 Đề tài
+              01 Khởi tạo
             </button>
             <span>/</span>
             <button
               onClick={() => setActiveScreen("S2")}
-              className={`px-2 py-1 rounded transition ${
+              className={`px-2.5 py-1 rounded-md transition ${
                 activeScreen === "S2"
-                  ? "bg-slate-900 text-white font-semibold"
+                  ? "bg-slate-900 text-white font-semibold shadow-sm"
                   : "hover:text-slate-900"
               }`}
             >
-              02 Bản đồ từ khóa
+              02 Cây từ khóa
             </button>
             <span>/</span>
             <button
               onClick={() => setActiveScreen("S3")}
-              className={`px-2 py-1 rounded transition ${
+              className={`px-2.5 py-1 rounded-md transition ${
                 activeScreen === "S3"
-                  ? "bg-slate-900 text-white font-semibold"
+                  ? "bg-slate-900 text-white font-semibold shadow-sm"
                   : "hover:text-slate-900"
               }`}
             >
@@ -285,13 +285,13 @@ export default function NatsukiScholarApp() {
             <span>/</span>
             <button
               onClick={() => setActiveScreen("S4")}
-              className={`px-2 py-1 rounded transition ${
+              className={`px-2.5 py-1 rounded-md transition ${
                 activeScreen === "S4"
-                  ? "bg-slate-900 text-white font-semibold"
+                  ? "bg-slate-900 text-white font-semibold shadow-sm"
                   : "hover:text-slate-900"
               }`}
             >
-              04 Đọc & Giải thích
+              04 Không gian đọc
             </button>
           </nav>
         </div>
@@ -344,10 +344,10 @@ export default function NatsukiScholarApp() {
             {/* Tiêu đề chính */}
             <div className="text-center mb-6">
               <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-slate-900 mb-2">
-                Bắt đầu nghiên cứu đề tài
+                Khởi tạo Khung Đề tài
               </h1>
               <p className="text-sm text-slate-500 max-w-md mx-auto">
-                Phân tích ý tưởng thành sơ đồ từ khóa học thuật, hoặc đọc trực tiếp tài liệu có sẵn.
+                Chuyển hóa ý tưởng sơ khai thành mạng lưới thuật ngữ và tài liệu học thuật.
               </p>
             </div>
 
@@ -362,7 +362,7 @@ export default function NatsukiScholarApp() {
                 }`}
               >
                 <IconSearch size={14} />
-                <span>Khởi tạo từ ý tưởng</span>
+                <span>Từ ý tưởng</span>
               </button>
               <button
                 onClick={() => setS1Tab("file")}
@@ -373,7 +373,7 @@ export default function NatsukiScholarApp() {
                 }`}
               >
                 <IconUpload size={14} />
-                <span>Đọc tài liệu có sẵn</span>
+                <span>Tải bài báo</span>
               </button>
             </div>
 
@@ -384,7 +384,7 @@ export default function NatsukiScholarApp() {
                   <textarea
                     value={topicInput}
                     onChange={(e) => setTopicInput(e.target.value)}
-                    placeholder="Ví dụ: Nhận diện sâu bệnh nông nghiệp đa loài bằng thị giác máy tính..."
+                    placeholder="Nhập các từ khóa rời rạc hoặc mô tả ý tưởng ban đầu (không cần chuẩn ngữ pháp hay thuật ngữ)..."
                     rows={3}
                     className="w-full text-slate-900 placeholder:text-slate-400 text-sm leading-relaxed resize-none focus:outline-none bg-transparent"
                   />
@@ -393,7 +393,7 @@ export default function NatsukiScholarApp() {
                       onClick={handleAnalyze}
                       className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium rounded-lg shadow-sm transition"
                     >
-                      <span>Phân tích sơ đồ từ khóa</span>
+                      <span>Phân giải từ khóa</span>
                       <IconArrowRight size={14} />
                     </button>
                   </div>
@@ -429,7 +429,7 @@ export default function NatsukiScholarApp() {
                     <IconUpload size={22} />
                   </div>
                   <div className="text-sm font-semibold text-slate-900 mb-1">
-                    Kéo thả tài liệu vào đây, hoặc click để chọn tệp
+                    Kéo thả bài báo vào đây, hoặc click để chọn tệp
                   </div>
                   <div className="text-xs text-slate-500">
                     Hỗ trợ định dạng PDF, TXT, DOCX · Mở trực tiếp trong không gian đọc
