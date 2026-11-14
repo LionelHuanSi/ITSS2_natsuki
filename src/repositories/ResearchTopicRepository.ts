@@ -9,8 +9,11 @@ export interface ResearchTopicData {
 }
 
 /**
- * Repository quản lý Dummy Data cho MVP Natsuki Scholar
- * Cung cấp 3 chủ đề học thuật CNTT chuẩn mực để demo trọn vẹn luồng
+ * Repository quản lý Dữ liệu Học thuật duy nhất cho MVP Natsuki Scholar:
+ * Kịch bản vàng: "Nhận diện sâu bệnh nông nghiệp đa loài thời gian thực bằng thị giác máy tính"
+ * Dựa trên công trình nghiên cứu chính thức:
+ * "Multi-species insect recognition method based on computer visions: Sustainable agricultural development"
+ * Xuất bản trên tạp chí Ecological Informatics (Elsevier, 2025).
  */
 export class ResearchTopicRepository {
   private static instance: ResearchTopicRepository;
@@ -27,8 +30,8 @@ export class ResearchTopicRepository {
     return ResearchTopicRepository.instance;
   }
 
-  public getTopicByKey(key: string): ResearchTopicData {
-    return this.topics.get(key) || this.topics.get("low-light-face")!;
+  public getTopicByKey(key?: string): ResearchTopicData {
+    return this.topics.get("pest-vision")!;
   }
 
   public getAllTopics(): ResearchTopicData[] {
@@ -36,216 +39,150 @@ export class ResearchTopicRepository {
   }
 
   public resolveTopicKeyFromInput(userInput: string): string {
-    const lower = userInput.toLowerCase();
-    if (
-      lower.includes("dưới nước") ||
-      lower.includes("cảm biến") ||
-      lower.includes("underwater") ||
-      lower.includes("acoustic")
-    ) {
-      return "underwater-sensor";
-    }
-    if (
-      lower.includes("cảm xúc") ||
-      lower.includes("tình cảm") ||
-      lower.includes("tiếng việt") ||
-      lower.includes("nlp") ||
-      lower.includes("sentiment") ||
-      lower.includes("ngôn ngữ")
-    ) {
-      return "vietnamese-nlp";
-    }
-    return "low-light-face";
+    return "pest-vision";
   }
 
   private seedMockData(): void {
     // ----------------------------------------------------
-    // CHỦ ĐỀ 1: NHẬN DIỆN KHUÔN MẶT THIẾU SÁNG
+    // BÀI BÁO 1 (BÀI BÁO NỀN TẢNG CỐT LÕI TỪ NGƯỜI DÙNG)
     // ----------------------------------------------------
-    const paperFace1 = new AcademicPaper(
-      "paper-face-1",
-      "Face Recognition in Low-Light Environments via Deep Domain Adaptation",
-      "Z. Zhang, X. Liu, H. Chen (Tsinghua & CMU)",
-      2022,
-      "IEEE Transactions on Pattern Analysis and Machine Intelligence (TPAMI)",
-      "Bài báo nền tảng giải quyết trực tiếp rào cản suy giảm độ chính xác khi nhận diện khuôn mặt ban đêm hoặc trong điều kiện ánh sáng cực yếu.",
+    const paperPestRTDetr = new AcademicPaper(
+      "paper-pest-rtdetr-2025",
+      "Multi-species insect recognition method based on computer visions: Sustainable agricultural development",
+      "L. Zhang, S. Sun, H. Zhao, Z. Li, D. Li (Wuxi University & Jilin University)",
+      2025,
+      "Ecological Informatics (Elsevier), Vol. 88, 103125",
+      "Đề xuất mô hình Pest-RTDetr phát hiện sâu bệnh nông nghiệp đa loài thời gian thực (80 FPS, 68.4% mAP) giải quyết triệt để bài toán mật độ dày, che khuất và phân bố dữ liệu đuôi dài trên tập dữ liệu IP102 (102 loài).",
       [
-        "Facial recognition algorithms have achieved outstanding verification accuracy under well-illuminated conditions. However, performance degrades drastically in low-light environments due to severe signal attenuation and non-uniform noise distribution.",
-        "Traditional image enhancement methods often amplify high-frequency sensor noise, corrupting critical facial landmarks required for deep feature alignment.",
-        "In this work, we formulate low-light face recognition as an unsupervised domain adaptation problem. We introduce an illumination-invariant feature extractor that maps low-light probe images and normal-light gallery images into a shared latent manifold.",
-        "Extensive experiments demonstrate that our approach maintains a 96.4% verification rate at 10^-5 false acceptance rate, outperforming standard CNN backbones without requiring paired synthetic training datasets."
+        "In agricultural production management, insect pests are responsible for approximately 20% of global crop losses each year. Therefore, insect pest control plays a crucial role in agricultural production and food security. Traditional insect pest identification methods heavily rely on frontline plant protection workers and agricultural technicians, requiring substantial time and effort. Deep learning offers high precision and adaptability, overcoming the low detection accuracy of traditional methods when identifying complex and diverse samples in natural field environments.",
+        "However, convolutional neural network (CNN)-based algorithms lack a global understanding of features, limiting their ability to effectively handle occlusion. Moreover, insect pest species often share similar appearances with minimal inter-class differences, while displaying pronounced intra-class variations across different life cycle stages (eggs, larvae, pupae, and adults). These morphological shifts complicate the classification model's ability to extract distinguishing characteristics.",
+        "Therefore, based on the RT-DETR network model, we propose the Pest-RTDetr algorithm for multi-species agricultural insect pest detection. The backbone network integrates DAS-ResNet50 with a deformable attention mechanism to capture salient features such as head and foot regions of insects. Furthermore, an enhanced cross-scale feature fusion module (CF) integrates shallow high-resolution features with deep semantic features to accurately localize small, densely distributed targets.",
+        "The IP102 benchmark dataset contains 75,222 samples across 102 pest categories exhibiting a severe long-tail distribution. To address class imbalance and bounding box distortion caused by overlapping pests, we employ Focal Loss to balance positive and negative samples, and introduce MPDIoU (Minimum Point Distance IoU) as the regression loss. Experimental results demonstrate that Pest-RTDetr achieves an mAP50 of 68.40% at 80 FPS, outperforming Faster R-CNN and YOLOv8."
       ],
       {
-        "signal attenuation":
-          "Sự suy giảm tín hiệu quang học (Signal Attenuation): Hiện tượng cảm biến camera nhận quá ít photon trong điều kiện thiếu sáng, dẫn đến dải tương phản (dynamic range) bị nén và mất toàn bộ chi tiết sắc nét trên khuôn mặt.",
-        "unsupervised domain adaptation":
-          "Thích ứng miền không giám sát (Unsupervised Domain Adaptation): Kỹ thuật học máy giúp mô hình được huấn luyện trên miền dữ liệu đủ sáng (Source Domain) có thể tự thích ứng và dự đoán chính xác trên miền ảnh thiếu sáng (Target Domain) mà không cần nhãn gán thủ công.",
-        "illumination-invariant feature extractor":
-          "Bộ trích xuất đặc trưng bất biến ánh sáng (Illumination-Invariant Extractor): Kiến trúc mạng nơ-ron được thiết kế để chỉ trích xuất các đặc trưng hình học cố định (khoảng cách mắt, sống mũi) và triệt tiêu biến thiên do cường độ chiếu sáng gây ra.",
-        "false acceptance rate":
-          "Tỷ lệ chấp nhận sai (FAR - False Acceptance Rate): Xác suất hệ thống nhận nhầm người lạ thành người hợp lệ trong cơ sở dữ liệu. Trong các bài báo bảo mật sinh trắc học, mức 10^-5 là tiêu chuẩn khắt khe."
+        "long-tail distribution":
+          "Phân bố dữ liệu đuôi dài (Long-Tail Distribution): Hiện tượng mất cân bằng mẫu nghiêm trọng trong tập dữ liệu IP102 (102 loài sâu bệnh), trong đó một số ít loài có rất nhiều ảnh mẫu (Head data), còn phần lớn các loài sâu hại quý hiếm lại chỉ có rất ít ảnh (Tail data), khiến mô hình học máy thông thường dễ bị thiên vị và dự đoán sai các loài thiểu số.",
+        "occlusion":
+          "Hiện tượng che khuất quang học (Occlusion): Trạng thái côn trùng bị cành lá, bóng râm hoặc các côn trùng khác che khuất một phần thân thể trong môi trường tự nhiên, gây mất mát thông tin hình ảnh nghiêm trọng.",
+        "deformable attention":
+          "Cơ chế chú ý biến dạng động (Deformable Attention - DAS): Kỹ thuật trong mạng tích chập giúp mô hình tự co giãn vùng tiếp nhận (receptive field) theo hình dáng giải phẫu tự nhiên của côn trùng (tập trung vào râu, chân, vân cánh) thay vì quét các ô vuông cố định, qua đó phân biệt chuẩn xác các loài sâu hại có ngoại hình tương đồng.",
+        "cross-scale feature fusion":
+          "Hợp nhất đặc trưng đa tỉ lệ (Cross-Scale Feature Fusion - CF): Cấu trúc hai nhánh kết hợp DAS và Bottlenecks giúp truyền tải đặc trưng ngữ nghĩa mức cao xuống tầng nông, giúp phát hiện chuẩn xác các loài sâu bệnh siêu nhỏ (micro-pests) trên nền lá cây phức tạp.",
+        "Focal Loss":
+          "Hàm mất mát tiêu điểm (Focal Loss): Hàm mục tiêu tinh chỉnh trọng số của các mẫu huấn luyện, giảm trọng số của các mẫu dễ nhận diện và tập trung tối đa đạo hàm vào các mẫu khó (các loài sâu hại ít gặp ở phần đuôi dữ liệu).",
+        "MPDIoU":
+          "Hàm mất mát khoảng cách điểm cực trị (MPDIoU - Minimum Point Distance IoU): Chỉ số tương đồng bounding box dựa trên khoảng cách giữa các góc trên-trái và dưới-phải của hộp dự đoán và hộp nhãn thực tế. MPDIoU giúp thuật toán hội tụ nhanh hơn và khắc phục hiện tượng mất dấu khi các con côn trùng bò đè lên nhau.",
+        "RT-DETR":
+          "Mạng biến đổi phát hiện đối tượng thời gian thực (Real-Time Detection Transformer): Kiến trúc tiên phong kết hợp ưu điểm học đặc trưng toàn cục của Transformer với tốc độ suy luận cực nhanh (80 FPS), loại bỏ hoàn toàn bước hậu xử lý NMS (Non-Maximum Suppression) phức tạp của họ mô hình YOLO."
       },
       {
-        "signal attenuation": "Sự suy giảm tín hiệu quang học",
-        "unsupervised domain adaptation": "Thích ứng miền không giám sát",
-        "illumination-invariant feature extractor": "Bộ trích xuất đặc trưng bất biến với ánh sáng",
-        "false acceptance rate": "Tỷ lệ chấp nhận sai (FAR)"
+        "long-tail distribution": "Phân bố dữ liệu đuôi dài",
+        "occlusion": "Hiện tượng che khuất quang học",
+        "deformable attention": "Cơ chế chú ý biến dạng động",
+        "cross-scale feature fusion": "Hợp nhất đặc trưng đa tỉ lệ",
+        "Focal Loss": "Hàm mất mát tiêu điểm",
+        "MPDIoU": "Hàm mất mát khoảng cách điểm cực trị (MPDIoU)",
+        "RT-DETR": "Mạng biến đổi phát hiện đối tượng thời gian thực"
       }
     );
 
-    const paperFace2 = new AcademicPaper(
-      "paper-face-2",
-      "NIR-to-Visible Face Synthesis and Verification Using Coupled Attention GANs",
-      "Y. Wang, R. He, T. Tan (Chinese Academy of Sciences)",
-      2021,
-      "IEEE International Conference on Computer Vision (ICCV)",
-      "Đề xuất phương pháp chuyển đổi ảnh hồng ngoại gần (NIR - ban đêm) sang ảnh ánh sáng nhìn thấy (VIS) để tái sử dụng cơ sở dữ liệu ảnh thẻ thông thường.",
+    // ----------------------------------------------------
+    // BÀI BÁO 2: THAM CHIẾU KIẾN TRÚC NỀN TẢNG (RT-DETR)
+    // ----------------------------------------------------
+    const paperRTDetr = new AcademicPaper(
+      "paper-rtdetr-cvpr-2023",
+      "DETRs Beat YOLOs on Real-time Object Detection",
+      "W. Lv, S. Xu, Y. Zhao, G. Wang, J. Wei, C. Cui et al. (Baidu Inc.)",
+      2023,
+      "IEEE / CVF Conference on Computer Vision and Pattern Recognition (CVPR)",
+      "Công trình nền tảng chứng minh mô hình Transformer có thể vượt qua dòng họ YOLO cả về độ chính xác và tốc độ suy luận thời gian thực mà không cần Non-Maximum Suppression (NMS).",
       [
-        "Active near-infrared (NIR) imaging is widely adopted for surveillance in total darkness, yet matching NIR queries against standard visible (VIS) gallery databases remains an open challenge due to significant modality discrepancy.",
-        "We introduce a coupled attention Generative Adversarial Network that disentangles identity representations from spectral illumination artifacts.",
-        "By preserving structural facial geometry across spectral domains, our framework reduces cross-modal identification error by 38% on standard benchmark datasets."
+        "Real-time object detection has long been dominated by YOLO detectors due to their low latency. However, YOLO models heavily rely on Non-Maximum Suppression (NMS) for post-processing, which introduces significant inference latency variance and hyperparameter sensitivity.",
+        "In this paper, we propose the Real-Time DEtection TRansformer (RT-DETR), the first end-to-end real-time object detector based on Vision Transformers. We design an efficient hybrid encoder that decouples intra-scale interaction and cross-scale fusion, achieving superior trade-offs between speed and accuracy.",
+        "On the MS COCO benchmark, RT-DETR-L achieves 53.0% AP at 114 FPS on T4 GPU, outperforming state-of-the-art YOLO detectors across multiple scale metrics."
       ],
       {
-        "modality discrepancy":
-          "Độ sai lệch phương thức quang phổ (Modality Discrepancy): Sự khác biệt cơ bản về phản xạ bề mặt da giữa tia hồng ngoại gần (NIR) và ánh sáng nhìn thấy (VIS), khiến các mạng CNN thông thường không nhận diện được cùng một người.",
-        "disentangles identity representations":
-          "Tách bạch biểu diễn danh tính (Disentanglement): Kỹ thuật phân tách véc-tơ đặc trưng khuôn mặt thành 2 phần độc lập: phần đại diện cho cấu trúc sinh trắc học cá nhân và phần biểu diễn hiệu ứng quang phổ môi trường."
+        "Non-Maximum Suppression":
+          "Loại bỏ phi cực đại (NMS - Non-Maximum Suppression): Thuật toán lọc các khung bao trùng lặp trong xử lý ảnh truyền thống. NMS gây tắc nghẽn tốc độ suy luận thời gian thực vì tính toán tuần tự và nhạy cảm với ngưỡng tự chọn.",
+        "hybrid encoder":
+          "Bộ mã hóa lai (Hybrid Encoder): Cấu trúc phân tách tương tác nội tầng và hợp nhất xuyên tầng, giảm độ phức tạp tính toán O(N^2) của Transformer thông thường về mức tuyến tính thời gian thực."
+      },
+      {
+        "Non-Maximum Suppression": "Thuật toán loại bỏ phi cực đại (NMS)",
+        "hybrid encoder": "Bộ mã hóa lai hiệu năng cao"
       }
     );
 
-    this.topics.set("low-light-face", {
-      key: "low-light-face",
-      title: "Nhận diện khuôn mặt trong điều kiện thiếu sáng",
-      subDomain: "Thị giác máy tính & Xử lý ảnh (Computer Vision)",
-      keywords: [
-        new KeywordNode(
-          "kw-llfr",
-          "Low-Light Face Recognition (LLFR)",
-          "Nhận diện khuôn mặt trong điều kiện thiếu sáng",
-          "Từ khóa cốt lõi (Core)",
-          "Thuật ngữ học thuật chuẩn mực quốc tế dùng để chỉ bài toán nhận diện sinh trắc học khi ảnh đầu vào bị nhiễu hạt nghiêm trọng và thiếu sáng trầm trọng.",
-          "Thay vì tìm 'night face detection' hay 'dark image', giới nghiên cứu IEEE/ACM sử dụng 'Low-Light Face Recognition' để định vị toàn bộ các công trình giải quyết suy hao tín hiệu ban đêm.",
-          [paperFace1, paperFace2]
-        ),
-        new KeywordNode(
-          "kw-uda",
-          "Unsupervised Domain Adaptation",
-          "Thích ứng miền không giám sát",
-          "Phương pháp luận (Methodology)",
-          "Phương pháp huấn luyện cầu nối giữa tập dữ liệu ảnh đủ sáng ban ngày và ảnh thiếu sáng ban đêm mà không cần gán nhãn lại từ đầu.",
-          "Đây là giải pháp hiện đại được ưa chuộng nhất trong các đồ án tốt nghiệp khi sinh viên không có điều kiện tự thu thập hàng chục nghìn bức ảnh khuôn mặt trong bóng tối.",
-          [paperFace1]
-        ),
-        new KeywordNode(
-          "kw-nir-vis",
-          "Heterogeneous NIR-to-VIS Face Matching",
-          "Đối chiếu khuôn mặt đa phổ Hồng ngoại - Ánh sáng thường",
-          "Kỹ thuật phần cứng & Đa phổ (Hardware & Multimodal)",
-          "Bài toán kết hợp cảm biến camera hồng ngoại để ghi nhận khuôn mặt trong bóng tối hoàn toàn rồi đối chiếu ngược với ảnh chụp CCCD/CMND thông thường.",
-          "Được áp dụng thực tế trong các hệ thống an ninh và camera giám sát thông minh.",
-          [paperFace2]
-        ),
-      ],
-    });
-
     // ----------------------------------------------------
-    // CHỦ ĐỀ 2: MẠNG CẢM BIẾN DƯỚI NƯỚC (UASN)
+    // BÀI BÁO 3: THAM CHIẾU TẬP DỮ LIỆU CHUẨN MỰC (IP102)
     // ----------------------------------------------------
-    const paperUasn1 = new AcademicPaper(
-      "paper-uasn-1",
-      "Underwater Acoustic Sensor Networks: Research Challenges and Routing Protocols",
-      "I. F. Akyildiz, D. Pompili, T. Melodia",
-      2005,
-      "IEEE Communications Magazine (7,200+ Citations)",
-      "Bài báo kinh điển được trích dẫn nhiều nhất thế giới, đặt nền móng toàn diện cho các nghiên cứu về mạng cảm biến âm học dưới nước.",
+    const paperIP102 = new AcademicPaper(
+      "paper-ip102-cvpr-2019",
+      "IP102: A Large-Scale Benchmark Dataset for Insect Pest Recognition",
+      "X. Wu, C. Zhan, Y.-K. Lai, M.-M. Cheng, J. Yang (Nankai University)",
+      2019,
+      "IEEE / CVF Conference on Computer Vision and Pattern Recognition (CVPR)",
+      "Tập dữ liệu chuẩn mực lớn nhất thế giới về sâu bệnh nông nghiệp với 75,222 ảnh trên 102 loài côn trùng phá hoại mùa màng, phản ánh đầy đủ thách thức đồng ruộng tự nhiên.",
       [
-        "Underwater Acoustic Sensor Networks (UW-ASNs) consist of variable numbers of sensors and vehicles deployed to perform collaborative monitoring tasks over given oceanographic areas.",
-        "Traditional radio frequency (RF) electromagnetic waves propagate through conductive sea water only at extremely low frequencies with severe attenuation. Therefore, acoustic communications are predominantly employed as the physical transmission medium.",
-        "However, underwater acoustic channels feature extremely long propagation delays, severely limited bandwidth, high bit error rates, and dynamic time-varying multipath fading.",
-        "These physical constraints render terrestrial ad-hoc routing protocols ineffective, demanding cross-layer network protocol architectures tailored to deep ocean environments."
+        "Accurate identification of agricultural insect pests is critical for food sustainability, yet progress in computer vision has been hindered by the lack of large-scale open benchmark datasets.",
+        "We introduce IP102, a large-scale insect pest dataset containing 75,222 high-resolution images categorized into 102 distinct pest classes across major agricultural crops.",
+        "The dataset exhibits significant challenges including severe class imbalance with a natural long-tail distribution, varied life-cycle stages (larvae to adults), and complex unconstrained field backgrounds."
       ],
       {
-        "acoustic communications":
-          "Truyền thông sóng âm dưới nước (Acoustic Communications): Thay vì dùng sóng vô tuyến (RF/Wifi) bị nước biển hấp thụ rất mạnh, hệ thống bắt buộc phải dùng sóng âm thanh với tốc độ truyền chậm hơn sóng vô tuyến khoảng 200.000 lần (khoảng 1500 m/s).",
-        "propagation delays":
-          "Độ trễ truyền lan tín hiệu (Propagation Delays): Khoảng thời gian rất lớn để một gói tin âm thanh truyền từ cảm biến dưới đáy biển lên phao nổi trên mặt nước, khiến các giao thức TCP/IP truyền thống trên cạn bị timeout và mất gói.",
-        "multipath fading":
-          "Fading đa đường (Multipath Fading): Hiện tượng sóng âm dội lại từ mặt nước và đáy biển nhiều lần, tạo ra sự giao thoa làm méo mó tín hiệu nhận được ở nút đích."
-      }
-    );
-
-    this.topics.set("underwater-sensor", {
-      key: "underwater-sensor",
-      title: "Mạng cảm biến không dây dưới nước",
-      subDomain: "Mạng máy tính & Truyền thông (Networking & IoT)",
-      keywords: [
-        new KeywordNode(
-          "kw-uasn",
-          "Underwater Acoustic Sensor Networks (UASN)",
-          "Mạng cảm biến sóng âm dưới nước",
-          "Từ khóa cốt lõi (Core)",
-          "Thuật ngữ học thuật chính xác thay vì tìm 'underwater wireless sensor'. Từ khóa này phân biệt rạch ròi giữa truyền thông sóng âm (acoustic) và sóng vô tuyến trên cạn.",
-          "Tìm đúng từ khóa này sẽ loại bỏ hoàn toàn các bài báo lạc đề về mạng cảm biến trên cạn (terrestrial WSN), tránh lãng phí thời gian tra cứu.",
-          [paperUasn1]
-        ),
-        new KeywordNode(
-          "kw-dbr",
-          "Depth-Based Routing (DBR)",
-          "Định tuyến dựa trên độ sâu",
-          "Giao thức định tuyến (Routing Protocol)",
-          "Giao thức mạng kinh điển cho phép các nút cảm biến chỉ cần đo áp suất nước (độ sâu) để quyết định chuyển tiếp gói tin lên phao nổi mà không cần định vị GPS.",
-          "Là giao thức cơ sở (baseline) bắt buộc phải so sánh trong mọi đồ án về định tuyến mạng dưới biển.",
-          [paperUasn1]
-        ),
-      ],
-    });
-
-    // ----------------------------------------------------
-    // CHỦ ĐỀ 3: PHÂN TÍCH CẢM XÚC TIẾNG VIỆT
-    // ----------------------------------------------------
-    const paperNlp1 = new AcademicPaper(
-      "paper-nlp-1",
-      "PhoBERT: Pre-trained Language Models for Vietnamese",
-      "D. Q. Nguyen, A. T. Nguyen (VinAI Research)",
-      2020,
-      "Findings of EMNLP 2020",
-      "Mô hình ngôn ngữ tiền huấn luyện chuẩn mực hàng đầu cho tiếng Việt, là xương sống của hầu hết các nghiên cứu NLP tiếng Việt hiện đại.",
-      [
-        "Pre-trained language models like BERT and RoBERTa have drastically advanced the state-of-the-art across various natural language processing benchmarks.",
-        "However, applying multilingual models to Vietnamese often yields suboptimal representations due to unique linguistic characteristics, particularly word segmentation ambiguity and tonality.",
-        "We introduce PhoBERT, a state-of-the-art monolingual pre-trained model based on RoBERTa architecture trained on a 20GB corpus of deduplicated Vietnamese texts.",
-        "PhoBERT significantly outperforms multilingual XLM-R across multiple downstream evaluation tasks including Part-of-Speech tagging, Dependency Parsing, and Named Entity Recognition."
-      ],
+        "class imbalance":
+          "Mất cân bằng phân phối lớp (Class Imbalance): Hiện tượng số lượng ảnh của loài phổ biến áp đảo số lượng ảnh của loài hiếm gặp, khiến AI dự đoán sai lệch nếu không có hàm loss đặc biệt.",
+        "unconstrained field backgrounds":
+          "Nền đồng ruộng không kiểm soát (Unconstrained Backgrounds): Bối cảnh thực tế ngoài trời có ánh nắng gắt, bùn đất, lá úa và côn trùng lẫn vào màu cây cỏ, gây nhiễu thị giác cực độ."
+      },
       {
-        "word segmentation ambiguity":
-          "Sự mơ hồ trong tách từ tiếng Việt (Word Segmentation Ambiguity): Tiếng Việt có các từ ghép nhiều âm tiết (ví dụ: 'học sinh', 'bàn học'). Nếu tách sai âm tiết sẽ làm thay đổi hoàn toàn ngữ nghĩa của câu khi đưa vào mô hình học sâu.",
-        "monolingual pre-trained model":
-          "Mô hình tiền huấn luyện đơn ngữ (Monolingual Pre-trained Model): Mô hình AI được học chuyên sâu trên dữ liệu ngôn ngữ mẹ đẻ (tiếng Việt), giúp nắm bắt sắc thái văn hóa và ngữ cảnh địa phương tốt hơn các mô hình đa ngôn ngữ tổng quát."
+        "class imbalance": "Mất cân bằng phân phối lớp",
+        "unconstrained field backgrounds": "Bối cảnh đồng ruộng tự nhiên không ràng buộc"
       }
     );
 
-    this.topics.set("vietnamese-nlp", {
-      key: "vietnamese-nlp",
-      title: "Phân tích cảm xúc văn bản tiếng Việt",
-      subDomain: "Xử lý ngôn ngữ tự nhiên (Natural Language Processing)",
+    // ----------------------------------------------------
+    // TỔ CHỨC CÂY TỪ KHÓA HỌC THUẬT (MÀN 2)
+    // ----------------------------------------------------
+    this.topics.set("pest-vision", {
+      key: "pest-vision",
+      title: "Nhận diện sâu bệnh nông nghiệp đa loài bằng thị giác máy tính",
+      subDomain: "Smart Agriculture & Computer Vision",
       keywords: [
         new KeywordNode(
-          "kw-absa",
-          "Aspect-Based Sentiment Analysis (ABSA)",
-          "Phân tích cảm xúc dựa trên khía cạnh",
-          "Từ khóa cốt lõi (Core)",
-          "Bài toán phân tích cảm xúc chuyên sâu: không chỉ đánh giá cả bài viết là tích cực/tiêu cực, mà bóc tách cảm xúc cho từng khía cạnh (ví dụ: 'đồ ăn ngon nhưng phục vụ chậm').",
-          "Là từ khóa học thuật chuẩn mực trong các hội nghị EMNLP/ACL cho đề tài khai phá ý kiến người dùng trên mạng xã hội.",
-          [paperNlp1]
+          "kw-ipd",
+          "Multi-Species Insect Pest Detection (IPD)",
+          "Nhận diện & phát hiện sâu hại nông nghiệp đa loài",
+          "Core Problem",
+          "Bài toán cốt lõi trong nông nghiệp thông minh nhằm định vị và phân loại tự động 102 loài sâu bệnh phá hoại mùa màng trong điều kiện đồng ruộng tự nhiên.",
+          "Thay vì tìm kiếm các từ khóa chung chung như 'insect recognition', giới nghiên cứu quốc tế sử dụng cụm 'Multi-Species Insect Pest Detection' trên tập benchmark IP102.",
+          [paperPestRTDetr, paperIP102]
         ),
         new KeywordNode(
-          "kw-phobert",
-          "Vietnamese Pre-trained Language Models",
-          "Mô hình ngôn ngữ tiền huấn luyện tiếng Việt",
-          "Kiến trúc nền tảng (Foundation Architecture)",
-          "Sử dụng PhoBERT hoặc ViDeBERTa làm mô hình trích xuất đặc trưng ngữ nghĩa theo ngữ cảnh tiếng Việt.",
-          "Điểm xuất phát bắt buộc cho bất kỳ đồ án xử lý ngôn ngữ tiếng Việt nào trong giai đoạn 2021–nay.",
-          [paperNlp1]
+          "kw-rtdetr",
+          "Real-Time Detection Transformer (RT-DETR)",
+          "Bộ biến đổi phát hiện đối tượng thời gian thực",
+          "Architecture",
+          "Kiến trúc Transformer phát hiện đối tượng thời gian thực (80+ FPS) loại bỏ hoàn toàn bước hậu xử lý NMS, giúp phân tích tương quan đặc trưng toàn cục vượt trội so với YOLO.",
+          "Đây là bước chuyển đổi công nghệ then chốt từ các mạng CNN truyền thống sang Transformer trong thị giác máy tính nông nghiệp.",
+          [paperPestRTDetr, paperRTDetr]
+        ),
+        new KeywordNode(
+          "kw-das-cf",
+          "Deformable Attention & Cross-Scale Fusion (DAS-CF)",
+          "Cơ chế chú ý biến dạng & Hợp nhất đặc trưng đa tỉ lệ",
+          "Methodology",
+          "Phương pháp trích xuất đặc trưng giải phẫu côn trùng (râu, chân) và hợp nhất đặc trưng giữa các tầng nông - sâu để nhận diện chính xác các loài sâu hại kích thước nhỏ (micro-pests) và bị che khuất.",
+          "Giúp mô hình tăng 6.33% mAP50 trên các vùng ảnh bị che khuất hoặc có ánh sáng phản chiếu phức tạp.",
+          [paperPestRTDetr]
+        ),
+        new KeywordNode(
+          "kw-loss-opt",
+          "Long-Tail Imbalance & MPDIoU Loss",
+          "Cân bằng phân bố đuôi dài & Hàm mất mát khoảng cách cực trị",
+          "Optimization",
+          "Chiến lược tối ưu hóa hàm mất mát kết hợp Focal Loss để cân bằng dữ liệu đuôi dài và MPDIoU để định vị chính xác các cá thể sâu hại nằm dày đặc hoặc chồng lấn lên nhau.",
+          "Giải quyết điểm nghẽn lớn nhất trong việc ứng dụng AI vào thực tế đồng ruộng khi mật độ sâu bệnh phát triển bùng phát.",
+          [paperPestRTDetr, paperIP102]
         ),
       ],
     });

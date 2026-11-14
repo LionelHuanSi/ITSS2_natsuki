@@ -15,7 +15,7 @@ export class ResearchWorkflowService {
   }
 
   // F1.1: Phân tích chủ đề & Sinh sơ đồ từ khóa học thuật
-  public analyzeTopic(input: string, fallbackKey = "low-light-face"): {
+  public analyzeTopic(input: string, fallbackKey = "pest-vision"): {
     isValid: boolean;
     errorMessage?: string;
     topicData?: ResearchTopicData;
@@ -121,12 +121,12 @@ export class ResearchWorkflowService {
     return [
       new SavedExplanation(
         "sample-1",
-        "paper-face-1",
-        "Face Recognition in Low-Light Environments via Deep Domain Adaptation",
-        "Low-Light Face Recognition (LLFR)",
-        "unsupervised domain adaptation",
-        "Thích ứng miền không giám sát (Unsupervised Domain Adaptation): Kỹ thuật học máy giúp mô hình được huấn luyện trên ảnh đủ sáng ban ngày tự thích ứng tốt trên ảnh thiếu sáng ban đêm mà không cần gán nhãn thủ công.",
-        "Mẫu tham khảo"
+        "paper-pest-rtdetr-2025",
+        "Multi-species insect recognition method based on computer visions: Sustainable agricultural development",
+        "Multi-Species Insect Pest Detection (IPD)",
+        "long-tail distribution",
+        "Phân bố dữ liệu đuôi dài (Long-Tail Distribution): Hiện tượng mất cân bằng mẫu nghiêm trọng trong tập dữ liệu IP102 (102 loài sâu bệnh), trong đó một số ít loài có rất nhiều ảnh mẫu (Head data), còn phần lớn các loài sâu hại quý hiếm lại chỉ có rất ít ảnh (Tail data), khiến mô hình thông thường dễ bị thiên vị và dự đoán sai các loài thiểu số.",
+        "Trích dẫn nền tảng"
       ),
     ];
   }

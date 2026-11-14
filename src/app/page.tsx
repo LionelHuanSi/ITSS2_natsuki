@@ -36,9 +36,9 @@ export default function NatsukiScholarApp() {
 
   // State: Chủ đề và phân tích
   const [topicInput, setTopicInput] = useState<string>(
-    "Nhận diện khuôn mặt trong điều kiện thiếu sáng"
+    "Nhận diện sâu bệnh nông nghiệp đa loài bằng thị giác máy tính"
   );
-  const [topicKey, setTopicKey] = useState<string>("low-light-face");
+  const [topicKey, setTopicKey] = useState<string>("pest-vision");
   const [searchError, setSearchError] = useState<string | null>(null);
   const [s1Tab, setS1Tab] = useState<"idea" | "file">("idea");
 
@@ -49,10 +49,10 @@ export default function NatsukiScholarApp() {
 
   // State: Từ khóa & Bài báo đang chọn
   const [selectedKeyword, setSelectedKeyword] = useState<KeywordNode>(
-    () => workflowService.getTopicByKey("low-light-face").keywords[0]
+    () => workflowService.getTopicByKey("pest-vision").keywords[0]
   );
   const [selectedPaper, setSelectedPaper] = useState<AcademicPaper>(
-    () => workflowService.getTopicByKey("low-light-face").keywords[0].papers[0]
+    () => workflowService.getTopicByKey("pest-vision").keywords[0].papers[0]
   );
 
   // State: Bôi đen, Dịch thuật & Giải thích ngữ cảnh
@@ -379,12 +379,12 @@ export default function NatsukiScholarApp() {
 
             {/* TAB 1: KHỞI TẠO TỪ Ý TƯỞNG */}
             {s1Tab === "idea" && (
-              <div className="w-full space-y-6">
+              <div className="w-full space-y-4">
                 <div className="w-full bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:border-slate-300 focus-within:border-slate-800 focus-within:ring-1 focus-within:ring-slate-800 transition">
                   <textarea
                     value={topicInput}
                     onChange={(e) => setTopicInput(e.target.value)}
-                    placeholder="Nhập ý tưởng đề tài bằng tiếng Việt hoặc tiếng Anh (ví dụ: Nhận diện khuôn mặt trong bóng tối, phân tích cảm xúc tiếng Việt...)"
+                    placeholder="Ví dụ: Nhận diện sâu bệnh nông nghiệp đa loài bằng thị giác máy tính..."
                     rows={3}
                     className="w-full text-slate-900 placeholder:text-slate-400 text-sm leading-relaxed resize-none focus:outline-none bg-transparent"
                   />
@@ -404,48 +404,6 @@ export default function NatsukiScholarApp() {
                     {searchError}
                   </div>
                 )}
-
-                {/* Đề tài mẫu dạng Chip tối giản */}
-                <div className="pt-1">
-                  <div className="text-xs text-slate-500 font-medium mb-3">
-                    Đề tài mẫu gợi ý:
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {[
-                      {
-                        key: "low-light-face",
-                        title: "Nhận diện khuôn mặt thiếu sáng",
-                        fullTitle: "Nhận diện khuôn mặt trong điều kiện thiếu sáng",
-                        tag: "Computer Vision",
-                      },
-                      {
-                        key: "underwater-sensor",
-                        title: "Cảm biến không dây dưới nước",
-                        fullTitle: "Mạng cảm biến không dây dưới nước",
-                        tag: "IoT Network",
-                      },
-                      {
-                        key: "vietnamese-nlp",
-                        title: "Phân tích cảm xúc tiếng Việt",
-                        fullTitle: "Phân tích cảm xúc văn bản tiếng Việt",
-                        tag: "NLP",
-                      },
-                    ].map((item) => (
-                      <button
-                        key={item.key}
-                        onClick={() => handleSelectPreset(item.key, item.fullTitle)}
-                        className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs transition border ${
-                          topicKey === item.key && topicInput === item.fullTitle
-                            ? "bg-slate-900 text-white border-slate-900 font-medium shadow-sm"
-                            : "bg-white text-slate-700 border-slate-200 hover:border-slate-300 hover:bg-slate-50"
-                        }`}
-                      >
-                        <span className="opacity-60 text-[11px] font-medium">{item.tag} ·</span>
-                        <span>{item.title}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
               </div>
             )}
 
@@ -488,19 +446,14 @@ export default function NatsukiScholarApp() {
         {activeScreen === "S2" && (
           <div className="max-w-6xl mx-auto px-6 py-6">
             {/* Header điều hướng */}
-            <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-200">
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-200/80">
               <button
                 onClick={() => setActiveScreen("S1")}
-                className="inline-flex items-center gap-1.5 text-xs text-slate-600 hover:text-slate-900 transition font-mono"
+                className="inline-flex items-center gap-1.5 text-xs text-slate-600 hover:text-slate-900 transition font-medium"
               >
                 <IconArrowLeft size={14} />
-                <span>Quay lại nhập đề tài</span>
+                <span>← Đổi đề tài khác</span>
               </button>
-              <div className="flex items-center gap-3">
-                <span className="text-xs font-mono text-slate-500 uppercase">
-                  BẢN ĐỒ TỪ KHÓA HỌC THUẬT (SƠ ĐỒ CÂY TƯƠNG TÁC)
-                </span>
-              </div>
             </div>
 
             {/* SƠ ĐỒ CÂY TƯƠNG TÁC (HORIZONTAL BEZIER TREE CANVAS) */}
