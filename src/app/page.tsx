@@ -547,29 +547,6 @@ export default function NatsukiScholarApp() {
                     {selectedKeyword.academicContext || selectedKeyword.explanation}
                   </p>
                 </div>
-
-                {/* 3. Cú pháp truy vấn đề xuất */}
-                {selectedKeyword.searchQuery && (
-                  <div className="border-t border-slate-100 pt-3.5">
-                    <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 font-semibold block mb-1">
-                      Cú pháp truy vấn đề xuất (Boolean Search):
-                    </span>
-                    <div className="p-3 bg-slate-900 text-slate-200 rounded-lg flex items-center justify-between gap-3">
-                      <code className="text-xs text-slate-200 font-mono truncate block flex-1">
-                        {selectedKeyword.searchQuery}
-                      </code>
-                      <button
-                        onClick={() => {
-                          navigator.clipboard?.writeText(selectedKeyword.searchQuery);
-                          showToast("Đã sao chép cú pháp truy vấn");
-                        }}
-                        className="shrink-0 px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded text-[11px] font-mono transition"
-                      >
-                        Sao chép
-                      </button>
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
 
@@ -579,9 +556,6 @@ export default function NatsukiScholarApp() {
                 <span className="text-xs font-mono uppercase text-slate-700 font-semibold flex items-center gap-1.5">
                   <IconDocument size={15} className="text-slate-500" />
                   <span>BÀI BÁO HỌC THUẬT NỀN TẢNG ĐƯỢC ĐỀ XUẤT</span>
-                </span>
-                <span className="text-xs text-slate-500 font-mono">
-                  {selectedKeyword.papers.length} công trình tiêu biểu
                 </span>
               </div>
 
