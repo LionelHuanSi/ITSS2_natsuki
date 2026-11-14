@@ -161,10 +161,10 @@ export default function NatsukiScholarApp() {
     setActiveScreen("S4");
   };
 
-  // Bắt sự kiện bôi đen trong bài báo
+  // Bắt sự kiện bôi đen trong bài báo (chỉ kích hoạt khi có đoạn text thực sự, không xóa khi click chuột nhẹ)
   const handleTextSelection = () => {
     const raw = window.getSelection()?.toString() || "";
-    if (!raw.trim()) return;
+    if (!raw.trim() || raw.trim().length < 2) return;
     triggerExplanation(raw);
   };
 
@@ -177,7 +177,7 @@ export default function NatsukiScholarApp() {
     setExplanationNotice(null);
     setHighlightedText(res.selectedText);
     setExplanationText(res.explanation);
-    setTranslationText(res.translation || `[Bản dịch]: ${res.selectedText}`);
+    setTranslationText(res.translation || res.selectedText);
   };
 
   // Xử lý gửi yêu cầu giải thích tùy biến (Custom Prompt)
@@ -225,6 +225,33 @@ export default function NatsukiScholarApp() {
     const updated = workflowService.deleteExplanation(id, savedExplanations);
     setSavedExplanations(updated);
     showToast("Đã xóa mục trích dẫn đã lưu");
+  };
+
+  // Giữ đánh dấu bôi đen trực quan bền vững trên bài báo cho đến khi bôi đen đoạn khác
+  const renderHighlightedParagraph = (paragraph: string, target: string): React.ReactNode => {
+    if (!target || !target.trim() || target.trim().length < 2) {
+      return paragraph;
+    }
+    const cleanTarget = target.trim();
+    const lowerPara = paragraph.toLowerCase();
+    const lowerTarget = cleanTarget.toLowerCase();
+    const index = lowerPara.indexOf(lowerTarget);
+    if (index === -1) {
+      return paragraph;
+    }
+    const before = paragraph.slice(0, index);
+    const matched = paragraph.slice(index, index + cleanTarget.length);
+    const after = paragraph.slice(index + cleanTarget.length);
+
+    return (
+      <>
+        {before}
+        <mark className="bg-amber-200/90 text-slate-900 px-1 py-0.5 rounded font-medium border-b-2 border-amber-400 select-text transition-all duration-150">
+          {matched}
+        </mark>
+        {renderHighlightedParagraph(after, target)}
+      </>
+    );
   };
 
   return (
@@ -690,6 +717,8 @@ export default function NatsukiScholarApp() {
                     <div className="flex flex-wrap gap-1.5">
                       {Object.keys(selectedPaper.dictionary).map((term) => (
                         <button
+                          type="button"
+                          onMouseDown={(e) => e.preventDefault()}
                           key={term}
                           onClick={() => triggerExplanation(term)}
                           className="academic-highlight text-xs font-medium text-slate-900"
@@ -705,7 +734,7 @@ export default function NatsukiScholarApp() {
                   <article className="paper-body space-y-5 text-slate-800 text-justify">
                     {selectedPaper.paragraphs.map((p, idx) => (
                       <p key={idx} className="leading-relaxed">
-                        {p}
+                        {renderHighlightedParagraph(p, highlightedText)}
                       </p>
                     ))}
                   </article>
@@ -718,6 +747,8 @@ export default function NatsukiScholarApp() {
                 <div className="p-4 bg-white border-b border-slate-200 shrink-0">
                   <div className="flex items-center gap-1 p-1 bg-slate-100 rounded border border-slate-200">
                     <button
+                      type="button"
+                      onMouseDown={(e) => e.preventDefault()}
                       onClick={() => setSidebarMode("explain")}
                       className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium rounded transition ${sidebarMode === "explain"
                           ? "bg-slate-900 text-white font-semibold"
@@ -729,6 +760,8 @@ export default function NatsukiScholarApp() {
                     </button>
 
                     <button
+                      type="button"
+                      onMouseDown={(e) => e.preventDefault()}
                       onClick={() => setSidebarMode("translate")}
                       className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium rounded transition ${sidebarMode === "translate"
                           ? "bg-slate-900 text-white font-semibold"
@@ -790,18 +823,24 @@ export default function NatsukiScholarApp() {
                             </span>
                             <div className="flex flex-wrap gap-1.5">
                               <button
+                                type="button"
+                                onMouseDown={(e) => e.preventDefault()}
                                 onClick={() => handleQuickPrompt("deeper")}
                                 className="px-2.5 py-1 text-[11px] bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 rounded transition"
                               >
                                 Giải thích chi tiết hơn
                               </button>
                               <button
+                                type="button"
+                                onMouseDown={(e) => e.preventDefault()}
                                 onClick={() => handleQuickPrompt("example")}
                                 className="px-2.5 py-1 text-[11px] bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 rounded transition"
                               >
                                 Cho ví dụ thực tế
                               </button>
                               <button
+                                type="button"
+                                onMouseDown={(e) => e.preventDefault()}
                                 onClick={() => handleQuickPrompt("summary")}
                                 className="px-2.5 py-1 text-[11px] bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 rounded transition"
                               >
@@ -840,21 +879,15 @@ export default function NatsukiScholarApp() {
                       {sidebarMode === "translate" && (
                         <div className="space-y-3">
                           <div className="bg-white border border-slate-900 p-4 rounded shadow-sm">
-                            <div className="flex items-center justify-between mb-1.5">
+                            <div className="mb-2">
                               <span className="text-[10px] font-mono uppercase text-slate-500 font-semibold">
-                                Bản dịch chuẩn ngữ cảnh CNTT:
-                              </span>
-                              <span className="text-[10px] font-mono text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 rounded">
-                                Sát nghĩa chuyên môn
+                                Bản dịch theo ngữ cảnh bài báo:
                               </span>
                             </div>
-                            <p className="text-xs leading-relaxed text-slate-800 font-medium">
+                            <p className="text-xs leading-relaxed text-slate-800 font-medium whitespace-pre-line">
                               {translationText}
                             </p>
                           </div>
-                          <p className="text-[11px] text-slate-500 leading-relaxed italic bg-slate-50 p-2.5 rounded border border-slate-200">
-                            Lưu ý: Bản dịch đã được đối chiếu để giữ đúng thuật ngữ kỹ thuật, tránh dịch sai lệch như các công cụ dịch máy thông thường.
-                          </p>
                         </div>
                       )}
                     </div>
@@ -864,6 +897,8 @@ export default function NatsukiScholarApp() {
                 {/* Footer nút hành động: Lưu giải thích */}
                 <div className="p-4 bg-white border-t border-slate-200 shrink-0 flex items-center justify-between">
                   <button
+                    type="button"
+                    onMouseDown={(e) => e.preventDefault()}
                     disabled={!highlightedText}
                     onClick={handleSaveExplanation}
                     className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-200 disabled:text-slate-400 text-white text-xs font-medium rounded transition"

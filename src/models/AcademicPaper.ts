@@ -27,8 +27,8 @@ export class AcademicPaper {
         return translation;
       }
     }
-    // Bản dịch ngữ cảnh thông minh dựa trên câu
-    return `[Dịch học thuật]: "${selectedText}" — Trong bối cảnh nghiên cứu "${this.title}", đoạn văn này đề cập đến việc áp dụng mô hình và phương pháp luận chuyên ngành nhằm xử lý các đặc trưng thực nghiệm trong điều kiện khảo sát thực tế.`;
+    // Bản dịch ngữ cảnh tự nhiên trực tiếp, không tiền tố hay lặp trích dẫn
+    return `Đoạn văn bản trích dẫn đề cập đến phương pháp luận chuyên ngành và kỹ thuật mô hình hóa đặc trưng trong nghiên cứu, phục vụ tối ưu hóa điều kiện khảo sát thực tế.`;
   }
 
   // Giải thích ngữ cảnh chuyên sâu + hỗ trợ yêu cầu giải thích tùy biến (Custom instruction)

@@ -69,8 +69,14 @@ export class ResearchTopicRepository {
           "Hiện tượng che khuất quang học (Occlusion): Trạng thái côn trùng bị cành lá, bóng râm hoặc các côn trùng khác che khuất một phần thân thể trong môi trường tự nhiên, gây mất mát thông tin hình ảnh nghiêm trọng.",
         "deformable attention":
           "Cơ chế chú ý biến dạng động (Deformable Attention - DAS): Kỹ thuật trong mạng tích chập giúp mô hình tự co giãn vùng tiếp nhận (receptive field) theo hình dáng giải phẫu tự nhiên của côn trùng (tập trung vào râu, chân, vân cánh) thay vì quét các ô vuông cố định, qua đó phân biệt chuẩn xác các loài sâu hại có ngoại hình tương đồng.",
+        "salient features":
+          "Đặc trưng nổi bật (Salient Features): Các vùng giải phẫu mang tín hiệu nhận diện đặc trưng nhất của côn trùng (như mắt, râu, vân cánh, khớp chân) thay vì quét đồng đều toàn bộ bức ảnh, giúp phân loại chính xác ngay cả khi thân côn trùng bị cành lá che khuất.",
+        "capture salient features":
+          "Trích xuất đặc trưng nổi bật (Salient Features Extraction): Nắm bắt các vùng giải phẫu mang tính quyết định của côn trùng (đầu, chân, vân cánh) để phân biệt các loài sâu hại có ngoại hình tương đồng.",
         "cross-scale feature fusion":
           "Hợp nhất đặc trưng đa tỉ lệ (Cross-Scale Feature Fusion - CF): Cấu trúc hai nhánh kết hợp DAS và Bottlenecks giúp truyền tải đặc trưng ngữ nghĩa mức cao xuống tầng nông, giúp phát hiện chuẩn xác các loài sâu bệnh siêu nhỏ (micro-pests) trên nền lá cây phức tạp.",
+        "small, densely distributed targets":
+          "Mục tiêu siêu nhỏ & phân bố dày đặc: Một trong những bài toán hóc búa nhất của thị giác máy tính nông nghiệp, khi các loài sâu rầy có kích thước chỉ vài milimet và thường tập trung thành bầy lớn trên cùng một phiến lá.",
         "Focal Loss":
           "Hàm mất mát tiêu điểm (Focal Loss): Hàm mục tiêu tinh chỉnh trọng số của các mẫu huấn luyện, giảm trọng số của các mẫu dễ nhận diện và tập trung tối đa đạo hàm vào các mẫu khó (các loài sâu hại ít gặp ở phần đuôi dữ liệu).",
         "MPDIoU":
@@ -79,13 +85,19 @@ export class ResearchTopicRepository {
           "Mạng biến đổi phát hiện đối tượng thời gian thực (Real-Time Detection Transformer): Kiến trúc tiên phong kết hợp ưu điểm học đặc trưng toàn cục của Transformer với tốc độ suy luận cực nhanh (80 FPS), loại bỏ hoàn toàn bước hậu xử lý NMS (Non-Maximum Suppression) phức tạp của họ mô hình YOLO."
       },
       {
-        "long-tail distribution": "Phân bố dữ liệu đuôi dài",
-        "occlusion": "Hiện tượng che khuất quang học",
+        "salient features": "Đặc trưng nổi bật mang tính quyết định nhận diện",
+        "capture salient features": "Nắm bắt các đặc trưng nổi bật như phần đầu và chân của côn trùng",
+        "anism to capture salient features": "Cơ chế chú ý biến dạng động nhằm nắm bắt các đặc trưng nổi bật (như phần đầu và chân của côn trùng)",
+        "head and foot regions": "Vùng đầu và chân của côn trùng",
+        "long-tail distribution": "Phân bố dữ liệu đuôi dài (mất cân bằng mẫu giữa các loài)",
+        "occlusion": "Hiện tượng che khuất quang học do cành lá hoặc bóng râm",
         "deformable attention": "Cơ chế chú ý biến dạng động",
-        "cross-scale feature fusion": "Hợp nhất đặc trưng đa tỉ lệ",
-        "Focal Loss": "Hàm mất mát tiêu điểm",
+        "cross-scale feature fusion": "Hợp nhất đặc trưng đa tỉ lệ (kết hợp tầng nông và tầng sâu)",
+        "small, densely distributed targets": "Các mục tiêu sâu bệnh siêu nhỏ và phân bố dày đặc",
+        "Focal Loss": "Hàm mất mát tiêu điểm (tập trung học các loài sâu bệnh hiếm gặp)",
         "MPDIoU": "Hàm mất mát khoảng cách điểm cực trị (MPDIoU)",
-        "RT-DETR": "Mạng biến đổi phát hiện đối tượng thời gian thực"
+        "RT-DETR": "Mạng biến đổi phát hiện đối tượng thời gian thực (RT-DETR)",
+        "mAP50 of 68.40% at 80 FPS": "Đạt độ chính xác mAP50 68,40% ở tốc độ suy luận 80 khung hình/giây (FPS)"
       },
       "SCIE Q1 · IF: 6.8",
       54,
