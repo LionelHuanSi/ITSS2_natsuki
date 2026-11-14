@@ -11,7 +11,9 @@ export class AcademicPaper {
     public readonly relevance: string,
     public readonly paragraphs: string[],
     public readonly dictionary: Record<string, string>,
-    public readonly translations: Record<string, string> = {}
+    public readonly translations: Record<string, string> = {},
+    public readonly ranking: string = "SCIE Q1",
+    public readonly citations: number = 0
   ) {}
 
   // Dịch thuật chính xác theo ngữ cảnh kỹ thuật học thuật

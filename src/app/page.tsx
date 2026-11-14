@@ -248,50 +248,50 @@ export default function NatsukiScholarApp() {
             <NatsukiScholarLogo />
           </button>
 
-          {/* Stepper dạng text học thuật */}
+          {/* Stepper dạng text học thuật không đánh số */}
           <nav className="hidden md:flex items-center gap-1.5 text-xs text-slate-500">
             <button
               onClick={() => setActiveScreen("S1")}
-              className={`px-2.5 py-1 rounded-md transition ${
+              className={`px-3 py-1 rounded-md transition ${
                 activeScreen === "S1"
                   ? "bg-slate-900 text-white font-semibold shadow-sm"
                   : "hover:text-slate-900"
               }`}
             >
-              01 Khởi tạo
+              Khởi tạo
             </button>
             <span>/</span>
             <button
               onClick={() => setActiveScreen("S2")}
-              className={`px-2.5 py-1 rounded-md transition ${
+              className={`px-3 py-1 rounded-md transition ${
                 activeScreen === "S2"
                   ? "bg-slate-900 text-white font-semibold shadow-sm"
                   : "hover:text-slate-900"
               }`}
             >
-              02 Cây từ khóa
+              Cây từ khóa
             </button>
             <span>/</span>
             <button
               onClick={() => setActiveScreen("S3")}
-              className={`px-2.5 py-1 rounded-md transition ${
+              className={`px-3 py-1 rounded-md transition ${
                 activeScreen === "S3"
                   ? "bg-slate-900 text-white font-semibold shadow-sm"
                   : "hover:text-slate-900"
               }`}
             >
-              03 Bài báo nền tảng
+              Bài báo nền tảng
             </button>
             <span>/</span>
             <button
               onClick={() => setActiveScreen("S4")}
-              className={`px-2.5 py-1 rounded-md transition ${
+              className={`px-3 py-1 rounded-md transition ${
                 activeScreen === "S4"
                   ? "bg-slate-900 text-white font-semibold shadow-sm"
                   : "hover:text-slate-900"
               }`}
             >
-              04 Không gian đọc
+              Không gian đọc
             </button>
           </nav>
         </div>
@@ -539,8 +539,18 @@ export default function NatsukiScholarApp() {
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="space-y-1.5">
-                        <div className="text-[11px] font-mono text-slate-500">
-                          {paper.venue} • {paper.year}
+                        <div className="flex items-center gap-2 mb-1 flex-wrap">
+                          <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded border bg-rose-50 text-rose-700 border-rose-200">
+                            {paper.ranking}
+                          </span>
+                          <span className="text-[11px] font-mono text-slate-500">
+                            {paper.venue} • {paper.year}
+                          </span>
+                          {paper.citations > 0 && (
+                            <span className="text-[11px] font-mono text-slate-400">
+                              • {paper.citations} Trích dẫn
+                            </span>
+                          )}
                         </div>
                         <h3 className="text-base font-semibold text-slate-900 leading-snug">
                           {paper.title}
@@ -612,9 +622,19 @@ export default function NatsukiScholarApp() {
               >
                 <div className="max-w-2xl mx-auto space-y-6">
                   <div className="border-b border-slate-200 pb-5">
-                    <span className="text-xs font-mono uppercase text-slate-500 block mb-1">
-                      {selectedPaper.venue} ({selectedPaper.year})
-                    </span>
+                    <div className="flex items-center gap-2 mb-2 flex-wrap">
+                      <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded border bg-rose-50 text-rose-700 border-rose-200">
+                        {selectedPaper.ranking}
+                      </span>
+                      <span className="text-xs font-mono uppercase text-slate-500">
+                        {selectedPaper.venue} ({selectedPaper.year})
+                      </span>
+                      {selectedPaper.citations > 0 && (
+                        <span className="text-xs font-mono text-slate-400">
+                          • {selectedPaper.citations} Trích dẫn
+                        </span>
+                      )}
+                    </div>
                     <h1 className="text-xl md:text-2xl font-bold text-slate-900 leading-snug">
                       {selectedPaper.title}
                     </h1>

@@ -4,7 +4,7 @@ import React, { useState, useRef, useMemo } from "react";
 import { KeywordNode } from "../models/KeywordNode";
 import { AcademicPaper } from "../models/AcademicPaper";
 import { ResearchTopicData } from "../repositories/ResearchTopicRepository";
-import { IconBookOpen, IconArrowRight, IconTree, IconDocument } from "./Icons";
+import { IconBookOpen, IconArrowRight, IconTree } from "./Icons";
 
 interface InteractiveKeywordTreeProps {
   topic: ResearchTopicData;
@@ -32,8 +32,8 @@ interface KeywordPosition {
 
 /**
  * Bản đồ từ khóa học thuật đa phân cấp tương tác (Hierarchical Branching Knowledge Tree)
- * Cấu trúc 3 tầng: Gốc đề tài -> Trụ cột từ khóa -> Các node bài báo nhánh lá thực thụ.
- * Người dùng có thể trực tiếp click vào từng bài báo để mở ngay không gian đọc.
+ * Cấu trúc 3 tầng: Gốc đề tài -> Trụ cột từ khóa học thuật -> Các node bài báo nhánh lá thực thụ.
+ * Hiển thị đầy đủ các chỉ số uy tín học thuật: Core A*, SCIE Q1, Impact Factor (IF).
  */
 export const InteractiveKeywordTree: React.FC<InteractiveKeywordTreeProps> = ({
   topic,
@@ -42,7 +42,7 @@ export const InteractiveKeywordTree: React.FC<InteractiveKeywordTreeProps> = ({
   onSelectKeyword,
   onSelectPaper,
 }) => {
-  const [scale, setScale] = useState<number>(0.92);
+  const [scale, setScale] = useState<number>(0.85);
   const [pan, setPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [dragStart, setDragStart] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
@@ -75,89 +75,102 @@ export const InteractiveKeywordTree: React.FC<InteractiveKeywordTreeProps> = ({
   };
 
   const handleResetView = () => {
-    setScale(0.92);
+    setScale(0.85);
     setPan({ x: 0, y: 0 });
   };
 
-  // Màu sắc phân cấp cho từng nhóm phân nhánh
-  const getLevelStyle = (level: string) => {
-    const l = level.toLowerCase();
-    if (l.includes("arch")) {
-      return {
-        borderAccent: "border-l-indigo-500",
-        badgeBg: "bg-indigo-50 text-indigo-700 border-indigo-200",
-        curveColor: "#6366f1",
-        glowColor: "rgba(99, 102, 241, 0.25)",
-      };
-    }
-    if (l.includes("feature") || l.includes("attention")) {
-      return {
+  // Màu sắc phân cấp cho từng từ khóa học thuật
+  const getKeywordStyle = (index: number) => {
+    const palette = [
+      {
         borderAccent: "border-l-sky-500",
         badgeBg: "bg-sky-50 text-sky-700 border-sky-200",
         curveColor: "#0284c7",
-        glowColor: "rgba(2, 132, 199, 0.25)",
-      };
-    }
-    if (l.includes("scale") || l.includes("fusion")) {
-      return {
+      },
+      {
+        borderAccent: "border-l-indigo-500",
+        badgeBg: "bg-indigo-50 text-indigo-700 border-indigo-200",
+        curveColor: "#6366f1",
+      },
+      {
         borderAccent: "border-l-purple-500",
         badgeBg: "bg-purple-50 text-purple-700 border-purple-200",
         curveColor: "#9333ea",
-        glowColor: "rgba(147, 51, 234, 0.25)",
-      };
+      },
+      {
+        borderAccent: "border-l-emerald-500",
+        badgeBg: "bg-emerald-50 text-emerald-700 border-emerald-200",
+        curveColor: "#059669",
+      },
+    ];
+    return palette[index % palette.length];
+  };
+
+  // Huy hiệu chỉ số học thuật uy tín (Core A*, SCIE Q1, IF)
+  const getRankingBadgeStyle = (ranking: string) => {
+    if (ranking.includes("Core A*") || ranking.includes("A*")) {
+      return "bg-rose-50 text-rose-700 border-rose-200 font-bold";
     }
-    return {
-      borderAccent: "border-l-amber-500",
-      badgeBg: "bg-amber-50 text-amber-700 border-amber-200",
-      curveColor: "#d97706",
-      glowColor: "rgba(217, 119, 6, 0.25)",
-    };
+    if (ranking.includes("IF: 24") || ranking.includes("IF: 12")) {
+      return "bg-indigo-50 text-indigo-700 border-indigo-200 font-bold";
+    }
+    if (ranking.includes("Q1")) {
+      return "bg-emerald-50 text-emerald-700 border-emerald-200 font-semibold";
+    }
+    return "bg-amber-50 text-amber-800 border-amber-200";
   };
 
   // ========================================================
   // TỌA ĐỘ ĐA PHÂN CẤP (GEOMETRY COMPUTATION)
   // ========================================================
-  // Root node: (60, 300), Width 270, Center: (330, 360)
+  // Node Gốc: (50, 360), Rộng 270, Tâm trục xuất phát: (320, 407)
   const rootPoint = {
-    x: 60,
-    y: 300,
+    x: 50,
+    y: 360,
     width: 270,
-    height: 120,
-    outX: 330,
-    outY: 360,
+    height: 95,
+    outX: 320,
+    outY: 407,
   };
 
-  // Cột 2: Từ khóa (X = 450)
-  const keywordStartX = 450;
-  const keywordWidth = 320;
-  const keywordHeight = 88;
+  // Cột 2: Từ khóa (X = 440, Rộng 330, Cao 90)
+  const keywordStartX = 440;
+  const keywordWidth = 330;
+  const keywordHeight = 90;
 
-  // Cột 3: Node bài báo thực thụ (X = 890)
-  const paperStartX = 890;
-  const paperWidth = 380;
-  const paperHeight = 68;
+  // Cột 3: Node bài báo thực thụ (X = 880, Rộng 410, Cao 72)
+  const paperStartX = 880;
+  const paperWidth = 410;
+  const paperHeight = 72;
 
-  // Bố cục tọa độ Y thủ công chuẩn xác để tránh chồng lấn
+  // Tọa độ Y thủ công chuẩn xác phân bổ 9 bài báo không bao giờ chồng lấn
   const treeLayout: KeywordPosition[] = useMemo(() => {
     // 4 Từ khóa với Y tương ứng
-    const kwYs = [65, 225, 385, 545];
+    const kwConfigs = [
+      {
+        kwY: 50,
+        paperYs: [15, 95, 175], // 3 bài báo
+      },
+      {
+        kwY: 285,
+        paperYs: [270, 350], // 2 bài báo
+      },
+      {
+        kwY: 485,
+        paperYs: [470, 550], // 2 bài báo
+      },
+      {
+        kwY: 685,
+        paperYs: [670, 750], // 2 bài báo
+      },
+    ];
 
     return topic.keywords.map((kw, kwIdx) => {
-      const kwY = kwYs[kwIdx] ?? 65 + kwIdx * 160;
-      const kwCenterY = kwY + keywordHeight / 2;
+      const cfg = kwConfigs[kwIdx] ?? { kwY: 50 + kwIdx * 200, paperYs: [] };
+      const kwCenterY = cfg.kwY + keywordHeight / 2;
 
-      // Tính vị trí cho từng bài báo con
-      const paperCount = kw.papers.length;
       const paperPositions: PaperPosition[] = kw.papers.map((paper, pIdx) => {
-        let pY: number;
-        if (paperCount === 1) {
-          pY = kwCenterY - paperHeight / 2;
-        } else {
-          // Trải đều quanh tâm từ khóa
-          const spacing = 78;
-          const startY = kwCenterY - ((paperCount - 1) * spacing) / 2 - paperHeight / 2;
-          pY = startY + pIdx * spacing;
-        }
+        const pY = cfg.paperYs[pIdx] ?? kwCenterY - paperHeight / 2 + pIdx * 80;
         return {
           paper,
           parentKeyword: kw,
@@ -170,7 +183,7 @@ export const InteractiveKeywordTree: React.FC<InteractiveKeywordTreeProps> = ({
       return {
         node: kw,
         x: keywordStartX,
-        y: kwY,
+        y: cfg.kwY,
         centerY: kwCenterY,
         papers: paperPositions,
       };
@@ -202,7 +215,7 @@ export const InteractiveKeywordTree: React.FC<InteractiveKeywordTreeProps> = ({
   };
 
   return (
-    <div className="relative w-full h-[680px] bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm select-none">
+    <div className="relative w-full h-[710px] bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm select-none">
       {/* THANH ĐIỀU KHIỂN ZOOM & PAN (Floating Glassmorphism) */}
       <div className="absolute top-4 right-4 z-20 flex items-center gap-1 bg-white/95 backdrop-blur-md border border-slate-200/90 px-2 py-1 rounded-xl shadow-sm text-xs">
         <button
@@ -236,18 +249,18 @@ export const InteractiveKeywordTree: React.FC<InteractiveKeywordTreeProps> = ({
       <div className="absolute bottom-4 left-4 z-20 hidden md:flex items-center gap-4 bg-white/90 backdrop-blur-md border border-slate-200/80 px-3.5 py-1.5 rounded-xl text-xs text-slate-600 shadow-xs">
         <div className="flex items-center gap-1.5">
           <span className="w-2.5 h-2.5 rounded-full bg-slate-900 inline-block"></span>
-          <span>Gốc đề tài</span>
+          <span>Đề tài gốc</span>
         </div>
         <div className="flex items-center gap-1.5">
           <span className="w-2.5 h-2.5 rounded-sm bg-sky-500 inline-block"></span>
-          <span>Trụ cột từ khóa học thuật</span>
+          <span>Từ khóa học thuật chuyên ngành</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-sm bg-indigo-600 inline-block"></span>
-          <span>Node bài báo nền tảng</span>
+          <span className="w-2.5 h-2.5 rounded-sm bg-emerald-600 inline-block"></span>
+          <span>Node bài báo nền tảng (Core A* / Q1)</span>
         </div>
         <span className="text-slate-400">|</span>
-        <span className="text-slate-500 italic">Click vào node bài báo để mở ngay không gian đọc</span>
+        <span className="text-slate-500 italic">Click vào thẻ bài báo để mở trực tiếp không gian đọc</span>
       </div>
 
       {/* CANVAS KHÔNG GIAN BẢN ĐỒ CÂY TƯƠNG TÁC */}
@@ -265,14 +278,14 @@ export const InteractiveKeywordTree: React.FC<InteractiveKeywordTreeProps> = ({
             transformOrigin: "center center",
             transition: isDragging ? "none" : "transform 0.15s ease-out",
           }}
-          className="w-[1340px] h-[720px] relative pointer-events-auto"
+          className="w-[1360px] h-[840px] relative pointer-events-auto"
         >
           {/* LỚP SVG: VẼ CÁC ĐƯỜNG CONG BEZIER MƯỢT MÀ TỪ GỐC -> TỪ KHÓA -> BÀI BÁO */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
             {/* 1. Các nhánh từ Node Gốc -> Node Từ khóa */}
-            {treeLayout.map((item) => {
+            {treeLayout.map((item, kwIdx) => {
               const active = isKwActive(item.node.id);
-              const style = getLevelStyle(item.node.level);
+              const style = getKeywordStyle(kwIdx);
 
               const startX = rootPoint.outX;
               const startY = rootPoint.outY;
@@ -316,8 +329,8 @@ export const InteractiveKeywordTree: React.FC<InteractiveKeywordTreeProps> = ({
             })}
 
             {/* 2. Các nhánh từ Node Từ khóa -> Các Node Bài báo nền tảng */}
-            {treeLayout.map((item) => {
-              const style = getLevelStyle(item.node.level);
+            {treeLayout.map((item, kwIdx) => {
+              const style = getKeywordStyle(kwIdx);
               const kwOutX = item.x + keywordWidth;
               const kwOutY = item.centerY;
 
@@ -376,7 +389,7 @@ export const InteractiveKeywordTree: React.FC<InteractiveKeywordTreeProps> = ({
           </svg>
 
           {/* ======================================================== */}
-          {/* CỘT 1 (TRÁI): NODE GỐC ĐỀ TÀI (ROOT NODE) */}
+          {/* CỘT 1 (TRÁI): NODE GỐC ĐỀ TÀI (ĐÃ LOẠI BỎ CHỖ THỪA) */}
           {/* ======================================================== */}
           <div
             style={{
@@ -391,24 +404,20 @@ export const InteractiveKeywordTree: React.FC<InteractiveKeywordTreeProps> = ({
               <IconTree size={14} />
               <span className="font-mono text-[11px] uppercase tracking-wider">{topic.subDomain}</span>
             </div>
-            <h2 className="text-sm font-semibold leading-snug text-white mb-2.5">
+            <h2 className="text-sm font-semibold leading-snug text-white">
               {topic.title}
             </h2>
-            <div className="pt-2 border-t border-slate-800/90 flex items-center justify-between text-[11px] text-slate-400 font-mono">
-              <span>{topic.keywords.length} Trụ cột học thuật</span>
-              <span className="text-emerald-400 font-medium">Sơ đồ đã tối ưu</span>
-            </div>
           </div>
 
           {/* ======================================================== */}
-          {/* CỘT 2 (GIỮA): CÁC TRỤ CỘT TỪ KHÓA HỌC THUẬT */}
+          {/* CỘT 2 (GIỮA): CÁC TỪ KHÓA HỌC THUẬT ĐỀ XUẤT CHUẨN XÁC */}
           {/* ======================================================== */}
-          {treeLayout.map((item) => {
+          {treeLayout.map((item, kwIdx) => {
             const kw = item.node;
             const isHovered = hoveredKeywordId === kw.id;
             const isSelected = selectedKeywordId === kw.id;
             const active = isKwActive(kw.id);
-            const style = getLevelStyle(kw.level);
+            const style = getKeywordStyle(kwIdx);
 
             return (
               <div
@@ -431,16 +440,16 @@ export const InteractiveKeywordTree: React.FC<InteractiveKeywordTreeProps> = ({
                     : "border-slate-200 hover:border-slate-400 shadow-xs"
                 } ${style.borderAccent} border-l-4 rounded-xl px-4 py-2.5 cursor-pointer transition-all duration-200 group flex flex-col justify-between`}
               >
-                {/* Header: Level Badge & Paper Count */}
+                {/* Header: Direction Tag & Paper Count */}
                 <div className="flex items-center justify-between">
                   <span
-                    className={`text-[11px] font-medium px-2 py-0.5 rounded-md border ${style.badgeBg}`}
+                    className={`text-[10px] font-medium px-2 py-0.5 rounded-md border ${style.badgeBg}`}
                   >
                     {kw.level}
                   </span>
                   <span className="text-xs text-slate-500 font-medium flex items-center gap-1 group-hover:text-slate-900 transition">
                     <IconBookOpen size={12} className="text-slate-400" />
-                    <span>{kw.papers.length} bài báo nhánh</span>
+                    <span>{kw.papers.length} bài báo quốc tế</span>
                     <IconArrowRight size={11} className="opacity-60 group-hover:translate-x-0.5 transition-transform" />
                   </span>
                 </div>
@@ -459,10 +468,10 @@ export const InteractiveKeywordTree: React.FC<InteractiveKeywordTreeProps> = ({
           })}
 
           {/* ======================================================== */}
-          {/* CỘT 3 (PHẢI): CÁC NODE BÀI BÁO NHÁNH LÁ THỰC THỤ (USER DEMAND) */}
+          {/* CỘT 3 (PHẢI): CÁC NODE BÀI BÁO VỚI CHỈ SỐ UY TÍN (CORE A*, Q1, IF) */}
           {/* ======================================================== */}
-          {treeLayout.map((item) => {
-            const style = getLevelStyle(item.node.level);
+          {treeLayout.map((item, kwIdx) => {
+            const style = getKeywordStyle(kwIdx);
 
             return item.papers.map((paperPos) => {
               const paper = paperPos.paper;
@@ -499,24 +508,41 @@ export const InteractiveKeywordTree: React.FC<InteractiveKeywordTreeProps> = ({
                       : "border-slate-200/90 hover:border-slate-400 shadow-xs"
                   } ${style.borderAccent} border-l-[3px] rounded-xl px-3.5 py-2 cursor-pointer transition-all duration-200 group flex flex-col justify-between`}
                 >
-                  {/* Top row: Venue pill & Action hint */}
+                  {/* Top row: Prestige Ranking Badge & Action Hint */}
                   <div className="flex items-center justify-between text-[10px]">
-                    <span className="font-mono text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded truncate max-w-[240px]">
-                      {paper.venue.split(",")[0]} · {paper.year}
-                    </span>
-                    <span className="text-slate-500 font-medium group-hover:text-slate-900 transition flex items-center gap-1 font-mono">
+                    <div className="flex items-center gap-1.5 overflow-hidden">
+                      <span
+                        className={`font-mono text-[10px] px-1.5 py-0.5 rounded border truncate ${getRankingBadgeStyle(
+                          paper.ranking
+                        )}`}
+                      >
+                        {paper.ranking}
+                      </span>
+                      <span className="font-mono text-slate-500 truncate text-[10px]">
+                        {paper.year}
+                      </span>
+                    </div>
+
+                    <span className="text-slate-500 font-medium group-hover:text-slate-900 transition flex items-center gap-1 font-mono shrink-0">
                       <span>Đọc ngay</span>
                       <IconArrowRight size={10} className="group-hover:translate-x-0.5 transition-transform" />
                     </span>
                   </div>
 
-                  {/* Title & First Author */}
+                  {/* Title & Venue / Author */}
                   <div className="mt-0.5">
                     <h4 className="text-xs font-semibold text-slate-900 group-hover:text-black line-clamp-1 leading-snug">
                       {paper.title}
                     </h4>
-                    <div className="text-[10px] text-slate-500 truncate mt-0.5">
-                      {paper.authors.split("(")[0]}
+                    <div className="text-[10px] text-slate-500 truncate mt-0.5 flex items-center justify-between">
+                      <span className="truncate max-w-[280px]">
+                        {paper.venue.split(",")[0]} · {paper.authors.split("(")[0]}
+                      </span>
+                      {paper.citations > 0 && (
+                        <span className="font-mono text-slate-400 shrink-0 ml-1">
+                          Trích dẫn: {paper.citations}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
