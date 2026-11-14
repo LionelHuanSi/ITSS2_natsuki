@@ -255,11 +255,10 @@ export default function NatsukiScholarApp() {
           <nav className="hidden md:flex items-center gap-1.5 text-xs text-slate-500">
             <button
               onClick={() => setActiveScreen("S1")}
-              className={`px-3 py-1 rounded-md transition ${
-                activeScreen === "S1"
+              className={`px-3 py-1 rounded-md transition ${activeScreen === "S1"
                   ? "bg-slate-900 text-white font-semibold shadow-sm"
                   : "hover:text-slate-900 text-slate-700"
-              }`}
+                }`}
             >
               Khởi tạo
             </button>
@@ -273,13 +272,12 @@ export default function NatsukiScholarApp() {
                 setActiveScreen("S2");
               }}
               title={hasAnalyzedIdea ? "Xem cây từ khóa học thuật" : "Cần khởi tạo từ ý tưởng trước"}
-              className={`px-3 py-1 rounded-md transition ${
-                activeScreen === "S2"
+              className={`px-3 py-1 rounded-md transition ${activeScreen === "S2"
                   ? "bg-slate-900 text-white font-semibold shadow-sm"
                   : hasAnalyzedIdea
-                  ? "hover:text-slate-900 text-slate-700 font-medium"
-                  : "opacity-40 cursor-not-allowed text-slate-400"
-              }`}
+                    ? "hover:text-slate-900 text-slate-700 font-medium"
+                    : "opacity-40 cursor-not-allowed text-slate-400"
+                }`}
             >
               Cây từ khóa
             </button>
@@ -293,13 +291,12 @@ export default function NatsukiScholarApp() {
                 setActiveScreen("S3");
               }}
               title={hasAnalyzedIdea ? "Xem danh sách bài báo nền tảng" : "Cần khởi tạo từ ý tưởng trước"}
-              className={`px-3 py-1 rounded-md transition ${
-                activeScreen === "S3"
+              className={`px-3 py-1 rounded-md transition ${activeScreen === "S3"
                   ? "bg-slate-900 text-white font-semibold shadow-sm"
                   : hasAnalyzedIdea
-                  ? "hover:text-slate-900 text-slate-700 font-medium"
-                  : "opacity-40 cursor-not-allowed text-slate-400"
-              }`}
+                    ? "hover:text-slate-900 text-slate-700 font-medium"
+                    : "opacity-40 cursor-not-allowed text-slate-400"
+                }`}
             >
               Bài báo nền tảng
             </button>
@@ -308,11 +305,10 @@ export default function NatsukiScholarApp() {
               onClick={() => {
                 setActiveScreen("S4");
               }}
-              className={`px-3 py-1 rounded-md transition ${
-                activeScreen === "S4"
+              className={`px-3 py-1 rounded-md transition ${activeScreen === "S4"
                   ? "bg-slate-900 text-white font-semibold shadow-sm"
                   : "hover:text-slate-900 text-slate-700"
-              }`}
+                }`}
             >
               Không gian đọc
             </button>
@@ -323,11 +319,10 @@ export default function NatsukiScholarApp() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => setActiveScreen("S6")}
-            className={`flex items-center gap-2 px-3 py-1.5 text-xs font-medium border rounded-lg transition ${
-              activeScreen === "S6"
+            className={`flex items-center gap-2 px-3 py-1.5 text-xs font-medium border rounded-lg transition ${activeScreen === "S6"
                 ? "bg-slate-900 text-white border-slate-900 shadow-sm"
                 : "bg-white text-slate-700 border-slate-300 hover:border-slate-400"
-            }`}
+              }`}
           >
             <IconArchive size={14} />
             <span>Kho trích dẫn</span>
@@ -367,22 +362,20 @@ export default function NatsukiScholarApp() {
             <div className="inline-flex p-1 bg-slate-100 rounded-xl border border-slate-200/80 mb-7">
               <button
                 onClick={() => setS1Tab("idea")}
-                className={`flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-lg transition ${
-                  s1Tab === "idea"
+                className={`flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-lg transition ${s1Tab === "idea"
                     ? "bg-white text-slate-900 shadow-sm font-semibold"
                     : "text-slate-600 hover:text-slate-900"
-                }`}
+                  }`}
               >
                 <IconSearch size={14} />
                 <span>Từ ý tưởng</span>
               </button>
               <button
                 onClick={() => setS1Tab("file")}
-                className={`flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-lg transition ${
-                  s1Tab === "file"
+                className={`flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-lg transition ${s1Tab === "file"
                     ? "bg-white text-slate-900 shadow-sm font-semibold"
                     : "text-slate-600 hover:text-slate-900"
-                }`}
+                  }`}
               >
                 <IconUpload size={14} />
                 <span>Tải bài báo</span>
@@ -554,11 +547,10 @@ export default function NatsukiScholarApp() {
                     <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                       <div className="space-y-2.5 flex-1">
                         <div className="flex items-center gap-2 mb-0.5 flex-wrap">
-                          <span className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded border ${
-                            paper.ranking.includes("A*")
+                          <span className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded border ${paper.ranking.includes("A*")
                               ? "bg-slate-900 text-white border-slate-900"
                               : "bg-slate-100 text-slate-800 border-slate-200"
-                          }`}>
+                            }`}>
                             {paper.ranking}
                           </span>
                           <span className="text-[11px] font-mono text-slate-500">
@@ -666,11 +658,10 @@ export default function NatsukiScholarApp() {
                 <div className="max-w-2xl mx-auto space-y-6">
                   <div className="border-b border-slate-200 pb-5">
                     <div className="flex items-center gap-2 mb-2 flex-wrap">
-                      <span className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded border ${
-                        selectedPaper.ranking.includes("A*")
+                      <span className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded border ${selectedPaper.ranking.includes("A*")
                           ? "bg-slate-900 text-white border-slate-900"
                           : "bg-slate-100 text-slate-800 border-slate-200"
-                      }`}>
+                        }`}>
                         {selectedPaper.ranking}
                       </span>
                       <span className="text-xs font-mono uppercase text-slate-500">
@@ -728,11 +719,10 @@ export default function NatsukiScholarApp() {
                   <div className="flex items-center gap-1 p-1 bg-slate-100 rounded border border-slate-200">
                     <button
                       onClick={() => setSidebarMode("explain")}
-                      className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium rounded transition ${
-                        sidebarMode === "explain"
+                      className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium rounded transition ${sidebarMode === "explain"
                           ? "bg-slate-900 text-white font-semibold"
                           : "text-slate-600 hover:text-slate-900"
-                      }`}
+                        }`}
                     >
                       <IconHighlight size={14} />
                       <span>Giải thích ngữ cảnh</span>
@@ -740,11 +730,10 @@ export default function NatsukiScholarApp() {
 
                     <button
                       onClick={() => setSidebarMode("translate")}
-                      className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium rounded transition ${
-                        sidebarMode === "translate"
+                      className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium rounded transition ${sidebarMode === "translate"
                           ? "bg-slate-900 text-white font-semibold"
                           : "text-slate-600 hover:text-slate-900"
-                      }`}
+                        }`}
                     >
                       <IconTranslate size={14} />
                       <span>Dịch thuật học thuật</span>
@@ -874,9 +863,6 @@ export default function NatsukiScholarApp() {
 
                 {/* Footer nút hành động: Lưu giải thích */}
                 <div className="p-4 bg-white border-t border-slate-200 shrink-0 flex items-center justify-between">
-                  <span className="text-[11px] text-slate-500 font-mono">
-                    Thao tác khép kín 1-click
-                  </span>
                   <button
                     disabled={!highlightedText}
                     onClick={handleSaveExplanation}
