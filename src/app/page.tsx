@@ -127,7 +127,11 @@ export default function NatsukiScholarApp() {
       {
         "representation discrepancy": "Độ sai lệch biểu diễn đặc trưng",
         "methodological rigor": "Tính chặt chẽ về phương pháp luận"
-      }
+      },
+      "Tài liệu tải lên",
+      0,
+      [],
+      ""
     );
 
     setSelectedPaper(customPaper);
@@ -651,13 +655,25 @@ export default function NatsukiScholarApp() {
             {/* Thanh điều hướng bài đọc */}
             <div className="h-11 bg-white border-b border-slate-200 px-6 flex items-center justify-between shrink-0 text-xs">
               <div className="flex items-center gap-3">
-                <button
-                  onClick={() => setActiveScreen("S3")}
-                  className="inline-flex items-center gap-1.5 text-slate-600 hover:text-slate-900 font-mono transition"
-                >
-                  <IconArrowLeft size={13} />
-                  <span>Đổi bài báo khác</span>
-                </button>
+                {selectedPaper.id.startsWith("upload-") || !hasAnalyzedIdea ? (
+                  <button
+                    onClick={() => setActiveScreen("S1")}
+                    className="inline-flex items-center gap-1.5 text-slate-600 hover:text-slate-900 font-mono transition"
+                    title="Quay lại trang Khởi tạo ban đầu"
+                  >
+                    <IconArrowLeft size={13} />
+                    <span>Quay lại khởi tạo</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setActiveScreen("S3")}
+                    className="inline-flex items-center gap-1.5 text-slate-600 hover:text-slate-900 font-mono transition"
+                    title="Quay lại danh sách bài báo của từ khóa này"
+                  >
+                    <IconArrowLeft size={13} />
+                    <span>Quay lại danh sách bài báo</span>
+                  </button>
+                )}
                 <span className="text-slate-300">|</span>
                 <span className="text-slate-700 truncate max-w-md font-medium">
                   {selectedPaper.title}
@@ -670,7 +686,9 @@ export default function NatsukiScholarApp() {
                   className="inline-flex items-center gap-1.5 px-2.5 py-1 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 rounded-md transition text-xs"
                 >
                   <IconUpload size={13} />
-                  <span>Tải lên bài báo</span>
+                  <span>
+                    {selectedPaper.id.startsWith("upload-") ? "Tải tệp bài báo khác" : "Tải lên bài báo"}
+                  </span>
                 </button>
               </div>
             </div>
@@ -685,9 +703,11 @@ export default function NatsukiScholarApp() {
                 <div className="max-w-2xl mx-auto space-y-6">
                   <div className="border-b border-slate-200 pb-5">
                     <div className="flex items-center gap-2 mb-2 flex-wrap">
-                      <span className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded border ${selectedPaper.ranking.includes("A*")
-                          ? "bg-slate-900 text-white border-slate-900"
-                          : "bg-slate-100 text-slate-800 border-slate-200"
+                      <span className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded border ${selectedPaper.id.startsWith("upload-")
+                          ? "bg-slate-100 text-slate-700 border-slate-200"
+                          : selectedPaper.ranking.includes("A*")
+                            ? "bg-slate-900 text-white border-slate-900"
+                            : "bg-slate-100 text-slate-800 border-slate-200"
                         }`}>
                         {selectedPaper.ranking}
                       </span>
