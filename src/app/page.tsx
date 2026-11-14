@@ -40,6 +40,7 @@ export default function NatsukiScholarApp() {
   );
   const [topicKey, setTopicKey] = useState<string>("low-light-face");
   const [searchError, setSearchError] = useState<string | null>(null);
+  const [s1Tab, setS1Tab] = useState<"idea" | "file">("idea");
 
   const currentTopic = useMemo(
     () => workflowService.getTopicByKey(topicKey),
@@ -297,26 +298,28 @@ export default function NatsukiScholarApp() {
 
         {/* Action Header */}
         <div className="flex items-center gap-3">
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium border border-slate-300 bg-white hover:border-slate-400 text-slate-700 rounded transition"
-            title="Tải lên bài báo (.pdf, .txt)"
-          >
-            <IconUpload size={14} />
-            <span>Tải lên bài báo</span>
-          </button>
+          {activeScreen !== "S1" && (
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium border border-slate-300 bg-white hover:border-slate-400 text-slate-700 rounded-lg transition"
+              title="Tải lên bài báo (.pdf, .txt)"
+            >
+              <IconUpload size={14} />
+              <span>Tải lên bài báo</span>
+            </button>
+          )}
 
           <button
             onClick={() => setActiveScreen("S6")}
-            className={`flex items-center gap-2 px-3 py-1.5 text-xs font-medium border rounded transition ${
+            className={`flex items-center gap-2 px-3 py-1.5 text-xs font-medium border rounded-lg transition ${
               activeScreen === "S6"
-                ? "bg-slate-900 text-white border-slate-900"
+                ? "bg-slate-900 text-white border-slate-900 shadow-sm"
                 : "bg-white text-slate-700 border-slate-300 hover:border-slate-400"
             }`}
           >
             <IconArchive size={14} />
             <span>Kho trích dẫn</span>
-            <span className="font-mono bg-slate-100 text-slate-800 px-1.5 py-0.2 rounded text-[11px]">
+            <span className="font-mono bg-slate-100 text-slate-800 px-1.5 py-0.5 rounded text-[11px] font-semibold">
               {savedExplanations.length}
             </span>
           </button>
@@ -337,115 +340,145 @@ export default function NatsukiScholarApp() {
         {/* MÀN HÌNH 1: KHỞI TẠO ĐỀ TÀI / TẢI TÀI LIỆU */}
         {/* ==================================================== */}
         {activeScreen === "S1" && (
-          <div className="max-w-3xl mx-auto px-6 py-14 flex flex-col items-center">
-            <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-center text-slate-900 mb-2">
-              Khởi tạo Khung Nghiên cứu Đề tài
-            </h1>
-            <p className="text-sm text-slate-600 text-center max-w-xl mb-8 leading-relaxed">
-              Nhập ý tưởng sơ khai để xây dựng sơ đồ từ khóa học thuật tiếng Anh, hoặc tải trực tiếp
-              bài báo của bạn lên để đọc và đối chiếu ngữ cảnh tại chỗ.
-            </p>
-
-            {/* Ô nhập chủ đề */}
-            <div className="w-full bg-white border border-slate-300 rounded p-4 mb-3 shadow-sm focus-within:border-slate-800 transition">
-              <label className="block text-xs uppercase font-mono text-slate-500 mb-2 font-medium">
-                Mô tả ý tưởng hoặc từ khóa tiếng Việt
-              </label>
-              <textarea
-                value={topicInput}
-                onChange={(e) => setTopicInput(e.target.value)}
-                placeholder="Ví dụ: Nhận diện khuôn mặt trong bóng tối, mạng cảm biến dưới biển, phân tích cảm xúc tiếng Việt..."
-                rows={3}
-                className="w-full text-slate-900 placeholder:text-slate-400 text-base resize-none focus:outline-none bg-transparent"
-              />
-              <div className="flex items-center justify-between pt-3 border-t border-slate-100 mt-2">
-                <span className="text-xs text-slate-400 font-mono">
-                  Đầu vào tự nhiên (không cần chuẩn thuật ngữ)
-                </span>
-                <button
-                  onClick={handleAnalyze}
-                  className="inline-flex items-center gap-2 px-5 py-2 bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium rounded transition"
-                >
-                  <IconSearch size={15} />
-                  <span>Phân tích sơ đồ từ khóa</span>
-                  <IconArrowRight size={14} />
-                </button>
-              </div>
+          <div className="max-w-2xl mx-auto px-6 py-12 flex flex-col items-center">
+            {/* Tiêu đề chính */}
+            <div className="text-center mb-6">
+              <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-slate-900 mb-2">
+                Bắt đầu nghiên cứu đề tài
+              </h1>
+              <p className="text-sm text-slate-500 max-w-md mx-auto">
+                Phân tích ý tưởng thành sơ đồ từ khóa học thuật, hoặc đọc trực tiếp tài liệu có sẵn.
+              </p>
             </div>
 
-            {searchError && (
-              <div className="w-full text-xs text-rose-600 bg-rose-50 border border-rose-200 px-3.5 py-2 rounded mb-4">
-                {searchError}
+            {/* Segmented Control - Chuyển đổi 2 chế độ */}
+            <div className="inline-flex p-1 bg-slate-100 rounded-xl border border-slate-200/80 mb-7">
+              <button
+                onClick={() => setS1Tab("idea")}
+                className={`flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-lg transition ${
+                  s1Tab === "idea"
+                    ? "bg-white text-slate-900 shadow-sm font-semibold"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                <IconSearch size={14} />
+                <span>Khởi tạo từ ý tưởng</span>
+              </button>
+              <button
+                onClick={() => setS1Tab("file")}
+                className={`flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-lg transition ${
+                  s1Tab === "file"
+                    ? "bg-white text-slate-900 shadow-sm font-semibold"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                <IconUpload size={14} />
+                <span>Đọc tài liệu có sẵn</span>
+              </button>
+            </div>
+
+            {/* TAB 1: KHỞI TẠO TỪ Ý TƯỞNG */}
+            {s1Tab === "idea" && (
+              <div className="w-full space-y-6">
+                <div className="w-full bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:border-slate-300 focus-within:border-slate-800 focus-within:ring-1 focus-within:ring-slate-800 transition">
+                  <textarea
+                    value={topicInput}
+                    onChange={(e) => setTopicInput(e.target.value)}
+                    placeholder="Nhập ý tưởng đề tài bằng tiếng Việt hoặc tiếng Anh (ví dụ: Nhận diện khuôn mặt trong bóng tối, phân tích cảm xúc tiếng Việt...)"
+                    rows={3}
+                    className="w-full text-slate-900 placeholder:text-slate-400 text-sm leading-relaxed resize-none focus:outline-none bg-transparent"
+                  />
+                  <div className="flex items-center justify-end pt-3 border-t border-slate-100 mt-2">
+                    <button
+                      onClick={handleAnalyze}
+                      className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium rounded-lg shadow-sm transition"
+                    >
+                      <span>Phân tích sơ đồ từ khóa</span>
+                      <IconArrowRight size={14} />
+                    </button>
+                  </div>
+                </div>
+
+                {searchError && (
+                  <div className="w-full text-xs text-rose-600 bg-rose-50 border border-rose-200 px-4 py-2.5 rounded-lg">
+                    {searchError}
+                  </div>
+                )}
+
+                {/* Đề tài mẫu dạng Chip tối giản */}
+                <div className="pt-1">
+                  <div className="text-xs text-slate-500 font-medium mb-3">
+                    Đề tài mẫu gợi ý:
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      {
+                        key: "low-light-face",
+                        title: "Nhận diện khuôn mặt thiếu sáng",
+                        fullTitle: "Nhận diện khuôn mặt trong điều kiện thiếu sáng",
+                        tag: "Computer Vision",
+                      },
+                      {
+                        key: "underwater-sensor",
+                        title: "Cảm biến không dây dưới nước",
+                        fullTitle: "Mạng cảm biến không dây dưới nước",
+                        tag: "IoT Network",
+                      },
+                      {
+                        key: "vietnamese-nlp",
+                        title: "Phân tích cảm xúc tiếng Việt",
+                        fullTitle: "Phân tích cảm xúc văn bản tiếng Việt",
+                        tag: "NLP",
+                      },
+                    ].map((item) => (
+                      <button
+                        key={item.key}
+                        onClick={() => handleSelectPreset(item.key, item.fullTitle)}
+                        className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs transition border ${
+                          topicKey === item.key && topicInput === item.fullTitle
+                            ? "bg-slate-900 text-white border-slate-900 font-medium shadow-sm"
+                            : "bg-white text-slate-700 border-slate-200 hover:border-slate-300 hover:bg-slate-50"
+                        }`}
+                      >
+                        <span className="opacity-60 text-[11px] font-medium">{item.tag} ·</span>
+                        <span>{item.title}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
 
-            {/* Khung tải tệp lên */}
-            <div className="w-full mb-6">
-              <div
-                onClick={() => fileInputRef.current?.click()}
-                className="w-full p-4 border border-dashed border-slate-300 hover:border-slate-800 bg-white hover:bg-slate-50 rounded cursor-pointer transition flex items-center justify-between"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded bg-slate-100 flex items-center justify-center text-slate-700">
-                    <IconUpload size={18} />
+            {/* TAB 2: ĐỌC TÀI LIỆU CÓ SẴN (DROPZONE) */}
+            {s1Tab === "file" && (
+              <div className="w-full">
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    const file = e.dataTransfer.files?.[0];
+                    if (file) {
+                      const fakeEvent = {
+                        target: { files: [file] },
+                      } as unknown as React.ChangeEvent<HTMLInputElement>;
+                      handleFileUpload(fakeEvent);
+                    }
+                  }}
+                  className="w-full py-14 px-6 border-2 border-dashed border-slate-200 hover:border-slate-400 bg-white hover:bg-slate-50/80 rounded-2xl cursor-pointer transition flex flex-col items-center justify-center text-center group"
+                >
+                  <div className="w-12 h-12 rounded-full bg-slate-100 group-hover:bg-slate-200 flex items-center justify-center text-slate-700 mb-3.5 transition">
+                    <IconUpload size={22} />
                   </div>
-                  <div>
-                    <div className="text-xs font-semibold text-slate-900">
-                      Hoặc tải lên bài báo / tài liệu có sẵn (.pdf, .txt, .docx)
-                    </div>
-                    <div className="text-[11px] text-slate-500">
-                      Mở trực tiếp trong không gian đọc và giải thích ngữ cảnh tức thì
-                    </div>
+                  <div className="text-sm font-semibold text-slate-900 mb-1">
+                    Kéo thả tài liệu vào đây, hoặc click để chọn tệp
+                  </div>
+                  <div className="text-xs text-slate-500">
+                    Hỗ trợ định dạng PDF, TXT, DOCX · Mở trực tiếp trong không gian đọc
                   </div>
                 </div>
-                <span className="text-xs font-mono text-slate-700 underline font-medium">
-                  Chọn tệp từ máy tính →
-                </span>
               </div>
-            </div>
-
-            {/* Chủ đề mẫu để test nhanh */}
-            <div className="w-full">
-              <span className="block text-xs font-mono uppercase text-slate-500 mb-2.5 font-medium">
-                Chủ đề nghiên cứu mẫu:
-              </span>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
-                {[
-                  {
-                    key: "low-light-face",
-                    title: "Nhận diện khuôn mặt trong điều kiện thiếu sáng",
-                    sub: "Thị giác máy tính (CV)",
-                  },
-                  {
-                    key: "underwater-sensor",
-                    title: "Mạng cảm biến không dây dưới nước",
-                    sub: "Mạng máy tính (IoT/Networking)",
-                  },
-                  {
-                    key: "vietnamese-nlp",
-                    title: "Phân tích cảm xúc văn bản tiếng Việt",
-                    sub: "Xử lý ngôn ngữ tự nhiên (NLP)",
-                  },
-                ].map((item) => (
-                  <button
-                    key={item.key}
-                    onClick={() => handleSelectPreset(item.key, item.title)}
-                    className={`text-left p-3 border rounded transition ${
-                      topicKey === item.key
-                        ? "border-slate-900 bg-slate-100 text-slate-900 font-medium"
-                        : "border-slate-200 bg-white hover:border-slate-300 text-slate-700"
-                    }`}
-                  >
-                    <div className="text-[11px] font-mono text-slate-500 uppercase">
-                      {item.sub}
-                    </div>
-                    <div className="text-xs font-medium text-slate-900 mt-1 line-clamp-2">
-                      {item.title}
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
+            )}
           </div>
         )}
 
