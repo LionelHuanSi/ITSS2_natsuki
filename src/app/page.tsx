@@ -460,7 +460,13 @@ export default function NatsukiScholarApp() {
             <InteractiveKeywordTree
               topic={currentTopic}
               selectedKeywordId={selectedKeyword.id}
+              selectedPaperId={selectedPaper.id}
               onSelectKeyword={handleSelectKeyword}
+              onSelectPaper={(paper, kw) => {
+                setSelectedKeyword(kw);
+                handleStartReading(paper);
+                showToast(`Đang mở bài báo: "${paper.title.slice(0, 40)}..."`);
+              }}
             />
           </div>
         )}

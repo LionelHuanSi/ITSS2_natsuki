@@ -123,7 +123,7 @@ export class ResearchWorkflowService {
         "sample-1",
         "paper-pest-rtdetr-2025",
         "Multi-species insect recognition method based on computer visions: Sustainable agricultural development",
-        "Multi-Species Insect Pest Detection (IPD)",
+        "Real-Time Detection Transformer (RT-DETR)",
         "long-tail distribution",
         "Phân bố dữ liệu đuôi dài (Long-Tail Distribution): Hiện tượng mất cân bằng mẫu nghiêm trọng trong tập dữ liệu IP102 (102 loài sâu bệnh), trong đó một số ít loài có rất nhiều ảnh mẫu (Head data), còn phần lớn các loài sâu hại quý hiếm lại chỉ có rất ít ảnh (Tail data), khiến mô hình thông thường dễ bị thiên vị và dự đoán sai các loài thiểu số.",
         "Trích dẫn nền tảng"
