@@ -618,16 +618,6 @@ export default function NatsukiScholarApp() {
                             </ul>
                           </div>
                         )}
-
-                        {/* Ý nghĩa tham khảo */}
-                        {paper.thesisValue && (
-                          <div className="text-xs text-slate-600 pt-1">
-                            <span className="font-semibold text-slate-800">
-                              Ý nghĩa tham khảo:
-                            </span>{" "}
-                            <span className="leading-relaxed">{paper.thesisValue}</span>
-                          </div>
-                        )}
                       </div>
 
                       <div className="shrink-0 flex md:flex-col justify-end">
