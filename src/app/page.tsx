@@ -321,17 +321,6 @@ export default function NatsukiScholarApp() {
 
         {/* Action Header */}
         <div className="flex items-center gap-3">
-          {activeScreen !== "S1" && (
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium border border-slate-300 bg-white hover:border-slate-400 text-slate-700 rounded-lg transition"
-              title="Tải lên bài báo (.pdf, .txt)"
-            >
-              <IconUpload size={14} />
-              <span>Tải lên bài báo</span>
-            </button>
-          )}
-
           <button
             onClick={() => setActiveScreen("S6")}
             className={`flex items-center gap-2 px-3 py-1.5 text-xs font-medium border rounded-lg transition ${
@@ -475,7 +464,7 @@ export default function NatsukiScholarApp() {
                 className="inline-flex items-center gap-1.5 text-xs text-slate-600 hover:text-slate-900 transition font-medium"
               >
                 <IconArrowLeft size={14} />
-                <span>← Đổi đề tài khác</span>
+                <span>Quay lại khởi tạo</span>
               </button>
             </div>
 
@@ -503,14 +492,11 @@ export default function NatsukiScholarApp() {
             <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-200">
               <button
                 onClick={() => setActiveScreen("S2")}
-                className="inline-flex items-center gap-1.5 text-xs text-slate-600 hover:text-slate-900 transition font-mono"
+                className="inline-flex items-center gap-1.5 text-xs text-slate-600 hover:text-slate-900 transition font-medium"
               >
                 <IconArrowLeft size={14} />
-                <span>Quay lại sơ đồ cây từ khóa</span>
+                <span>Quay lại cây từ khóa</span>
               </button>
-              <span className="text-xs font-mono text-slate-500 uppercase">
-                CHI TIẾT TỪ KHÓA & TÀI LIỆU NỀN TẢNG
-              </span>
             </div>
 
             {/* Chi tiết từ khóa & Phân tích chuyên sâu (Swiss Minimalist) */}
@@ -659,13 +645,13 @@ export default function NatsukiScholarApp() {
                 </span>
               </div>
 
-              <div className="flex items-center gap-3 text-slate-500 font-mono text-[11px]">
+              <div className="flex items-center gap-3">
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="text-slate-700 hover:underline flex items-center gap-1"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 rounded-md transition text-xs"
                 >
-                  <IconUpload size={12} />
-                  <span>Tải lên tệp khác</span>
+                  <IconUpload size={13} />
+                  <span>Tải lên bài báo</span>
                 </button>
               </div>
             </div>
