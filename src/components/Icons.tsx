@@ -19,7 +19,7 @@ export const NatsukiScholarLogo: React.FC<{ className?: string }> = ({
         alt="Natsuki Scholar Logo"
         width={36}
         height={36}
-        className="w-9 h-9 drop-shadow-sm select-none"
+        className="w-9 h-9 rounded-full drop-shadow-sm select-none"
       />
     </div>
     <div className="flex flex-col leading-none">

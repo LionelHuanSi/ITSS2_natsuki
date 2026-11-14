@@ -12,6 +12,15 @@ const beVietnamPro = Be_Vietnam_Pro({
 export const metadata: Metadata = {
   title: "Natsuki Scholar — Academic Research Flow Workspace",
   description: "Không gian làm việc nghiên cứu học thuật tập trung (Khám phá từ khóa & Đọc hiểu tại chỗ không mất context)",
+  icons: {
+    icon: [
+      { url: "/logos/natsuki-icon.png", sizes: "512x512", type: "image/png" },
+      { url: "/icon.png", sizes: "512x512", type: "image/png" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    shortcut: "/logos/natsuki-icon.png",
+    apple: "/logos/natsuki-icon.png",
+  },
 };
 
 export default function RootLayout({
