@@ -1,5 +1,6 @@
 /**
  * Domain Entity đại diện cho một bài báo học thuật
+ * Hỗ trợ tóm tắt đóng góp cốt lõi, kết quả thực nghiệm và giá trị tham chiếu học thuật.
  */
 export class AcademicPaper {
   constructor(
@@ -8,12 +9,14 @@ export class AcademicPaper {
     public readonly authors: string,
     public readonly year: number,
     public readonly venue: string,
-    public readonly relevance: string,
+    public readonly relevance: string, // Tóm tắt đóng góp chính (Core Contribution Summary)
     public readonly paragraphs: string[],
     public readonly dictionary: Record<string, string>,
     public readonly translations: Record<string, string> = {},
     public readonly ranking: string = "SCIE Q1",
-    public readonly citations: number = 0
+    public readonly citations: number = 0,
+    public readonly keyFindings: string[] = [], // Các kết quả thực nghiệm nổi bật (mAP, FPS, Dataset)
+    public readonly thesisValue: string = "" // Giá trị tham khảo thực tiễn cho đề tài nghiên cứu
   ) {}
 
   // Dịch thuật chính xác theo ngữ cảnh kỹ thuật học thuật

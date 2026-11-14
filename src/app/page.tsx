@@ -39,6 +39,7 @@ export default function NatsukiScholarApp() {
   const [topicKey, setTopicKey] = useState<string>("pest-vision");
   const [searchError, setSearchError] = useState<string | null>(null);
   const [s1Tab, setS1Tab] = useState<"idea" | "file">("idea");
+  const [hasAnalyzedIdea, setHasAnalyzedIdea] = useState<boolean>(false);
 
   const currentTopic = useMemo(
     () => workflowService.getTopicByKey(topicKey),
@@ -87,7 +88,9 @@ export default function NatsukiScholarApp() {
     setTopicInput(raw);
     setTopicKey(res.topicData.key);
     setSelectedKeyword(res.topicData.keywords[0]);
+    setHasAnalyzedIdea(true);
     setActiveScreen("S2");
+    showToast("Đã phân giải ý tưởng thành sơ đồ từ khóa học thuật");
   };
 
   // Chọn mẫu chủ đề có sẵn
@@ -248,47 +251,67 @@ export default function NatsukiScholarApp() {
             <NatsukiScholarLogo />
           </button>
 
-          {/* Stepper dạng text học thuật không đánh số */}
+          {/* Stepper dạng text học thuật không đánh số (khóa các tab phụ khi chưa khởi tạo từ ý tưởng) */}
           <nav className="hidden md:flex items-center gap-1.5 text-xs text-slate-500">
             <button
               onClick={() => setActiveScreen("S1")}
               className={`px-3 py-1 rounded-md transition ${
                 activeScreen === "S1"
                   ? "bg-slate-900 text-white font-semibold shadow-sm"
-                  : "hover:text-slate-900"
+                  : "hover:text-slate-900 text-slate-700"
               }`}
             >
               Khởi tạo
             </button>
             <span>/</span>
             <button
-              onClick={() => setActiveScreen("S2")}
+              onClick={() => {
+                if (!hasAnalyzedIdea) {
+                  showToast("Vui lòng khởi tạo từ ý tưởng để mở Cây từ khóa");
+                  return;
+                }
+                setActiveScreen("S2");
+              }}
+              title={hasAnalyzedIdea ? "Xem cây từ khóa học thuật" : "Cần khởi tạo từ ý tưởng trước"}
               className={`px-3 py-1 rounded-md transition ${
                 activeScreen === "S2"
                   ? "bg-slate-900 text-white font-semibold shadow-sm"
-                  : "hover:text-slate-900"
+                  : hasAnalyzedIdea
+                  ? "hover:text-slate-900 text-slate-700 font-medium"
+                  : "opacity-40 cursor-not-allowed text-slate-400"
               }`}
             >
               Cây từ khóa
             </button>
             <span>/</span>
             <button
-              onClick={() => setActiveScreen("S3")}
+              onClick={() => {
+                if (!hasAnalyzedIdea) {
+                  showToast("Vui lòng khởi tạo từ ý tưởng để mở Bài báo nền tảng");
+                  return;
+                }
+                setActiveScreen("S3");
+              }}
+              title={hasAnalyzedIdea ? "Xem danh sách bài báo nền tảng" : "Cần khởi tạo từ ý tưởng trước"}
               className={`px-3 py-1 rounded-md transition ${
                 activeScreen === "S3"
                   ? "bg-slate-900 text-white font-semibold shadow-sm"
-                  : "hover:text-slate-900"
+                  : hasAnalyzedIdea
+                  ? "hover:text-slate-900 text-slate-700 font-medium"
+                  : "opacity-40 cursor-not-allowed text-slate-400"
               }`}
             >
               Bài báo nền tảng
             </button>
             <span>/</span>
             <button
-              onClick={() => setActiveScreen("S4")}
+              onClick={() => {
+                setActiveScreen("S4");
+              }}
               className={`px-3 py-1 rounded-md transition ${
                 activeScreen === "S4"
                   ? "bg-slate-900 text-white font-semibold shadow-sm"
-                  : "hover:text-slate-900"
+                  : "hover:text-slate-900 text-slate-700"
               }`}
             >
               Không gian đọc
@@ -384,7 +407,7 @@ export default function NatsukiScholarApp() {
                   <textarea
                     value={topicInput}
                     onChange={(e) => setTopicInput(e.target.value)}
-                    placeholder="Nhập các từ khóa rời rạc hoặc mô tả ý tưởng ban đầu (không cần chuẩn ngữ pháp hay thuật ngữ)..."
+                    placeholder="Nhập các từ khóa rời rạc hoặc mô tả ý tưởng ban đầu..."
                     rows={3}
                     className="w-full text-slate-900 placeholder:text-slate-400 text-sm leading-relaxed resize-none focus:outline-none bg-transparent"
                   />
@@ -490,57 +513,88 @@ export default function NatsukiScholarApp() {
               </span>
             </div>
 
-            {/* Chi tiết từ khóa */}
-            <div className="bg-white border border-slate-200 p-6 rounded mb-8">
+            {/* Chi tiết từ khóa & Phân tích chuyên sâu */}
+            <div className="bg-white border border-slate-200 p-6 rounded-2xl mb-8 shadow-xs">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-xs font-mono px-2 py-0.5 bg-slate-100 border border-slate-200 text-slate-700 rounded">
+                <span className="text-[11px] font-mono px-2.5 py-0.5 bg-slate-100 border border-slate-200 text-slate-800 rounded-md font-semibold">
                   {selectedKeyword.level}
                 </span>
                 <span className="text-xs text-slate-500 font-medium">
                   {selectedKeyword.labelVi}
                 </span>
               </div>
-              <h2 className="text-2xl font-semibold text-slate-900 mb-3">
+              <h2 className="text-2xl font-bold text-slate-900 mb-4 tracking-tight">
                 {selectedKeyword.labelEn}
               </h2>
-              <div className="space-y-3 text-xs leading-relaxed text-slate-700">
-                <div className="p-3.5 bg-slate-50 border-l-2 border-slate-900">
-                  <span className="font-semibold block text-slate-900 mb-0.5">
-                    Định nghĩa chuyên ngành:
+
+              <div className="space-y-4 text-xs leading-relaxed text-slate-700">
+                {/* 1. Vì sao AI đề xuất từ khóa này */}
+                <div className="p-4 bg-sky-50/50 border-l-4 border-sky-600 rounded-r-xl">
+                  <span className="font-bold block text-slate-900 mb-1 text-[13px]">
+                    💡 Vì sao AI đề xuất từ khóa này từ ý tưởng ban đầu của bạn?
                   </span>
-                  {selectedKeyword.explanation}
+                  <p className="text-slate-700 leading-relaxed text-justify">
+                    {selectedKeyword.selectionReason || selectedKeyword.whyImportant}
+                  </p>
                 </div>
-                <div className="p-3.5 bg-slate-50 border-l-2 border-slate-400">
-                  <span className="font-semibold block text-slate-900 mb-0.5">
-                    Tại sao nên dùng thuật ngữ này khi tìm kiếm tài liệu quốc tế?
+
+                {/* 2. Bối cảnh học thuật & Thách thức kỹ thuật quốc tế */}
+                <div className="p-4 bg-slate-50 border-l-4 border-slate-800 rounded-r-xl">
+                  <span className="font-bold block text-slate-900 mb-1 text-[13px]">
+                    🔬 Bối cảnh học thuật & Thách thức kỹ thuật quốc tế:
                   </span>
-                  {selectedKeyword.whyImportant}
+                  <p className="text-slate-700 leading-relaxed text-justify">
+                    {selectedKeyword.academicContext || selectedKeyword.explanation}
+                  </p>
                 </div>
+
+                {/* 3. Cú pháp truy vấn đề xuất */}
+                {selectedKeyword.searchQuery && (
+                  <div className="p-3.5 bg-slate-900 text-slate-200 rounded-xl flex items-center justify-between gap-3">
+                    <div className="overflow-hidden">
+                      <span className="text-[11px] font-mono text-sky-400 block mb-0.5">
+                        Cú pháp truy vấn chuẩn xác (Scopus / IEEE Xplore / Google Scholar):
+                      </span>
+                      <code className="text-xs text-white font-mono truncate block">
+                        {selectedKeyword.searchQuery}
+                      </code>
+                    </div>
+                    <button
+                      onClick={() => {
+                        navigator.clipboard?.writeText(selectedKeyword.searchQuery);
+                        showToast("Đã sao chép cú pháp truy vấn vào bộ nhớ tạm");
+                      }}
+                      className="shrink-0 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white rounded-lg text-xs font-mono transition"
+                    >
+                      Sao chép
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
 
             {/* Danh sách bài báo nền tảng */}
             <div>
               <div className="flex items-center justify-between mb-4">
-                <span className="text-xs font-mono uppercase text-slate-600 font-semibold flex items-center gap-2">
+                <span className="text-xs font-mono uppercase text-slate-700 font-bold flex items-center gap-2">
                   <IconDocument size={16} />
                   <span>BÀI BÁO HỌC THUẬT NỀN TẢNG ĐƯỢC ĐỀ XUẤT</span>
                 </span>
                 <span className="text-xs text-slate-500 font-mono">
-                  {selectedKeyword.papers.length} bài báo uy tín
+                  {selectedKeyword.papers.length} công trình tiêu biểu
                 </span>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-5">
                 {selectedKeyword.papers.map((paper) => (
                   <div
                     key={paper.id}
-                    className="p-5 bg-white border border-slate-200 rounded hover:border-slate-400 transition"
+                    className="p-5 bg-white border border-slate-200 rounded-2xl hover:border-slate-400 shadow-xs transition group"
                   >
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="space-y-1.5">
+                    <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+                      <div className="space-y-2.5 flex-1">
                         <div className="flex items-center gap-2 mb-1 flex-wrap">
-                          <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded border bg-rose-50 text-rose-700 border-rose-200">
+                          <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded border bg-rose-50 text-rose-700 border-rose-200">
                             {paper.ranking}
                           </span>
                           <span className="text-[11px] font-mono text-slate-500">
@@ -552,27 +606,61 @@ export default function NatsukiScholarApp() {
                             </span>
                           )}
                         </div>
-                        <h3 className="text-base font-semibold text-slate-900 leading-snug">
+
+                        <h3 className="text-base font-bold text-slate-900 leading-snug">
                           {paper.title}
                         </h3>
+
                         <div className="text-xs text-slate-600">
-                          <span className="font-medium text-slate-700">Tác giả:</span>{" "}
+                          <span className="font-semibold text-slate-700">Tác giả:</span>{" "}
                           {paper.authors}
                         </div>
-                        <p className="text-xs text-slate-600 bg-slate-50 p-2.5 rounded border border-slate-100 mt-2">
-                          <span className="font-semibold text-slate-800">Lý do nền tảng:</span>{" "}
-                          {paper.relevance}
-                        </p>
+
+                        {/* Tóm tắt đóng góp cốt lõi */}
+                        <div className="text-xs text-slate-700 bg-slate-50 p-3.5 rounded-xl border border-slate-100">
+                          <span className="font-bold text-slate-900 block mb-1">
+                            📌 Tóm tắt đóng góp cốt lõi:
+                          </span>
+                          <p className="leading-relaxed text-justify">{paper.relevance}</p>
+                        </div>
+
+                        {/* Kết quả thực nghiệm nổi bật */}
+                        {paper.keyFindings && paper.keyFindings.length > 0 && (
+                          <div className="text-xs text-slate-700 bg-emerald-50/50 p-3.5 rounded-xl border border-emerald-100">
+                            <span className="font-bold text-emerald-900 block mb-1.5">
+                              📊 Kết quả thực nghiệm & Chỉ số SOTA:
+                            </span>
+                            <ul className="space-y-1 list-disc list-inside text-slate-700">
+                              {paper.keyFindings.map((finding, fIdx) => (
+                                <li key={fIdx} className="leading-relaxed">
+                                  {finding}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        {/* Giá trị tham khảo cho đề tài */}
+                        {paper.thesisValue && (
+                          <div className="text-xs text-slate-600 flex items-start gap-1.5 pt-1">
+                            <span className="font-semibold text-slate-800 shrink-0">
+                              🎯 Giá trị tham khảo:
+                            </span>
+                            <span className="leading-relaxed">{paper.thesisValue}</span>
+                          </div>
+                        )}
                       </div>
 
-                      <button
-                        onClick={() => handleStartReading(paper)}
-                        className="shrink-0 inline-flex items-center gap-2 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium rounded transition"
-                      >
-                        <IconBookOpen size={14} />
-                        <span>Đọc bài báo này</span>
-                        <IconArrowRight size={13} />
-                      </button>
+                      <div className="shrink-0 flex md:flex-col justify-end">
+                        <button
+                          onClick={() => handleStartReading(paper)}
+                          className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-xl transition shadow-xs"
+                        >
+                          <IconBookOpen size={14} />
+                          <span>Đọc bài báo này</span>
+                          <IconArrowRight size={13} />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
