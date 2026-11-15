@@ -47,7 +47,8 @@ export class ResearchWorkflowService {
   public explainHighlightedText(
     paper: AcademicPaper,
     rawSelection: string,
-    customPrompt?: string
+    customPrompt?: string,
+    lang: "vi" | "ja" = "vi"
   ): {
     isValid: boolean;
     errorMessage?: string;
@@ -59,15 +60,17 @@ export class ResearchWorkflowService {
     if (clean.length < 3) {
       return {
         isValid: false,
-        errorMessage: "Vui lòng bôi đen ít nhất 1 cụm từ trong bài báo để xem giải thích hoặc dịch thuật.",
+        errorMessage: lang === "ja"
+          ? "論文本文から1つ以上の語句または文を選択してください。"
+          : "Vui lòng bôi đen ít nhất 1 cụm từ trong bài báo để xem giải thích hoặc dịch thuật.",
       };
     }
 
     return {
       isValid: true,
       selectedText: clean,
-      explanation: paper.resolveContextualExplanation(clean, customPrompt),
-      translation: paper.resolveContextualTranslation(clean),
+      explanation: paper.resolveContextualExplanation(clean, customPrompt, lang),
+      translation: paper.resolveContextualTranslation(clean, lang),
     };
   }
 

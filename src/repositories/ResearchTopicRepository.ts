@@ -4,7 +4,9 @@ import { KeywordNode } from "../models/KeywordNode";
 export interface ResearchTopicData {
   key: string;
   title: string;
+  titleJa?: string;
   subDomain: string;
+  subDomainJa?: string;
   keywords: KeywordNode[];
 }
 
@@ -106,7 +108,50 @@ export class ResearchTopicRepository {
         "Backbone DAS-ResNet50 giúp tăng 6.33% mAP50 trên các trường hợp sâu bệnh bị cành lá che khuất.",
         "Hàm mất mát MPDIoU giúp mô hình hội tụ nhanh hơn 15% và hạn chế sai lệch khung bao khi côn trùng bò chồng lấn."
       ],
-      "Cung cấp kiến trúc tham chiếu hoàn chỉnh để xây dựng hệ thống phát hiện sâu bệnh tự động theo chuẩn hội nghị/tạp chí quốc tế."
+      "Cung cấp kiến trúc tham chiếu hoàn chỉnh để xây dựng hệ thống phát hiện sâu bệnh tự động theo chuẩn hội nghị/tạp chí quốc tế.",
+      "NMSボトルネックを排除した実時間多種農業病害虫検出モデルPest-RTDetrを提案。DAS-ResNet50バックボーンとマルチスケール特徴量統合機構（CF）を統合。",
+      [
+        "ベンチマークデータセットIP102（102種）において、推論速度80 FPSでmAP50 68.40%を達成。",
+        "DAS-ResNet50バックボーンにより、葉による遮蔽条件下でのmAP50が6.33%向上。",
+        "MPDIoU損失関数により、収束速度が15%向上し、虫体の重なりによる境界ボックスの歪みを低減。"
+      ],
+      {
+        "long-tail distribution":
+          "ロングテール分布（Long-Tail Distribution）: IP102データセット（102害虫種）における深刻なサンプル不均衡現象。少数の代表種に大量の画像が存在する一方、希少種・有害種の画像が極めて少なく、従来モデルでは少数クラスの誤判定が頻発する。",
+        "occlusion":
+          "遮蔽現象（Occlusion）: 野外環境において、植物の葉や枝、日陰、または他の虫体によって害虫の身体の一部が覆い隠され、画像情報が著しく欠落する現象。",
+        "deformable attention":
+          "変形可能アテンション（Deformable Attention - DAS）: 畳み込みネットワークにおいて、固定矩形グリッド走査の代わりに昆虫の解剖学的輪郭（触角、脚、翅脈）に合わせて受容野（receptive field）を動的に変形させる技術。類似種間の高精度識別に寄与する。",
+        "salient features":
+          "顕著な特徴（Salient Features）: 画像全体を一様に処理するのではなく、昆虫の解剖学的キーポイント（頭部、触角、脚の関節）にモデルの焦点を集中させ、部分的な遮蔽下でも正確に分類する技術。",
+        "capture salient features":
+          "顕著な特徴抽出（Salient Features Extraction）: 昆虫の頭部や脚部など、種の識別に決定的な解剖学的特徴領域を重点的に抽出する処理。",
+        "cross-scale feature fusion":
+          "マルチスケール特徴量統合（Cross-Scale Feature Fusion - CF）: DASとBottlenecksを組み合わせ、深層の意味論的特徴を高解像度の浅層特徴へ伝達。複雑な葉の背景から微小害虫（micro-pests）を高精度に検出する。",
+        "small, densely distributed targets":
+          "微小密集標的（Small, Densely Distributed Targets）: 数ミリ単位の害虫が一枚の葉に高密度で群生する、農業コンピュータビジョンにおける最難関課題の一つ。",
+        "Focal Loss":
+          "フォーカル損失（Focal Loss）: 訓練サンプルの重みを適応的に調整し、分類しやすい多数サンプルの寄与度を下げ、分類困難な少数クラス（テールデータ）の学習に勾配を集中させる損失関数。",
+        "MPDIoU":
+          "極値点最小距離IoU（MPDIoU）: 予測枠と正解枠の左上・右下角の幾何学的距離に基づく新しいバウンディングボックス回帰損失。害虫同士が密集・重なり合う状況でも高速な収束と追従性を実現する。",
+        "RT-DETR":
+          "実時間物体検出Transformer（Real-Time Detection Transformer）: Transformerの大域的特徴把握力と80 FPS超の高速推論を両立し、YOLO系で不可欠だったNMS後処理のボトルネックを完全排除した先駆的アーキテクチャ。"
+      },
+      {
+        "salient features": "識別の決め手となる顕著な特徴",
+        "capture salient features": "昆虫の頭部や脚部など顕著な特徴を捉える",
+        "anism to capture salient features": "昆虫の頭部や脚部など顕著な特徴を捉えるための変形可能アテンション機構",
+        "head and foot regions": "昆虫の頭部および脚部領域",
+        "long-tail distribution": "ロングテール分布（種ごとのサンプル不均衡現象）",
+        "occlusion": "葉や枝による光学的な遮蔽現象",
+        "deformable attention": "変形可能アテンション機構（Deformable Attention）",
+        "cross-scale feature fusion": "マルチスケール特徴量統合（浅層・深層の双方向連携）",
+        "small, densely distributed targets": "微小かつ高密度に分布する害虫標的",
+        "Focal Loss": "フォーカル損失（希少クラスの学習を重点化）",
+        "MPDIoU": "極値点最小距離IoU（MPDIoU回帰損失）",
+        "RT-DETR": "実時間物体検出Transformer（RT-DETR）",
+        "mAP50 of 68.40% at 80 FPS": "推論速度80 FPSでmAP50 68.40%を達成"
+      }
     );
 
     // ====================================================
@@ -395,7 +440,9 @@ export class ResearchTopicRepository {
     this.topics.set("pest-vision", {
       key: "pest-vision",
       title: "Nhận diện sâu bệnh nông nghiệp đa loài bằng thị giác máy tính",
+      titleJa: "コンピュータビジョンによる多種農業病害虫の識別",
       subDomain: "Smart Agriculture & Computer Vision",
+      subDomainJa: "スマート農業 ＆ コンピュータビジョン",
       keywords: [
         new KeywordNode(
           "kw-ipd",
@@ -407,7 +454,11 @@ export class ResearchTopicRepository {
           [paperPestRTDetr, paperIP102, paperSurveyPest],
           "Hệ thống AI nhận diện ý tưởng của bạn hướng tới việc bảo vệ cây trồng trước nhiều loại sâu bệnh tự nhiên. Trong khoa học máy tính ứng dụng nông nghiệp, bài toán này bắt buộc phải giải quyết trên tập dữ liệu đa loài (multi-species) thay vì chỉ một loài đơn lẻ. AI đề xuất từ khóa chuẩn mực 'Multi-Species Insect Pest Detection' để trực tiếp kết nối đề tài của bạn tới các công trình benchmark quốc tế uy tín (như IP102) và các mô hình phát hiện đối tượng SOTA.",
           "Trong thực tế đồng ruộng, sâu hại gây thiệt hại hơn 20% sản lượng nông sản toàn cầu hàng năm. Thách thức cốt lõi của IPD là hiện tượng biến thiên hình thái lớn giữa các giai đoạn vòng đời (trứng, ấu trùng, nhộng, trưởng thành) cùng sự tương đồng thị giác cao giữa các loài sâu hại khác nhau. Nghiên cứu trong hướng này đòi hỏi mô hình phải vừa đạt độ chính xác cao trên dữ liệu đuôi dài (long-tail), vừa loại trừ được các nhiễu quang học từ cành lá phức tạp.",
-          '("Multi-Species Insect Pest Detection" OR "Agricultural Pest Detection") AND ("IP102" OR "deep learning") AND ("RT-DETR" OR "YOLO")'
+          '("Multi-Species Insect Pest Detection" OR "Agricultural Pest Detection") AND ("IP102" OR "deep learning") AND ("RT-DETR" OR "YOLO")',
+          "多種農業病害虫の実時間高精度検出（IPD）",
+          "野外の自然な農地環境下で、102種に及ぶ農作物病害虫を自動検出・高精度同定するための基礎的研究分野。",
+          "ユーザーの「コンピュータビジョンによる多種農業病害虫の識別」という初期アイデアに基づき、AIは国際標準学術用語「Multi-Species Insect Pest Detection」を選定しました。単一種の検出にとどまらず、多種害虫を対象とすることでIP102等の国際標準ベンチマークや最新SOTAモデルへ直結します。",
+          "野外環境下での病害虫識別は、微小サイズ、天候による照度変化、葉による遮蔽、そして種間類似性と成長段階ごとの形態変化が重なる高難度タスクです。トップカンファレンス（CVPR、TPAMI）では、NMS不要のRT-DETR構造やマルチスケール特徴抽出が主要トレンドとなっています。"
         ),
         new KeywordNode(
           "kw-finegrained",
@@ -419,7 +470,11 @@ export class ResearchTopicRepository {
           [paperDeformableAttention, paperFineGrainedPest],
           "Ý tưởng nhận diện sâu bệnh đòi hỏi khả năng quan sát chi tiết từng bộ phận sinh học đặc trưng. AI ánh xạ yêu cầu này thành từ khóa kỹ thuật chuyên sâu 'Fine-Grained Pest Feature Extraction'. Thuật ngữ này giúp bạn tiếp cận các thuật toán thị giác phân giải mịn (Fine-Grained Visual Classification - FGVC) và các cơ chế chú ý biến dạng động (Deformable Attention) - hướng đi nghiên cứu đang được đánh giá cao nhất tại các hội nghị đỉnh cao như CVPR, ICCV.",
           "Khác với việc nhận diện ô tô hay người đi bộ, côn trùng có kích thước nhỏ và cấu trúc giải phẫu cực kỳ tinh vi. Sự khác biệt giữa loài gây hại nghiêm trọng và loài côn trùng có ích đôi khi chỉ nằm ở số lượng đốt râu hoặc hoa văn trên cánh. Thách thức lớn nhất là làm thế nào để mạng nơ-ron tự động khoanh vùng được các chi tiết giải phẫu này mà không cần tốn hàng ngàn giờ công gán nhãn thủ công cho từng bộ phận cơ thể côn trùng.",
-          '("Fine-Grained" OR "Deformable Attention") AND ("Pest Recognition" OR "Insect Classification") AND ("Anatomical Structures" OR "Feature Extraction")'
+          '("Fine-Grained" OR "Deformable Attention") AND ("Pest Recognition" OR "Insect Classification") AND ("Anatomical Structures" OR "Feature Extraction")',
+          "害虫の微細解剖学的特徴抽出（触角・脚部・翅脈）",
+          "外見が酷似する害虫種間（種間差異の極小性）や、幼虫・成虫間の形態変化を正確に識別するための生体解剖学的特徴抽出技術。",
+          "害虫識別の高精度化には、微細な生体パーツの観察が不可欠です。AIはこの要件を先端学術キーワード「Fine-Grained Pest Feature Extraction」にマッピングし、CVPR等で評価の高いDeformable Attention（変形可能アテンション）手法へと接続します。",
+          "一般的な物体認識と異なり、害虫は極めて微小で複雑な構造を持ちます。益虫と害虫の差異が触角の節数や翅の斑点のみに現れることも珍しくありません。膨大な手動アノテーションなしに局所解剖特徴を自動学習させることが技術的要所となります。"
         ),
         new KeywordNode(
           "kw-occlusion",
@@ -431,7 +486,11 @@ export class ResearchTopicRepository {
           [paperCrossScaleFusion, paperMPDIoU],
           "Môi trường nông nghiệp tự nhiên luôn chứa đầy vật cản (lá cây, cành khô, bóng râm, bùn đất) và sâu bệnh thường sống bầy đàn. AI đề xuất từ khóa 'Occluded & Dense Small-Pest Localization' nhằm trang bị cho đề tài của bạn các giải pháp xử lý che khuất (occlusion handling) và phát hiện đối tượng nhỏ mật độ cao (dense small object detection) - một trong những tiêu chí chấm điểm khắt khe nhất của các giáo sư về tính khả thi thực nghiệm.",
           "Các mạng nơ-ron tích chập (CNN) thông thường bị suy giảm độ chính xác nghiêm trọng khi đối tượng bị che khuất hơn 30% thân thể hoặc khi các khung bao dự đoán chồng lấn lên nhau (gây triệt tiêu nhầm qua thuật toán NMS). Hướng nghiên cứu này tập trung vào các giải pháp tiên tiến như hợp nhất đặc trưng hai chiều (Cross-Scale Feature Fusion) trên IEEE TPAMI và hàm mất mát khoảng cách cực trị MPDIoU.",
-          '("Occlusion Handling" OR "Dense Object Detection") AND ("Small Target" OR "Micro-Pests") AND ("Cross-Scale Fusion" OR "MPDIoU")'
+          '("Occlusion Handling" OR "Dense Object Detection") AND ("Small Target" OR "Micro-Pests") AND ("Cross-Scale Fusion" OR "MPDIoU")',
+          "葉の遮蔽および高密度微小害虫の局所位置特定",
+          "浅層・深層のマルチスケール特徴量統合と極値点最小距離損失（MPDIoU）を組み合わせ、重なり合う微小害虫の見失いを根本的に解決する技術体系。",
+          "自然農地では害虫が葉陰に隠れ、群生して密集します。AIは遮蔽処理（Occlusion Handling）と微小密集物体検出（Dense Small Object Detection）の学術知見を提案し、研究の実用性を高めます。",
+          "対象が30%以上遮蔽された場合やバウンディングボックスが重なり合った場合、従来のCNNとNMSでは検出精度が急落します。Cross-Scale Feature FusionやMPDIoU回帰損失により、高密度重なり環境下での堅牢な局所化を実現します。"
         ),
         new KeywordNode(
           "kw-realtime-edge",
@@ -443,7 +502,11 @@ export class ResearchTopicRepository {
           [paperRTDetr, paperEdgePest],
           "Một đề tài tốt nghiệp kỹ thuật máy tính / thị giác máy tính sẽ đạt điểm tối đa nếu không chỉ dừng lại ở mô hình lý thuyết trên máy tính bàn mà còn chứng minh được khả năng chạy thời gian thực trên thiết bị vi biên (Edge Devices). AI đề xuất từ khóa này để liên kết nghiên cứu của bạn với các kiến trúc thời gian thực tiên tiến nhất (như RT-DETR Baidu) và kỹ thuật nhúng phần cứng thực địa.",
           "Rào cản lớn nhất của việc đưa AI ra đồng ruộng là tài nguyên tính toán hạn chế của chip nhúng (như NVIDIA Jetson, Raspberry Pi) và nguồn điện pin mặt trời giới hạn (thường dưới 15W). Hướng nghiên cứu này giải quyết bài toán cân bằng hoàn hảo giữa độ phức tạp mô hình (FLOPs, tham số), độ trễ suy luận (Inference Latency < 20ms) và mức tiêu thụ điện năng ngoài trời.",
-          '("Real-Time Object Detection" OR "RT-DETR") AND ("Edge AI" OR "Embedded System" OR "Jetson") AND ("Pest Monitoring" OR "Precision Agriculture")'
+          '("Real-Time Object Detection" OR "RT-DETR") AND ("Edge AI" OR "Embedded System" OR "Jetson") AND ("Pest Monitoring" OR "Precision Agriculture")',
+          "実時間エッジAIによる野外病害虫検出",
+          "NMS後処理を完全排除した実時間Transformerアーキテクチャを活用し、ソーラー給電のスマート害虫トラップや農業用ドローンへ80 FPS以上でモデルを実装する応用研究。",
+          "理論モデルにとどまらず、省電力エッジデバイスでの実時間推論可能性を実証することで、実用化・社会実装（Productization）に直結するキーワードです。",
+          "組み込みチップ（NVIDIA Jetson等）の限られた計算資源とバッテリー駆動（15W未満）の中で、モデル複雑度、推論遅延（<20ms）、野外消費電力の最適なトレードオフを確立します。"
         ),
       ],
     });

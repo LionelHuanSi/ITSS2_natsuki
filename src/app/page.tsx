@@ -11,23 +11,23 @@ import {
   IconBookOpen,
   IconArrowLeft,
   IconArrowRight,
-  IconChevronRight,
   IconCheck,
   IconTrash,
   IconUpload,
   IconTranslate,
   IconSend,
-  IconRefresh,
 } from "@/components/Icons";
 import { ResearchWorkflowService } from "@/services/ResearchWorkflowService";
 import { KeywordNode } from "@/models/KeywordNode";
 import { AcademicPaper } from "@/models/AcademicPaper";
 import { SavedExplanation } from "@/models/SavedExplanation";
 import { InteractiveKeywordTree } from "@/components/InteractiveKeywordTree";
+import { LanguageProvider, useLanguage } from "@/i18n/LanguageContext";
 
 export type ScreenId = "S1" | "S2" | "S3" | "S4" | "S6";
 
-export default function NatsukiScholarApp() {
+function NatsukiScholarContent() {
+  const { language, setLanguage, t } = useLanguage();
   const workflowService = useMemo(() => new ResearchWorkflowService(), []);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -71,6 +71,22 @@ export default function NatsukiScholarApp() {
     setSavedExplanations(workflowService.loadSavedExplanations());
   }, [workflowService]);
 
+  // Cập nhật lại diễn giải và dịch thuật khi ngôn ngữ thay đổi
+  useEffect(() => {
+    if (highlightedText && selectedPaper) {
+      const res = workflowService.explainHighlightedText(
+        selectedPaper,
+        highlightedText,
+        customPrompt,
+        language
+      );
+      if (res.isValid) {
+        setExplanationText(res.explanation || "");
+        setTranslationText(res.translation || highlightedText);
+      }
+    }
+  }, [language]);
+
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 2500);
@@ -78,10 +94,14 @@ export default function NatsukiScholarApp() {
 
   // Xử lý Phân giải chủ đề (S1 -> S2)
   const handleAnalyze = () => {
-    const raw = topicInput.trim() || "Nhận diện sâu bệnh nông nghiệp đa loài bằng thị giác máy tính";
+    const defaultIdea =
+      language === "ja"
+        ? "コンピュータビジョンによる多種農業病害虫の識別"
+        : "Nhận diện sâu bệnh nông nghiệp đa loài bằng thị giác máy tính";
+    const raw = topicInput.trim() || defaultIdea;
     const res = workflowService.analyzeTopic(raw, "pest-vision");
     if (!res.isValid || !res.topicData) {
-      setSearchError(res.errorMessage || "Vui lòng nhập mô tả hoặc từ khóa nghiên cứu.");
+      setSearchError(res.errorMessage || t.toasts.minTopicInputError);
       return;
     }
     setSearchError(null);
@@ -90,7 +110,11 @@ export default function NatsukiScholarApp() {
     setSelectedKeyword(res.topicData.keywords[0]);
     setHasAnalyzedIdea(true);
     setActiveScreen("S2");
-    showToast("Đã phân giải ý tưởng thành sơ đồ từ khóa học thuật");
+    showToast(
+      language === "ja"
+        ? "研究アイデアを体系的学術キーワードツリーに分解しました"
+        : "Đã phân giải ý tưởng thành sơ đồ từ khóa học thuật"
+    );
   };
 
   // Chọn mẫu chủ đề có sẵn
@@ -109,29 +133,45 @@ export default function NatsukiScholarApp() {
     const customPaper = new AcademicPaper(
       `upload-${Date.now()}`,
       paperTitle,
-      "Tài liệu người dùng tải lên",
+      language === "ja" ? "ユーザーアップロード論文" : "Tài liệu người dùng tải lên",
       new Date().getFullYear(),
-      `Tệp đính kèm: ${file.name}`,
-      "Tài liệu do bạn trực tiếp tải lên để đọc và phân tích ngữ cảnh tại chỗ.",
+      `${language === "ja" ? "添付ファイル" : "Tệp đính kèm"}: ${file.name}`,
+      language === "ja"
+        ? "読解および文脈分析のために直接アップロードされた文書です。"
+        : "Tài liệu do bạn trực tiếp tải lên để đọc và phân tích ngữ cảnh tại chỗ.",
       [
         "This is the imported document content for your study. In academic research, deep domain modeling and specialized terms often introduce confusion when read through generic translation tools.",
         "The model actively bridges the representation discrepancy by mapping domain-specific jargon into verified technical contexts.",
-        "Through contextual reading, researchers can examine methodological rigor, experimental setups, and performance metrics without losing their train of thought."
+        "Through contextual reading, researchers can examine methodological rigor, experimental setups, and performance metrics without losing their train of thought.",
       ],
       {
         "representation discrepancy":
           "Độ sai lệch biểu diễn dữ liệu (Representation Discrepancy): Sự khác biệt về mặt phân phối đặc trưng giữa dữ liệu lý thuyết và dữ liệu thực nghiệm thực tế.",
         "methodological rigor":
-          "Tính chặt chẽ về phương pháp luận (Methodological Rigor): Tiêu chuẩn khoa học đảm bảo quy trình thử nghiệm và đối chứng không bị sai lệch hoặc có độ lệch thiên vị."
+          "Tính chặt chẽ về phương pháp luận (Methodological Rigor): Tiêu chuẩn khoa học đảm bảo quy trình thử nghiệm và đối chứng không bị sai lệch hoặc có độ lệch thiên vị.",
       },
       {
         "representation discrepancy": "Độ sai lệch biểu diễn đặc trưng",
-        "methodological rigor": "Tính chặt chẽ về phương pháp luận"
+        "methodological rigor": "Tính chặt chẽ về phương pháp luận",
       },
-      "Tài liệu tải lên",
+      language === "ja" ? "アップロード論文" : "Tài liệu tải lên",
       0,
       [],
-      ""
+      "",
+      language === "ja"
+        ? "ユーザーにより直接アップロードされた研究ドキュメントです。"
+        : "Tài liệu do bạn trực tiếp tải lên để đọc và phân tích ngữ cảnh tại chỗ.",
+      [],
+      {
+        "representation discrepancy":
+          "表現不一致（Representation Discrepancy）: 理論的データ分布と実世界観測データとの間における特徴量の分布乖離現象。",
+        "methodological rigor":
+          "方法論の厳密性（Methodological Rigor）: 実験手順および対照群の妥当性がバイアスなく担保されていることを示す科学的基準。",
+      },
+      {
+        "representation discrepancy": "特徴量表現の乖離・不一致",
+        "methodological rigor": "方法論の厳密性",
+      }
     );
 
     setSelectedPaper(customPaper);
@@ -140,7 +180,7 @@ export default function NatsukiScholarApp() {
     setTranslationText("");
     setExplanationNotice(null);
     setActiveScreen("S4");
-    showToast(`Đã tải lên tệp "${file.name}". Bắt đầu đọc bài báo!`);
+    showToast(t.toasts.uploadedSuccess.replace("{fileName}", file.name));
 
     // Reset input
     if (fileInputRef.current) fileInputRef.current.value = "";
@@ -173,9 +213,14 @@ export default function NatsukiScholarApp() {
   };
 
   const triggerExplanation = (text: string, customInstruction?: string) => {
-    const res = workflowService.explainHighlightedText(selectedPaper, text, customInstruction);
+    const res = workflowService.explainHighlightedText(
+      selectedPaper,
+      text,
+      customInstruction,
+      language
+    );
     if (!res.isValid || !res.selectedText || !res.explanation) {
-      setExplanationNotice(res.errorMessage || "Vui lòng bôi đen đoạn văn dài hơn.");
+      setExplanationNotice(res.errorMessage || t.toasts.selectTextError);
       return;
     }
     setExplanationNotice(null);
@@ -193,7 +238,7 @@ export default function NatsukiScholarApp() {
     setTimeout(() => {
       triggerExplanation(highlightedText, customPrompt);
       setIsProcessingPrompt(false);
-      showToast("Đã cập nhật giải thích theo yêu cầu của bạn.");
+      showToast(t.toasts.updatedExplanation);
     }, 200);
   };
 
@@ -201,13 +246,25 @@ export default function NatsukiScholarApp() {
   const handleQuickPrompt = (promptType: "deeper" | "example" | "summary") => {
     if (!highlightedText) return;
     let promptStr = "";
-    if (promptType === "deeper") promptStr = "giải thích chi tiết rõ ràng hơn về nguyên lý";
-    if (promptType === "example") promptStr = "cho ví dụ thực tế minh họa cụ thể";
-    if (promptType === "summary") promptStr = "tóm tắt ngắn gọn 1 câu";
+    if (promptType === "deeper") {
+      promptStr =
+        language === "ja"
+          ? "原理をより詳細に解説"
+          : "giải thích chi tiết rõ ràng hơn về nguyên lý";
+    }
+    if (promptType === "example") {
+      promptStr =
+        language === "ja"
+          ? "具体的な応用例を提示"
+          : "cho ví dụ thực tế minh họa cụ thể";
+    }
+    if (promptType === "summary") {
+      promptStr = language === "ja" ? "1文で要約" : "tóm tắt ngắn gọn 1 câu";
+    }
 
     setCustomPrompt(promptStr);
     triggerExplanation(highlightedText, promptStr);
-    showToast(`Đã áp dụng: ${promptStr}`);
+    showToast(t.toasts.appliedPrompt.replace("{prompt}", promptStr));
   };
 
   // Lưu trích dẫn vào Kho lưu trữ
@@ -222,13 +279,13 @@ export default function NatsukiScholarApp() {
       savedExplanations
     );
     setSavedExplanations(updated);
-    showToast("Đã lưu trích dẫn vào Kho tri thức cá nhân");
+    showToast(t.toasts.savedExplanationSuccess);
   };
 
   const handleDeleteSaved = (id: string) => {
     const updated = workflowService.deleteExplanation(id, savedExplanations);
     setSavedExplanations(updated);
-    showToast("Đã xóa mục trích dẫn đã lưu");
+    showToast(t.toasts.deletedExplanationSuccess);
   };
 
   // Giữ đánh dấu bôi đen trực quan bền vững trên bài báo cho đến khi bôi đen đoạn khác
@@ -277,86 +334,119 @@ export default function NatsukiScholarApp() {
           <button
             onClick={() => setActiveScreen("S1")}
             className="hover:opacity-80 transition flex items-center"
-            title="Quay về Trang chủ"
+            title={t.nav.returnHome}
           >
             <NatsukiScholarLogo />
           </button>
 
-          {/* Stepper dạng text học thuật không đánh số (khóa các tab phụ khi chưa khởi tạo từ ý tưởng) */}
+          {/* Stepper dạng text học thuật không đánh số */}
           <nav className="hidden md:flex items-center gap-1.5 text-xs text-slate-500">
             <button
               onClick={() => setActiveScreen("S1")}
-              className={`px-3 py-1 rounded-md transition ${activeScreen === "S1"
+              className={`px-3 py-1 rounded-md transition ${
+                activeScreen === "S1"
                   ? "bg-slate-900 text-white font-semibold shadow-sm"
                   : "hover:text-slate-900 text-slate-700"
-                }`}
+              }`}
             >
-              Khởi tạo
+              {t.nav.step1}
             </button>
             <span>/</span>
             <button
               onClick={() => {
                 if (!hasAnalyzedIdea) {
-                  showToast("Vui lòng khởi tạo từ ý tưởng để mở Cây từ khóa");
+                  showToast(t.nav.requireIdeaToast);
                   return;
                 }
                 setActiveScreen("S2");
               }}
-              title={hasAnalyzedIdea ? "Xem cây từ khóa học thuật" : "Cần khởi tạo từ ý tưởng trước"}
-              className={`px-3 py-1 rounded-md transition ${activeScreen === "S2"
+              title={hasAnalyzedIdea ? t.nav.step2 : t.nav.requireIdeaToast}
+              className={`px-3 py-1 rounded-md transition ${
+                activeScreen === "S2"
                   ? "bg-slate-900 text-white font-semibold shadow-sm"
                   : hasAnalyzedIdea
-                    ? "hover:text-slate-900 text-slate-700 font-medium"
-                    : "opacity-40 cursor-not-allowed text-slate-400"
-                }`}
+                  ? "hover:text-slate-900 text-slate-700 font-medium"
+                  : "opacity-40 cursor-not-allowed text-slate-400"
+              }`}
             >
-              Cây từ khóa
+              {t.nav.step2}
             </button>
             <span>/</span>
             <button
               onClick={() => {
                 if (!hasAnalyzedIdea) {
-                  showToast("Vui lòng khởi tạo từ ý tưởng để mở Bài báo nền tảng");
+                  showToast(t.nav.requireIdeaToast);
                   return;
                 }
                 setActiveScreen("S3");
               }}
-              title={hasAnalyzedIdea ? "Xem danh sách bài báo nền tảng" : "Cần khởi tạo từ ý tưởng trước"}
-              className={`px-3 py-1 rounded-md transition ${activeScreen === "S3"
+              title={hasAnalyzedIdea ? t.nav.step3 : t.nav.requireIdeaToast}
+              className={`px-3 py-1 rounded-md transition ${
+                activeScreen === "S3"
                   ? "bg-slate-900 text-white font-semibold shadow-sm"
                   : hasAnalyzedIdea
-                    ? "hover:text-slate-900 text-slate-700 font-medium"
-                    : "opacity-40 cursor-not-allowed text-slate-400"
-                }`}
+                  ? "hover:text-slate-900 text-slate-700 font-medium"
+                  : "opacity-40 cursor-not-allowed text-slate-400"
+              }`}
             >
-              Bài báo nền tảng
+              {t.nav.step3}
             </button>
             <span>/</span>
             <button
               onClick={() => {
                 setActiveScreen("S4");
               }}
-              className={`px-3 py-1 rounded-md transition ${activeScreen === "S4"
+              className={`px-3 py-1 rounded-md transition ${
+                activeScreen === "S4"
                   ? "bg-slate-900 text-white font-semibold shadow-sm"
                   : "hover:text-slate-900 text-slate-700"
-                }`}
+              }`}
             >
-              Không gian đọc
+              {t.nav.step4}
             </button>
           </nav>
         </div>
 
-        {/* Action Header */}
+        {/* Action Header: Language Switcher & Knowledge Base */}
         <div className="flex items-center gap-3">
+          {/* Nút chuyển đổi ngôn ngữ Việt / Nhật */}
+          <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs">
+            <button
+              type="button"
+              onClick={() => setLanguage("vi")}
+              className={`px-2.5 py-1 rounded-md transition text-xs font-mono font-medium ${
+                language === "vi"
+                  ? "bg-white text-slate-900 font-semibold shadow-xs"
+                  : "text-slate-500 hover:text-slate-800"
+              }`}
+              title="Chuyển sang Tiếng Việt"
+            >
+              VI
+            </button>
+            <button
+              type="button"
+              onClick={() => setLanguage("ja")}
+              className={`px-2.5 py-1 rounded-md transition text-xs font-mono font-medium ${
+                language === "ja"
+                  ? "bg-white text-slate-900 font-semibold shadow-xs"
+                  : "text-slate-500 hover:text-slate-800"
+              }`}
+              title="日本語に切り替え"
+            >
+              JA
+            </button>
+          </div>
+
           <button
             onClick={() => setActiveScreen("S6")}
-            className={`flex items-center gap-2 px-3 py-1.5 text-xs font-medium border rounded-lg transition ${activeScreen === "S6"
+            className={`flex items-center gap-2 px-3 py-1.5 text-xs font-medium border rounded-lg transition ${
+              activeScreen === "S6"
                 ? "bg-slate-900 text-white border-slate-900 shadow-sm"
                 : "bg-white text-slate-700 border-slate-300 hover:border-slate-400"
-              }`}
+            }`}
           >
             <IconArchive size={14} />
-            <span>Kho trích dẫn</span>
+            <span>{t.nav.knowledgeBase}</span>
             <span className="font-mono bg-slate-100 text-slate-800 px-1.5 py-0.5 rounded text-[11px] font-semibold">
               {savedExplanations.length}
             </span>
@@ -381,11 +471,14 @@ export default function NatsukiScholarApp() {
           <div className="max-w-2xl mx-auto px-6 py-12 flex flex-col items-center">
             {/* Tiêu đề chính */}
             <div className="text-center mb-6">
+              <span className="inline-block text-[11px] font-mono uppercase tracking-wider text-slate-500 bg-slate-100 px-3 py-1 rounded-full border border-slate-200 mb-3">
+                {t.s1.badge}
+              </span>
               <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-slate-900 mb-2">
-                Khởi tạo Khung Đề tài
+                {t.s1.title1} <span className="text-slate-600">{t.s1.title2}</span>
               </h1>
-              <p className="text-sm text-slate-500 max-w-md mx-auto">
-                Chuyển hóa ý tưởng sơ khai thành mạng lưới thuật ngữ và tài liệu học thuật.
+              <p className="text-xs text-slate-500 max-w-lg mx-auto leading-relaxed">
+                {t.s1.description}
               </p>
             </div>
 
@@ -393,23 +486,25 @@ export default function NatsukiScholarApp() {
             <div className="inline-flex p-1 bg-slate-100 rounded-xl border border-slate-200/80 mb-7">
               <button
                 onClick={() => setS1Tab("idea")}
-                className={`flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-lg transition ${s1Tab === "idea"
+                className={`flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-lg transition ${
+                  s1Tab === "idea"
                     ? "bg-white text-slate-900 shadow-sm font-semibold"
                     : "text-slate-600 hover:text-slate-900"
-                  }`}
+                }`}
               >
                 <IconSearch size={14} />
-                <span>Từ ý tưởng</span>
+                <span>{language === "ja" ? "アイデアから開始" : "Từ ý tưởng"}</span>
               </button>
               <button
                 onClick={() => setS1Tab("file")}
-                className={`flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-lg transition ${s1Tab === "file"
+                className={`flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-lg transition ${
+                  s1Tab === "file"
                     ? "bg-white text-slate-900 shadow-sm font-semibold"
                     : "text-slate-600 hover:text-slate-900"
-                  }`}
+                }`}
               >
                 <IconUpload size={14} />
-                <span>Tải bài báo</span>
+                <span>{language === "ja" ? "論文PDFを直接読解" : "Tải bài báo"}</span>
               </button>
             </div>
 
@@ -417,19 +512,27 @@ export default function NatsukiScholarApp() {
             {s1Tab === "idea" && (
               <div className="w-full space-y-4">
                 <div className="w-full bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:border-slate-300 focus-within:border-slate-800 focus-within:ring-1 focus-within:ring-slate-800 transition">
+                  <span className="text-[11px] font-mono text-slate-500 font-semibold block mb-2">
+                    {t.s1.inputLabel}
+                  </span>
                   <textarea
                     value={topicInput}
                     onChange={(e) => setTopicInput(e.target.value)}
-                    placeholder="Nhập các từ khóa rời rạc hoặc mô tả ý tưởng ban đầu..."
+                    placeholder={t.s1.inputPlaceholder}
                     rows={3}
                     className="w-full text-slate-900 placeholder:text-slate-400 text-sm leading-relaxed resize-none focus:outline-none bg-transparent"
                   />
-                  <div className="flex items-center justify-end pt-3 border-t border-slate-100 mt-2">
+                  <div className="flex items-center justify-between pt-3 border-t border-slate-100 mt-2">
+                    <span className="text-[11px] text-slate-400 font-mono">
+                      {topicInput.length > 0
+                        ? `${topicInput.length} ${language === "ja" ? "文字" : "ký tự"}`
+                        : ""}
+                    </span>
                     <button
                       onClick={handleAnalyze}
                       className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium rounded-lg shadow-sm transition"
                     >
-                      <span>Phân giải từ khóa</span>
+                      <span>{t.s1.analyzeBtn}</span>
                       <IconArrowRight size={14} />
                     </button>
                   </div>
@@ -440,6 +543,42 @@ export default function NatsukiScholarApp() {
                     {searchError}
                   </div>
                 )}
+
+                {/* Các gợi ý đề tài mẫu */}
+                <div className="w-full pt-2">
+                  <span className="text-xs text-slate-500 font-medium block mb-2">
+                    {t.s1.sampleIdeasLabel}
+                  </span>
+                  <div className="flex flex-col gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleSelectPreset("pest-vision", t.s1.sampleIdea1)
+                      }
+                      className="text-left text-xs text-slate-700 hover:text-slate-900 bg-white hover:bg-slate-100 p-2.5 rounded-lg border border-slate-200 transition"
+                    >
+                      • {t.s1.sampleIdea1}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleSelectPreset("pest-vision", t.s1.sampleIdea2)
+                      }
+                      className="text-left text-xs text-slate-700 hover:text-slate-900 bg-white hover:bg-slate-100 p-2.5 rounded-lg border border-slate-200 transition"
+                    >
+                      • {t.s1.sampleIdea2}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleSelectPreset("pest-vision", t.s1.sampleIdea3)
+                      }
+                      className="text-left text-xs text-slate-700 hover:text-slate-900 bg-white hover:bg-slate-100 p-2.5 rounded-lg border border-slate-200 transition"
+                    >
+                      • {t.s1.sampleIdea3}
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
 
@@ -465,10 +604,10 @@ export default function NatsukiScholarApp() {
                     <IconUpload size={22} />
                   </div>
                   <div className="text-sm font-semibold text-slate-900 mb-1">
-                    Kéo thả bài báo vào đây, hoặc click để chọn tệp
+                    {t.s1.dropzoneTitle}
                   </div>
                   <div className="text-xs text-slate-500">
-                    Hỗ trợ định dạng PDF, TXT, DOCX · Mở trực tiếp trong không gian đọc
+                    {t.s1.dropzoneDesc}
                   </div>
                 </div>
               </div>
@@ -488,7 +627,7 @@ export default function NatsukiScholarApp() {
                 className="inline-flex items-center gap-1.5 text-xs text-slate-600 hover:text-slate-900 transition font-medium"
               >
                 <IconArrowLeft size={14} />
-                <span>Quay lại khởi tạo</span>
+                <span>{t.s2.backBtn}</span>
               </button>
             </div>
 
@@ -497,11 +636,16 @@ export default function NatsukiScholarApp() {
               topic={currentTopic}
               selectedKeywordId={selectedKeyword.id}
               selectedPaperId={selectedPaper.id}
+              language={language}
               onSelectKeyword={handleSelectKeyword}
               onSelectPaper={(paper, kw) => {
                 setSelectedKeyword(kw);
                 handleStartReading(paper);
-                showToast(`Đang mở bài báo: "${paper.title.slice(0, 40)}..."`);
+                showToast(
+                  language === "ja"
+                    ? `論文を開いています: "${paper.title.slice(0, 36)}..."`
+                    : `Đang mở bài báo: "${paper.title.slice(0, 40)}..."`
+                );
               }}
             />
           </div>
@@ -519,7 +663,7 @@ export default function NatsukiScholarApp() {
                 className="inline-flex items-center gap-1.5 text-xs text-slate-600 hover:text-slate-900 transition font-medium"
               >
                 <IconArrowLeft size={14} />
-                <span>Quay lại cây từ khóa</span>
+                <span>{t.s3.backBtn}</span>
               </button>
             </div>
 
@@ -530,7 +674,7 @@ export default function NatsukiScholarApp() {
                   {selectedKeyword.level}
                 </span>
                 <span className="text-xs text-slate-500 font-medium">
-                  {selectedKeyword.labelVi}
+                  {selectedKeyword.getLabel(language)}
                 </span>
               </div>
               <h2 className="text-2xl font-semibold text-slate-900 mb-4 tracking-tight">
@@ -541,20 +685,22 @@ export default function NatsukiScholarApp() {
                 {/* 1. Cơ sở chọn lọc thuật ngữ */}
                 <div className="border-t border-slate-100 pt-3.5">
                   <span className="font-mono text-[11px] uppercase tracking-wider text-slate-500 font-semibold block mb-1">
-                    Cơ sở chọn lọc thuật ngữ:
+                    {t.s3.selectionReasonTitle}
                   </span>
                   <p className="text-slate-800 text-sm leading-relaxed text-justify">
-                    {selectedKeyword.selectionReason || selectedKeyword.whyImportant}
+                    {selectedKeyword.getSelectionReason(language) ||
+                      selectedKeyword.getExplanation(language)}
                   </p>
                 </div>
 
                 {/* 2. Bối cảnh nghiên cứu & Thách thức kỹ thuật */}
                 <div className="border-t border-slate-100 pt-3.5">
                   <span className="font-mono text-[11px] uppercase tracking-wider text-slate-500 font-semibold block mb-1">
-                    Bối cảnh nghiên cứu & Thách thức kỹ thuật:
+                    {t.s3.academicContextTitle}
                   </span>
                   <p className="text-slate-800 text-sm leading-relaxed text-justify">
-                    {selectedKeyword.academicContext || selectedKeyword.explanation}
+                    {selectedKeyword.getAcademicContext(language) ||
+                      selectedKeyword.getExplanation(language)}
                   </p>
                 </div>
               </div>
@@ -565,7 +711,7 @@ export default function NatsukiScholarApp() {
               <div className="flex items-center justify-between mb-4">
                 <span className="text-xs font-mono uppercase text-slate-700 font-semibold flex items-center gap-1.5">
                   <IconDocument size={15} className="text-slate-500" />
-                  <span>BÀI BÁO HỌC THUẬT NỀN TẢNG ĐƯỢC ĐỀ XUẤT</span>
+                  <span>{t.s3.foundationalPapersTitle}</span>
                 </span>
               </div>
 
@@ -578,10 +724,13 @@ export default function NatsukiScholarApp() {
                     <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                       <div className="space-y-2.5 flex-1">
                         <div className="flex items-center gap-2 mb-0.5 flex-wrap">
-                          <span className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded border ${paper.ranking.includes("A*")
-                              ? "bg-slate-900 text-white border-slate-900"
-                              : "bg-slate-100 text-slate-800 border-slate-200"
-                            }`}>
+                          <span
+                            className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded border ${
+                              paper.ranking.includes("A*")
+                                ? "bg-slate-900 text-white border-slate-900"
+                                : "bg-slate-100 text-slate-800 border-slate-200"
+                            }`}
+                          >
                             {paper.ranking}
                           </span>
                           <span className="text-[11px] font-mono text-slate-500">
@@ -589,7 +738,7 @@ export default function NatsukiScholarApp() {
                           </span>
                           {paper.citations > 0 && (
                             <span className="text-[11px] font-mono text-slate-400">
-                              • {paper.citations} trích dẫn
+                              • {paper.citations} {t.s3.citationsLabel}
                             </span>
                           )}
                         </div>
@@ -599,34 +748,38 @@ export default function NatsukiScholarApp() {
                         </h3>
 
                         <div className="text-xs text-slate-500">
-                          <span className="font-medium text-slate-600">Tác giả:</span> {paper.authors}
+                          <span className="font-medium text-slate-600">
+                            {t.s3.authorsLabel}
+                          </span>{" "}
+                          {paper.authors}
                         </div>
 
                         {/* Đóng góp chính */}
                         <div className="pt-2 border-t border-slate-100">
                           <span className="font-semibold text-slate-900 text-xs block mb-0.5">
-                            Đóng góp chính:
+                            {t.s3.keyContributions}
                           </span>
                           <p className="text-xs text-slate-700 leading-relaxed text-justify">
-                            {paper.relevance}
+                            {paper.getRelevance(language)}
                           </p>
                         </div>
 
                         {/* Kết quả thực nghiệm */}
-                        {paper.keyFindings && paper.keyFindings.length > 0 && (
-                          <div className="pt-1">
-                            <span className="font-semibold text-slate-900 text-xs block mb-1">
-                              Kết quả thực nghiệm & Định lượng:
-                            </span>
-                            <ul className="space-y-1 list-disc list-inside text-xs text-slate-600">
-                              {paper.keyFindings.map((finding, fIdx) => (
-                                <li key={fIdx} className="leading-relaxed">
-                                  {finding}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
+                        {paper.getKeyFindings(language) &&
+                          paper.getKeyFindings(language).length > 0 && (
+                            <div className="pt-1">
+                              <span className="font-semibold text-slate-900 text-xs block mb-1">
+                                {t.s3.experimentalResults}
+                              </span>
+                              <ul className="space-y-1 list-disc list-inside text-xs text-slate-600">
+                                {paper.getKeyFindings(language).map((finding, fIdx) => (
+                                  <li key={fIdx} className="leading-relaxed">
+                                    {finding}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
                       </div>
 
                       <div className="shrink-0 flex md:flex-col justify-end">
@@ -635,7 +788,7 @@ export default function NatsukiScholarApp() {
                           className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium rounded-lg transition shadow-xs"
                         >
                           <IconBookOpen size={13} />
-                          <span>Đọc bài báo</span>
+                          <span>{t.s3.readPaperBtn}</span>
                           <IconArrowRight size={12} />
                         </button>
                       </div>
@@ -659,19 +812,19 @@ export default function NatsukiScholarApp() {
                   <button
                     onClick={() => setActiveScreen("S1")}
                     className="inline-flex items-center gap-1.5 text-slate-600 hover:text-slate-900 font-mono transition"
-                    title="Quay lại trang Khởi tạo ban đầu"
+                    title={t.s4.backToInit}
                   >
                     <IconArrowLeft size={13} />
-                    <span>Quay lại khởi tạo</span>
+                    <span>{t.s4.backToInit}</span>
                   </button>
                 ) : (
                   <button
                     onClick={() => setActiveScreen("S3")}
                     className="inline-flex items-center gap-1.5 text-slate-600 hover:text-slate-900 font-mono transition"
-                    title="Quay lại danh sách bài báo của từ khóa này"
+                    title={t.s4.backToPapers}
                   >
                     <IconArrowLeft size={13} />
-                    <span>Quay lại danh sách bài báo</span>
+                    <span>{t.s4.backToPapers}</span>
                   </button>
                 )}
                 <span className="text-slate-300">|</span>
@@ -687,7 +840,9 @@ export default function NatsukiScholarApp() {
                 >
                   <IconUpload size={13} />
                   <span>
-                    {selectedPaper.id.startsWith("upload-") ? "Tải tệp bài báo khác" : "Tải lên bài báo"}
+                    {selectedPaper.id.startsWith("upload-")
+                      ? t.s4.uploadAnotherFile
+                      : t.s4.uploadPaper}
                   </span>
                 </button>
               </div>
@@ -703,20 +858,25 @@ export default function NatsukiScholarApp() {
                 <div className="max-w-2xl mx-auto space-y-6">
                   <div className="border-b border-slate-200 pb-5">
                     <div className="flex items-center gap-2 mb-2 flex-wrap">
-                      <span className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded border ${selectedPaper.id.startsWith("upload-")
-                          ? "bg-slate-100 text-slate-700 border-slate-200"
-                          : selectedPaper.ranking.includes("A*")
+                      <span
+                        className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded border ${
+                          selectedPaper.id.startsWith("upload-")
+                            ? "bg-slate-100 text-slate-700 border-slate-200"
+                            : selectedPaper.ranking.includes("A*")
                             ? "bg-slate-900 text-white border-slate-900"
                             : "bg-slate-100 text-slate-800 border-slate-200"
-                        }`}>
-                        {selectedPaper.ranking}
+                        }`}
+                      >
+                        {selectedPaper.id.startsWith("upload-")
+                          ? t.s4.userUploadBadge
+                          : selectedPaper.ranking}
                       </span>
                       <span className="text-xs font-mono uppercase text-slate-500">
                         {selectedPaper.venue} ({selectedPaper.year})
                       </span>
                       {selectedPaper.citations > 0 && (
                         <span className="text-xs font-mono text-slate-400">
-                          • {selectedPaper.citations} Trích dẫn
+                          • {selectedPaper.citations} {t.s4.citationsLabel}
                         </span>
                       )}
                     </div>
@@ -724,7 +884,9 @@ export default function NatsukiScholarApp() {
                       {selectedPaper.title}
                     </h1>
                     <p className="text-xs text-slate-600 mt-2">
-                      <span className="font-semibold text-slate-700">Tác giả:</span>{" "}
+                      <span className="font-semibold text-slate-700">
+                        {t.s4.authorsLabel}
+                      </span>{" "}
                       {selectedPaper.authors}
                     </p>
                   </div>
@@ -732,17 +894,17 @@ export default function NatsukiScholarApp() {
                   {/* Thanh gợi ý từ khóa */}
                   <div className="p-3 bg-slate-50 border border-slate-200 rounded text-xs text-slate-600 flex flex-col gap-2">
                     <div className="flex items-center justify-between font-medium">
-                      <span>Bôi đen câu bất kỳ để xem Dịch / Giải thích, hoặc bấm từ khóa mẫu:</span>
+                      <span>{t.s4.highlightHint}</span>
                     </div>
                     <div className="flex flex-wrap gap-1.5">
-                      {Object.keys(selectedPaper.dictionary).map((term) => (
+                      {Object.keys(selectedPaper.getDictionary(language)).map((term) => (
                         <button
                           type="button"
                           onMouseDown={(e) => e.preventDefault()}
                           key={term}
                           onClick={() => triggerExplanation(term)}
                           className="academic-highlight text-xs font-medium text-slate-900"
-                          title="Bấm để dịch và giải thích ngữ cảnh"
+                          title={language === "ja" ? "クリックして翻訳・解説を表示" : "Bấm để dịch và giải thích ngữ cảnh"}
                         >
                           {term}
                         </button>
@@ -770,26 +932,28 @@ export default function NatsukiScholarApp() {
                       type="button"
                       onMouseDown={(e) => e.preventDefault()}
                       onClick={() => setSidebarMode("explain")}
-                      className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium rounded transition ${sidebarMode === "explain"
+                      className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium rounded transition ${
+                        sidebarMode === "explain"
                           ? "bg-slate-900 text-white font-semibold"
                           : "text-slate-600 hover:text-slate-900"
-                        }`}
+                      }`}
                     >
                       <IconHighlight size={14} />
-                      <span>Giải thích ngữ cảnh</span>
+                      <span>{t.s4.tabExplain}</span>
                     </button>
 
                     <button
                       type="button"
                       onMouseDown={(e) => e.preventDefault()}
                       onClick={() => setSidebarMode("translate")}
-                      className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium rounded transition ${sidebarMode === "translate"
+                      className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium rounded transition ${
+                        sidebarMode === "translate"
                           ? "bg-slate-900 text-white font-semibold"
                           : "text-slate-600 hover:text-slate-900"
-                        }`}
+                      }`}
                     >
                       <IconTranslate size={14} />
-                      <span>Dịch thuật học thuật</span>
+                      <span>{t.s4.tabTranslate}</span>
                     </button>
                   </div>
                 </div>
@@ -806,10 +970,10 @@ export default function NatsukiScholarApp() {
                     <div className="h-64 flex flex-col items-center justify-center text-center p-6 border border-dashed border-slate-300 rounded text-slate-500">
                       <IconHighlight size={24} className="mb-2 text-slate-400" />
                       <span className="text-xs font-medium text-slate-700 mb-1">
-                        Chưa có đoạn văn bản được chọn
+                        {t.s4.emptySelectionTitle}
                       </span>
                       <p className="text-[11px] text-slate-500 max-w-xs leading-relaxed">
-                        Dùng chuột bôi đen một câu khó trong bài đọc bên trái để xem bản dịch chuẩn hoặc giải thích chi tiết.
+                        {t.s4.emptySelectionDesc}
                       </p>
                     </div>
                   ) : (
@@ -817,7 +981,7 @@ export default function NatsukiScholarApp() {
                       {/* Đoạn văn gốc */}
                       <div className="bg-white border border-slate-200 p-3 rounded">
                         <span className="text-[10px] font-mono uppercase text-slate-400 font-semibold block mb-1">
-                          Đoạn trích dẫn gốc trong bài:
+                          {t.s4.originalQuoteTitle}
                         </span>
                         <p className="text-xs font-mono text-slate-900 bg-slate-50 p-2 rounded border border-slate-100">
                           "{highlightedText}"
@@ -829,7 +993,7 @@ export default function NatsukiScholarApp() {
                         <div className="space-y-3">
                           <div className="bg-white border border-slate-900 p-4 rounded shadow-sm">
                             <span className="text-[10px] font-mono uppercase text-slate-500 font-semibold block mb-1.5">
-                              Ý nghĩa theo ngữ cảnh nghiên cứu:
+                              {t.s4.explainTitle}
                             </span>
                             <p className="text-xs leading-relaxed text-slate-800 whitespace-pre-line">
                               {explanationText}
@@ -839,7 +1003,7 @@ export default function NatsukiScholarApp() {
                           {/* Quick Action Prompt Pills */}
                           <div className="space-y-1.5">
                             <span className="text-[10px] font-mono uppercase text-slate-400 block font-semibold">
-                              Bạn muốn giải thích rõ hơn? Bấm chọn nhanh:
+                              {t.s4.quickPromptTitle}
                             </span>
                             <div className="flex flex-wrap gap-1.5">
                               <button
@@ -848,7 +1012,7 @@ export default function NatsukiScholarApp() {
                                 onClick={() => handleQuickPrompt("deeper")}
                                 className="px-2.5 py-1 text-[11px] bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 rounded transition"
                               >
-                                Giải thích chi tiết hơn
+                                {t.s4.quickPromptDeeper}
                               </button>
                               <button
                                 type="button"
@@ -856,7 +1020,7 @@ export default function NatsukiScholarApp() {
                                 onClick={() => handleQuickPrompt("example")}
                                 className="px-2.5 py-1 text-[11px] bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 rounded transition"
                               >
-                                Cho ví dụ thực tế
+                                {t.s4.quickPromptExample}
                               </button>
                               <button
                                 type="button"
@@ -864,7 +1028,7 @@ export default function NatsukiScholarApp() {
                                 onClick={() => handleQuickPrompt("summary")}
                                 className="px-2.5 py-1 text-[11px] bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 rounded transition"
                               >
-                                Tóm tắt 1 câu
+                                {t.s4.quickPromptSummary}
                               </button>
                             </div>
                           </div>
@@ -872,21 +1036,21 @@ export default function NatsukiScholarApp() {
                           {/* Ô nhập yêu cầu giải thích tùy biến */}
                           <form onSubmit={handleSendCustomPrompt} className="pt-2">
                             <span className="text-[10px] font-mono uppercase text-slate-500 block font-semibold mb-1">
-                              Hoặc nhập yêu cầu giải thích theo ý bạn:
+                              {t.s4.customPromptLabel}
                             </span>
                             <div className="flex items-center gap-1.5 bg-white border border-slate-300 focus-within:border-slate-800 p-1.5 rounded">
                               <input
                                 type="text"
                                 value={customPrompt}
                                 onChange={(e) => setCustomPrompt(e.target.value)}
-                                placeholder="Ví dụ: giải thích dễ hiểu cho người mới, so sánh với CNN..."
+                                placeholder={t.s4.customPromptPlaceholder}
                                 className="flex-1 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none px-1.5 bg-transparent"
                               />
                               <button
                                 type="submit"
                                 disabled={isProcessingPrompt || !customPrompt.trim()}
                                 className="p-1.5 bg-slate-900 text-white rounded hover:bg-slate-800 disabled:opacity-40 transition shrink-0"
-                                title="Gửi yêu cầu giải thích"
+                                title={t.s4.sendPromptBtn}
                               >
                                 <IconSend size={13} />
                               </button>
@@ -901,7 +1065,7 @@ export default function NatsukiScholarApp() {
                           <div className="bg-white border border-slate-900 p-4 rounded shadow-sm">
                             <div className="mb-2">
                               <span className="text-[10px] font-mono uppercase text-slate-500 font-semibold">
-                                Bản dịch theo ngữ cảnh bài báo:
+                                {t.s4.translateTitle}
                               </span>
                             </div>
                             <p className="text-xs leading-relaxed text-slate-800 font-medium whitespace-pre-line">
@@ -924,7 +1088,7 @@ export default function NatsukiScholarApp() {
                     className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-200 disabled:text-slate-400 text-white text-xs font-medium rounded transition"
                   >
                     <IconArchive size={14} />
-                    <span>Lưu vào Kho tri thức</span>
+                    <span>{t.s4.saveToKnowledgeBtn}</span>
                   </button>
                 </div>
               </aside>
@@ -944,39 +1108,39 @@ export default function NatsukiScholarApp() {
                 className="inline-flex items-center gap-1.5 text-xs text-slate-600 hover:text-slate-900 transition font-mono"
               >
                 <IconArrowLeft size={14} />
-                <span>Quay lại bài đọc tiếp</span>
+                <span>{t.s6.backBtn}</span>
               </button>
               <span className="text-xs font-mono text-slate-500 uppercase">
-                KHO LƯU TRỮ TRÍCH DẪN & GHI CHÚ
+                {t.s6.headerBadge}
               </span>
             </div>
 
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-xl font-semibold text-slate-900">
-                  Kho Trích dẫn & Diễn giải Ngữ cảnh
+                  {t.s6.title}
                 </h2>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Lưu trữ có hệ thống giúp bạn không phải tra cứu lại từ đầu khi viết đồ án hoặc tổng quan tài liệu.
+                  {t.s6.description}
                 </p>
               </div>
               <span className="text-xs font-mono px-2.5 py-1 bg-white border border-slate-200 rounded text-slate-700">
-                {savedExplanations.length} trích dẫn đã lưu
+                {savedExplanations.length} {t.s6.savedCount}
               </span>
             </div>
 
             {savedExplanations.length === 0 ? (
               <div className="bg-white border border-slate-200 rounded p-12 text-center text-slate-500">
                 <IconArchive size={28} className="mx-auto mb-2 text-slate-300" />
-                <p className="text-sm font-medium text-slate-700">Kho lưu trữ đang trống</p>
+                <p className="text-sm font-medium text-slate-700">{t.s6.emptyTitle}</p>
                 <p className="text-xs text-slate-500 mt-1">
-                  Khi đọc bài báo ở bước 4, hãy bôi đen các câu khó và nhấn "Lưu vào Kho tri thức".
+                  {t.s6.emptyDesc}
                 </p>
                 <button
                   onClick={() => setActiveScreen("S4")}
                   className="mt-4 px-4 py-2 bg-slate-900 text-white text-xs font-medium rounded hover:bg-slate-800 transition"
                 >
-                  Mở bài đọc ngay
+                  {t.s6.backBtn}
                 </button>
               </div>
             ) : (
@@ -992,13 +1156,13 @@ export default function NatsukiScholarApp() {
                           {item.keywordLabel} • {item.createdAt}
                         </span>
                         <h4 className="text-xs font-semibold text-slate-900">
-                          Bài báo: {item.paperTitle}
+                          {language === "ja" ? "論文" : "Bài báo"}: {item.paperTitle}
                         </h4>
                       </div>
                       <button
                         onClick={() => handleDeleteSaved(item.id)}
                         className="text-slate-400 hover:text-rose-600 transition p-1"
-                        title="Xóa trích dẫn này"
+                        title={t.s6.deleteBtn}
                       >
                         <IconTrash size={15} />
                       </button>
@@ -1017,7 +1181,7 @@ export default function NatsukiScholarApp() {
                         onClick={() => setActiveScreen("S4")}
                         className="inline-flex items-center gap-1.5 text-xs text-slate-900 hover:underline font-medium"
                       >
-                        <span>Đọc tiếp bài này</span>
+                        <span>{language === "ja" ? "この論文の読解を続ける" : "Đọc tiếp bài này"}</span>
                         <IconArrowRight size={13} />
                       </button>
                     </div>
@@ -1029,5 +1193,13 @@ export default function NatsukiScholarApp() {
         )}
       </main>
     </div>
+  );
+}
+
+export default function NatsukiScholarApp() {
+  return (
+    <LanguageProvider>
+      <NatsukiScholarContent />
+    </LanguageProvider>
   );
 }

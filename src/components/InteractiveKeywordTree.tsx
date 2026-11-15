@@ -10,6 +10,7 @@ interface InteractiveKeywordTreeProps {
   topic: ResearchTopicData;
   selectedKeywordId?: string;
   selectedPaperId?: string;
+  language?: "vi" | "ja";
   onSelectKeyword: (keyword: KeywordNode) => void;
   onSelectPaper?: (paper: AcademicPaper, keyword: KeywordNode) => void;
 }
@@ -39,6 +40,7 @@ export const InteractiveKeywordTree: React.FC<InteractiveKeywordTreeProps> = ({
   topic,
   selectedKeywordId,
   selectedPaperId,
+  language = "vi",
   onSelectKeyword,
   onSelectPaper,
 }) => {
@@ -239,9 +241,9 @@ export const InteractiveKeywordTree: React.FC<InteractiveKeywordTreeProps> = ({
         <button
           onClick={handleResetView}
           className="px-2.5 py-1 hover:bg-slate-100 rounded-lg text-xs text-slate-700 font-medium transition"
-          title="Đưa về mặc định"
+          title={language === "ja" ? "初期位置に戻す" : "Đưa về mặc định"}
         >
-          Căn giữa
+          {language === "ja" ? "中央配置" : "Căn giữa"}
         </button>
       </div>
 
@@ -249,18 +251,20 @@ export const InteractiveKeywordTree: React.FC<InteractiveKeywordTreeProps> = ({
       <div className="absolute bottom-4 left-4 z-20 hidden md:flex items-center gap-4 bg-white/90 backdrop-blur-md border border-slate-200/80 px-3.5 py-1.5 rounded-xl text-xs text-slate-600 shadow-xs">
         <div className="flex items-center gap-1.5">
           <span className="w-2.5 h-2.5 rounded-full bg-slate-900 inline-block"></span>
-          <span>Đề tài gốc</span>
+          <span>{language === "ja" ? "研究テーマ" : "Đề tài gốc"}</span>
         </div>
         <div className="flex items-center gap-1.5">
           <span className="w-2.5 h-2.5 rounded-sm bg-sky-500 inline-block"></span>
-          <span>Từ khóa học thuật chuyên ngành</span>
+          <span>{language === "ja" ? "学術専門キーワード" : "Từ khóa học thuật chuyên ngành"}</span>
         </div>
         <div className="flex items-center gap-1.5">
           <span className="w-2.5 h-2.5 rounded-sm bg-emerald-600 inline-block"></span>
-          <span>Node bài báo nền tảng (Core A* / Q1)</span>
+          <span>{language === "ja" ? "基盤論文ノード (Core A* / Q1)" : "Node bài báo nền tảng (Core A* / Q1)"}</span>
         </div>
         <span className="text-slate-400">|</span>
-        <span className="text-slate-500 italic">Click vào thẻ bài báo để mở trực tiếp không gian đọc</span>
+        <span className="text-slate-500 italic">
+          {language === "ja" ? "論文カードをクリックして読解スペースを開く" : "Click vào thẻ bài báo để mở trực tiếp không gian đọc"}
+        </span>
       </div>
 
       {/* CANVAS KHÔNG GIAN BẢN ĐỒ CÂY TƯƠNG TÁC */}
@@ -402,10 +406,12 @@ export const InteractiveKeywordTree: React.FC<InteractiveKeywordTreeProps> = ({
           >
             <div className="flex items-center gap-1.5 text-xs text-sky-400 font-medium mb-1.5">
               <IconTree size={14} />
-              <span className="font-mono text-[11px] uppercase tracking-wider">{topic.subDomain}</span>
+              <span className="font-mono text-[11px] uppercase tracking-wider">
+                {language === "ja" && topic.subDomainJa ? topic.subDomainJa : topic.subDomain}
+              </span>
             </div>
             <h2 className="text-sm font-semibold leading-snug text-white">
-              {topic.title}
+              {language === "ja" && topic.titleJa ? topic.titleJa : topic.title}
             </h2>
           </div>
 
@@ -449,7 +455,9 @@ export const InteractiveKeywordTree: React.FC<InteractiveKeywordTreeProps> = ({
                   </span>
                   <span className="text-xs text-slate-500 font-medium flex items-center gap-1 group-hover:text-slate-900 transition">
                     <IconBookOpen size={12} className="text-slate-400" />
-                    <span>{kw.papers.length} bài báo quốc tế</span>
+                    <span>
+                      {language === "ja" ? `${kw.papers.length} 本の国際論文` : `${kw.papers.length} bài báo quốc tế`}
+                    </span>
                     <IconArrowRight size={11} className="opacity-60 group-hover:translate-x-0.5 transition-transform" />
                   </span>
                 </div>
@@ -460,7 +468,7 @@ export const InteractiveKeywordTree: React.FC<InteractiveKeywordTreeProps> = ({
                     {kw.labelEn}
                   </h3>
                   <div className="text-[11px] text-slate-500 truncate mt-0.5">
-                    {kw.labelVi}
+                    {kw.getLabel(language)}
                   </div>
                 </div>
               </div>
@@ -524,7 +532,7 @@ export const InteractiveKeywordTree: React.FC<InteractiveKeywordTreeProps> = ({
                     </div>
 
                     <span className="text-slate-500 font-medium group-hover:text-slate-900 transition flex items-center gap-1 font-mono shrink-0">
-                      <span>Đọc ngay</span>
+                      <span>{language === "ja" ? "読む" : "Đọc ngay"}</span>
                       <IconArrowRight size={10} className="group-hover:translate-x-0.5 transition-transform" />
                     </span>
                   </div>
