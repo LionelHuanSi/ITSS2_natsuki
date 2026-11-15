@@ -117,13 +117,6 @@ function NatsukiScholarContent() {
     );
   };
 
-  // Chọn mẫu chủ đề có sẵn
-  const handleSelectPreset = (key: string, title: string) => {
-    setTopicKey(key);
-    setTopicInput(title);
-    setSearchError(null);
-  };
-
   // Tải lên bài báo tài liệu cá nhân (.pdf, .txt, .docx)
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
