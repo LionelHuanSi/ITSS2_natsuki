@@ -471,14 +471,11 @@ function NatsukiScholarContent() {
           <div className="max-w-2xl mx-auto px-6 py-12 flex flex-col items-center">
             {/* Tiêu đề chính */}
             <div className="text-center mb-6">
-              <span className="inline-block text-[11px] font-mono uppercase tracking-wider text-slate-500 bg-slate-100 px-3 py-1 rounded-full border border-slate-200 mb-3">
-                {t.s1.badge}
-              </span>
               <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-slate-900 mb-2">
-                {t.s1.title1} <span className="text-slate-600">{t.s1.title2}</span>
+                {t.s1.title}
               </h1>
-              <p className="text-xs text-slate-500 max-w-lg mx-auto leading-relaxed">
-                {t.s1.description}
+              <p className="text-sm text-slate-500 max-w-md mx-auto">
+                {t.s1.subtitle}
               </p>
             </div>
 
@@ -493,7 +490,7 @@ function NatsukiScholarContent() {
                 }`}
               >
                 <IconSearch size={14} />
-                <span>{language === "ja" ? "アイデアから開始" : "Từ ý tưởng"}</span>
+                <span>{t.s1.tabIdea}</span>
               </button>
               <button
                 onClick={() => setS1Tab("file")}
@@ -504,7 +501,7 @@ function NatsukiScholarContent() {
                 }`}
               >
                 <IconUpload size={14} />
-                <span>{language === "ja" ? "論文PDFを直接読解" : "Tải bài báo"}</span>
+                <span>{t.s1.tabFile}</span>
               </button>
             </div>
 
@@ -512,9 +509,6 @@ function NatsukiScholarContent() {
             {s1Tab === "idea" && (
               <div className="w-full space-y-4">
                 <div className="w-full bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:border-slate-300 focus-within:border-slate-800 focus-within:ring-1 focus-within:ring-slate-800 transition">
-                  <span className="text-[11px] font-mono text-slate-500 font-semibold block mb-2">
-                    {t.s1.inputLabel}
-                  </span>
                   <textarea
                     value={topicInput}
                     onChange={(e) => setTopicInput(e.target.value)}
@@ -522,12 +516,7 @@ function NatsukiScholarContent() {
                     rows={3}
                     className="w-full text-slate-900 placeholder:text-slate-400 text-sm leading-relaxed resize-none focus:outline-none bg-transparent"
                   />
-                  <div className="flex items-center justify-between pt-3 border-t border-slate-100 mt-2">
-                    <span className="text-[11px] text-slate-400 font-mono">
-                      {topicInput.length > 0
-                        ? `${topicInput.length} ${language === "ja" ? "文字" : "ký tự"}`
-                        : ""}
-                    </span>
+                  <div className="flex items-center justify-end pt-3 border-t border-slate-100 mt-2">
                     <button
                       onClick={handleAnalyze}
                       className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium rounded-lg shadow-sm transition"
@@ -543,42 +532,6 @@ function NatsukiScholarContent() {
                     {searchError}
                   </div>
                 )}
-
-                {/* Các gợi ý đề tài mẫu */}
-                <div className="w-full pt-2">
-                  <span className="text-xs text-slate-500 font-medium block mb-2">
-                    {t.s1.sampleIdeasLabel}
-                  </span>
-                  <div className="flex flex-col gap-1.5">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        handleSelectPreset("pest-vision", t.s1.sampleIdea1)
-                      }
-                      className="text-left text-xs text-slate-700 hover:text-slate-900 bg-white hover:bg-slate-100 p-2.5 rounded-lg border border-slate-200 transition"
-                    >
-                      • {t.s1.sampleIdea1}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        handleSelectPreset("pest-vision", t.s1.sampleIdea2)
-                      }
-                      className="text-left text-xs text-slate-700 hover:text-slate-900 bg-white hover:bg-slate-100 p-2.5 rounded-lg border border-slate-200 transition"
-                    >
-                      • {t.s1.sampleIdea2}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        handleSelectPreset("pest-vision", t.s1.sampleIdea3)
-                      }
-                      className="text-left text-xs text-slate-700 hover:text-slate-900 bg-white hover:bg-slate-100 p-2.5 rounded-lg border border-slate-200 transition"
-                    >
-                      • {t.s1.sampleIdea3}
-                    </button>
-                  </div>
-                </div>
               </div>
             )}
 

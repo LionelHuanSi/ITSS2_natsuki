@@ -15,20 +15,14 @@ export const translations = {
     },
     // Screen 1: Initial Idea
     s1: {
-      badge: "Không gian làm việc nghiên cứu học thuật tập trung",
-      title1: "Khám phá từ khóa & Đọc hiểu tại chỗ",
-      title2: "không mất context",
-      description:
-        "Hỗ trợ nghiên cứu sinh và nhà khoa học phân giải ý tưởng sơ khai thành cây từ khóa chuẩn Scopus/ISI, định vị các công trình nền tảng và hỗ trợ đọc hiểu đa ngữ với giải thích ngữ cảnh chuyên sâu.",
-      inputLabel: "Mô tả ý tưởng nghiên cứu ban đầu:",
+      title: "Khởi tạo Khung Đề tài",
+      subtitle: "Chuyển hóa ý tưởng sơ khai thành mạng lưới thuật ngữ và tài liệu học thuật.",
+      tabIdea: "Từ ý tưởng",
+      tabFile: "Tải bài báo",
       inputPlaceholder: "Nhập các từ khóa rời rạc hoặc mô tả ý tưởng ban đầu...",
-      analyzeBtn: "Phân giải từ khóa →",
-      sampleIdeasLabel: "Hoặc thử nhanh với các đề tài mẫu:",
-      sampleIdea1: "Nhận diện sâu bệnh nông nghiệp đa loài bằng thị giác máy tính",
-      sampleIdea2: "Hệ thống hỗ trợ phẫu thuật tim mạch với robot thời gian thực",
-      sampleIdea3: "Dự báo phụ tải điện vi lưới sử dụng học sâu lai",
-      dropzoneTitle: "Hoặc kéo thả trực tiếp tệp bài báo để đọc và dịch ngữ cảnh",
-      dropzoneDesc: "Kéo thả tệp .pdf, .txt, .docx vào đây, hoặc click để chọn tệp từ máy tính",
+      analyzeBtn: "Phân giải từ khóa",
+      dropzoneTitle: "Kéo thả bài báo vào đây, hoặc click để chọn tệp",
+      dropzoneDesc: "Hỗ trợ định dạng PDF, TXT, DOCX · Mở trực tiếp trong không gian đọc",
     },
     // Screen 2: Interactive Keyword Tree
     s2: {
@@ -122,20 +116,14 @@ export const translations = {
     },
     // Screen 1: Initial Idea
     s1: {
-      badge: "学術研究特化型ワークスペース",
-      title1: "キーワードの体系的分解から",
-      title2: "文脈を保持した論文読解まで",
-      description:
-        "研究者や大学院生の初期アイデアをScopus/ISI水準のキーワードツリーへと体系化し、基盤となる重要文献の特定と高度な文脈依存型・学術読解をシームレスに支援します。",
-      inputLabel: "研究テーマまたは初期アイデアを入力:",
+      title: "研究テーマの初期設定",
+      subtitle: "初期アイデアを体系的な学術用語ネットワークと先行研究群へと構造化します。",
+      tabIdea: "アイデアから開始",
+      tabFile: "論文PDFをアップロード",
       inputPlaceholder: "初期アイデアや断片的なキーワードを入力...",
-      analyzeBtn: "キーワードを体系化 →",
-      sampleIdeasLabel: "または、サンプル研究テーマを試す:",
-      sampleIdea1: "コンピュータビジョンによる多種農業病害虫の識別",
-      sampleIdea2: "リアルタイムロボット支援心臓血管手術システム",
-      sampleIdea3: "ハイブリッド深層学習を用いたマイクログリッド電力負荷予測",
-      dropzoneTitle: "または、論文PDFを直接ドラッグ＆ドロップして即座に読解・翻訳",
-      dropzoneDesc: ".pdf, .txt, .docx ファイルをドラッグ＆ドロップ、またはファイルを選択",
+      analyzeBtn: "キーワードを体系化",
+      dropzoneTitle: "論文PDFをドラッグ＆ドロップ、またはファイルを選択",
+      dropzoneDesc: "PDF, TXT, DOCX形式に対応 · 読解スペースで直接閲覧",
     },
     // Screen 2: Interactive Keyword Tree
     s2: {
