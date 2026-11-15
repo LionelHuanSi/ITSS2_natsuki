@@ -276,7 +276,8 @@ function NatsukiScholarContent() {
       selectedKeyword,
       highlightedText,
       contentToSave,
-      savedExplanations
+      savedExplanations,
+      language
     );
     setSavedExplanations(updated);
     showToast(t.toasts.savedExplanationSuccess);
@@ -624,7 +625,7 @@ function NatsukiScholarContent() {
             <div className="bg-white border border-slate-200 p-6 rounded-xl mb-8 shadow-xs">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-[11px] font-mono px-2 py-0.5 bg-slate-100 text-slate-700 border border-slate-200 rounded font-medium">
-                  {selectedKeyword.level}
+                  {selectedKeyword.getLevel(language)}
                 </span>
                 <span className="text-xs text-slate-500 font-medium">
                   {selectedKeyword.getLabel(language)}
@@ -684,7 +685,7 @@ function NatsukiScholarContent() {
                                 : "bg-slate-100 text-slate-800 border-slate-200"
                             }`}
                           >
-                            {paper.ranking}
+                            {paper.getRanking(language)}
                           </span>
                           <span className="text-[11px] font-mono text-slate-500">
                             {paper.venue} • {paper.year}
@@ -822,7 +823,7 @@ function NatsukiScholarContent() {
                       >
                         {selectedPaper.id.startsWith("upload-")
                           ? t.s4.userUploadBadge
-                          : selectedPaper.ranking}
+                          : selectedPaper.getRanking(language)}
                       </span>
                       <span className="text-xs font-mono uppercase text-slate-500">
                         {selectedPaper.venue} ({selectedPaper.year})
@@ -1106,7 +1107,7 @@ function NatsukiScholarContent() {
                     <div className="flex items-start justify-between gap-4">
                       <div className="space-y-1">
                         <span className="text-[11px] font-mono text-slate-500">
-                          {item.keywordLabel} • {item.createdAt}
+                          {item.getKeywordLabel(language)} • {item.getCreatedAt(language)}
                         </span>
                         <h4 className="text-xs font-semibold text-slate-900">
                           {language === "ja" ? "論文" : "Bài báo"}: {item.paperTitle}
@@ -1126,7 +1127,7 @@ function NatsukiScholarContent() {
                     </div>
 
                     <p className="text-xs leading-relaxed text-slate-700 bg-white border border-slate-100 p-3 rounded whitespace-pre-line">
-                      {item.explanation}
+                      {item.getExplanation(language)}
                     </p>
 
                     <div className="flex items-center justify-end pt-2 border-t border-slate-100">

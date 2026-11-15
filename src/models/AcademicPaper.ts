@@ -20,8 +20,19 @@ export class AcademicPaper {
     public readonly relevanceJa: string = "",
     public readonly keyFindingsJa: string[] = [],
     public readonly dictionaryJa: Record<string, string> = {},
-    public readonly translationsJa: Record<string, string> = {}
+    public readonly translationsJa: Record<string, string> = {},
+    public readonly rankingJa: string = ""
   ) {}
+
+  public getRanking(lang: "vi" | "ja"): string {
+    if (lang === "ja") {
+      if (this.rankingJa) return this.rankingJa;
+      return this.ranking
+        .replace(/Trích dẫn:\s*/g, "被引用数: ")
+        .replace(/Trích dẫn\s*/g, "被引用数 ");
+    }
+    return this.ranking;
+  }
 
   public getRelevance(lang: "vi" | "ja"): string {
     return lang === "ja" && this.relevanceJa ? this.relevanceJa : this.relevance;

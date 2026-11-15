@@ -223,7 +223,7 @@ export const InteractiveKeywordTree: React.FC<InteractiveKeywordTreeProps> = ({
         <button
           onClick={() => handleZoom(0.12)}
           className="w-7 h-7 flex items-center justify-center hover:bg-slate-100 rounded-lg text-slate-700 font-bold transition text-sm"
-          title="Phóng to"
+          title={language === "ja" ? "拡大" : "Phóng to"}
         >
           +
         </button>
@@ -233,7 +233,7 @@ export const InteractiveKeywordTree: React.FC<InteractiveKeywordTreeProps> = ({
         <button
           onClick={() => handleZoom(-0.12)}
           className="w-7 h-7 flex items-center justify-center hover:bg-slate-100 rounded-lg text-slate-700 font-bold transition text-sm"
-          title="Thu nhỏ"
+          title={language === "ja" ? "縮小" : "Thu nhỏ"}
         >
           −
         </button>
@@ -451,7 +451,7 @@ export const InteractiveKeywordTree: React.FC<InteractiveKeywordTreeProps> = ({
                   <span
                     className={`text-[10px] font-medium px-2 py-0.5 rounded-md border ${style.badgeBg}`}
                   >
-                    {kw.level}
+                    {kw.getLevel(language)}
                   </span>
                   <span className="text-xs text-slate-500 font-medium flex items-center gap-1 group-hover:text-slate-900 transition">
                     <IconBookOpen size={12} className="text-slate-400" />
@@ -507,7 +507,7 @@ export const InteractiveKeywordTree: React.FC<InteractiveKeywordTreeProps> = ({
                       onSelectKeyword(item.node);
                     }
                   }}
-                  title={`Click để mở bài báo: ${paper.title}`}
+                  title={language === "ja" ? `論文を開く: ${paper.title}` : `Click để mở bài báo: ${paper.title}`}
                   className={`tree-card z-10 bg-white/95 backdrop-blur-xs border ${
                     isSelected
                       ? "border-slate-900 shadow-md ring-2 ring-slate-900/15"
@@ -524,7 +524,7 @@ export const InteractiveKeywordTree: React.FC<InteractiveKeywordTreeProps> = ({
                           paper.ranking
                         )}`}
                       >
-                        {paper.ranking}
+                        {paper.getRanking(language)}
                       </span>
                       <span className="font-mono text-slate-500 truncate text-[10px]">
                         {paper.year}
@@ -548,7 +548,7 @@ export const InteractiveKeywordTree: React.FC<InteractiveKeywordTreeProps> = ({
                       </span>
                       {paper.citations > 0 && (
                         <span className="font-mono text-slate-400 shrink-0 ml-1">
-                          Trích dẫn: {paper.citations}
+                          {language === "ja" ? "被引用数:" : "Trích dẫn:"} {paper.citations}
                         </span>
                       )}
                     </div>

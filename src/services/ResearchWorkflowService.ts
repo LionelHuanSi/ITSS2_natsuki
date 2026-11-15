@@ -92,8 +92,10 @@ export class ResearchWorkflowService {
     keyword: KeywordNode,
     selectedText: string,
     explanation: string,
-    currentList: SavedExplanation[]
+    currentList: SavedExplanation[],
+    lang: "vi" | "ja" = "vi"
   ): SavedExplanation[] {
+    const isJa = lang === "ja";
     const newItem = new SavedExplanation(
       `saved-${Date.now()}`,
       paper.id,
@@ -101,7 +103,10 @@ export class ResearchWorkflowService {
       keyword.labelEn,
       selectedText,
       explanation,
-      new Date().toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" }) + " hôm nay"
+      new Date().toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" }) + " hôm nay",
+      isJa ? explanation : paper.resolveContextualExplanation(selectedText, undefined, "ja"),
+      new Date().toLocaleTimeString("ja-JP", { hour: "2-digit", minute: "2-digit" }) + " 今日",
+      keyword.getLabel("ja")
     );
     const updated = [newItem, ...currentList];
     this.persistList(updated);
@@ -129,7 +134,10 @@ export class ResearchWorkflowService {
         "Multi-Species Insect Pest Detection (IPD)",
         "long-tail distribution",
         "Phân bố dữ liệu đuôi dài (Long-Tail Distribution): Hiện tượng mất cân bằng mẫu nghiêm trọng trong tập dữ liệu IP102 (102 loài sâu bệnh), trong đó một số ít loài có rất nhiều ảnh mẫu (Head data), còn phần lớn các loài sâu hại quý hiếm lại chỉ có rất ít ảnh (Tail data), khiến mô hình thông thường dễ bị thiên vị và dự đoán sai các loài thiểu số.",
-        "Trích dẫn nền tảng"
+        "Trích dẫn nền tảng",
+        "ロングテール分布（Long-Tail Distribution）: IP102データセット（102害虫種）における深刻なサンプル不均衡現象。少数の代表種に大量の画像が存在する一方、希少種・有害種の画像が極めて少なく、従来モデルでは少数クラスの誤判定が頻発する。",
+        "基盤文献の引用",
+        "多種農業病害虫の実時間高精度検出（IPD）"
       ),
     ];
   }

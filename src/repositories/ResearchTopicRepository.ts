@@ -186,7 +186,24 @@ export class ResearchTopicRepository {
         "Bao quát 102 phân loại sâu hại trên 8 nhóm cây trồng chủ lực (lúa nước, ngô, đậu tương, cây ăn quả...).",
         "Xác lập kết quả đối chứng đường cơ sở (Baseline) cho hơn 10 kiến trúc mạng SOTA."
       ],
-      "Bộ dữ liệu bắt buộc phải dùng để làm thực nghiệm và đối chiếu kết quả nghiên cứu khi bảo vệ luận văn hoặc nộp bài báo quốc tế."
+      "Bộ dữ liệu bắt buộc phải dùng để làm thực nghiệm và đối chiếu kết quả nghiên cứu khi bảo vệ luận văn hoặc nộp bài báo quốc tế.",
+      "農作物害虫102種、75,222枚の画像からなる2階層構造の世界最大規模オープンベンチマークデータセットを構築。",
+      [
+        "植物保護の第一線専門家による手動アノテーションを施した75,222枚の高品質画像で構成。",
+        "主要8農作物（水稲、トウモロコシ、大豆、果樹等）における102分類の害虫を網羅。",
+        "10種以上の最新SOTAモデルに対する標準ベースライン検証結果を確立。"
+      ],
+      {
+        "class imbalance":
+          "クラス不均衡（Class Imbalance）: 代表害虫種のサンプル数が希少種を圧倒する現象。専用の損失関数を用いない場合、モデルの推論が多数派クラスへ偏る原因となる。",
+        "unconstrained field backgrounds":
+          "制約のない自然な野外背景（Unconstrained Field Backgrounds）: 直射日光、泥土、枯葉、昆虫の保護色が複雑に混在し、極めて激しい視覚ノイズを生み出す実際の屋外圃場環境。"
+      },
+      {
+        "class imbalance": "クラス不均衡分布",
+        "unconstrained field backgrounds": "制約のない自然な野外圃場背景"
+      },
+      "Core A* · 被引用数: 1,180+"
     );
 
     // ====================================================
@@ -221,7 +238,24 @@ export class ResearchTopicRepository {
         "Chỉ ra 3 nút thắt kỹ thuật lớn nhất: ánh sáng tự nhiên biến đổi, thiếu hụt dữ liệu gán nhãn, và độ trễ vi biên.",
         "Đề xuất khung hướng dẫn chọn lựa mô hình tối ưu theo từng mục đích triển khai (đám mây vs thiết bị nhúng)."
       ],
-      "Nguồn tài liệu tổng quan hoàn hảo để viết chương 2 (Tổng quan tình hình nghiên cứu / Literature Review) trong báo cáo khoa học."
+      "Nguồn tài liệu tổng quan hoàn hảo để viết chương 2 (Tổng quan tình hình nghiên cứu / Literature Review) trong báo cáo khoa học.",
+      "従来のCNNからVision Transformerに至るスマート農業におけるコンピュータビジョンの発展プロセスを体系的に総括。",
+      [
+        "2015〜2023年における200以上の害虫検出モデルの性能を分類・比較。",
+        "自然光の変化、アノテーションデータ不足、エッジ遅延の3大技術的ボトルネックを明示。",
+        "展開目的（クラウド vs 組み込みエッジ）に応じた最適モデル選定ガイドラインを提示。"
+      ],
+      {
+        "hand-crafted feature engineering":
+          "手動特徴量エンジニアリング（SIFT, HOG, LBP等）: 固定された数学的ルールに基づく旧来手法であり、撮影角度や日照変化に対するロバスト性が低い。",
+        "few-shot learning":
+          "フューショット学習（Few-Shot Learning）: わずか3〜5枚の初期サンプル画像から新種の害虫を高精度に識別可能にする学習技術。"
+      },
+      {
+        "hand-crafted feature engineering": "人手による特徴量設計",
+        "few-shot learning": "少数サンプル学習技術"
+      },
+      "SCIE Q1 · IF: 8.3"
     );
 
     // ====================================================
@@ -256,7 +290,24 @@ export class ResearchTopicRepository {
         "Tập trung chính xác vào các chi tiết nhận diện giải phẫu then chốt (râu, viền cánh, vân đốt).",
         "Được chọn báo cáo miệng (Oral Presentation - top 3% bài báo xuất sắc nhất CVPR 2022)."
       ],
-      "Cơ sở lý thuyết trực tiếp giải thích vì sao mạng AI phân biệt được các loài côn trùng có ngoại hình gần như giống hệt nhau."
+      "Cơ sở lý thuyết trực tiếp giải thích vì sao mạng AI phân biệt được các loài côn trùng có ngoại hình gần như giống hệt nhau.",
+      "変形可能スパースアテンションのブレークスルー: 固定正方形グリッドに代わり、サンプリング点が昆虫の生体解剖学的輪郭に動的に適合。",
+      [
+        "Vision Transformerの全域自己アテンション比で計算量を65%大幅削減。",
+        "昆虫の触角、翅の縁、節模様など重要解剖学的パーツへ焦点を高精度に集中。",
+        "CVPR 2022にて採択率上位3%以内の口頭発表（Oral Presentation）に選出。"
+      ],
+      {
+        "sparse attention":
+          "スパースアテンション（Sparse Attention）: 全画素間の相関を計算する代わりに重要な位置のみを適応的にサンプリングし、GPU計算量を削減する技術。",
+        "reference offsets":
+          "参照オフセット（Reference Offsets）: 昆虫の脚や触角、翅の実際の輪郭に沿ってサンプリング位置を適応移動させる動的ベクトル。"
+      },
+      {
+        "sparse attention": "選択的スパースアテンション機構",
+        "reference offsets": "動的参照座標オフセット"
+      },
+      "Core A* · Oral Presentation"
     );
 
     // ====================================================
@@ -291,7 +342,24 @@ export class ResearchTopicRepository {
         "Tự động học định vị vùng nhận diện cục bộ mà không cần tốn chi phí vẽ bounding box cho từng chiếc chân/râu.",
         "Kiểm chứng thực tế trên các trang trại lúa mì và bông vải tại Trung Quốc."
       ],
-      "Ý tưởng quan trọng để nâng cao độ chính xác khi phân loại các loài sâu bệnh nằm trong cùng một họ sinh học."
+      "Ý tưởng quan trọng để nâng cao độ chính xác khi phân loại các loài sâu bệnh nằm trong cùng một họ sinh học.",
+      "各パーツの手動ラベル付けなしに、昆虫体上の微小な識別部位を自動検出する判別パッチマイニング手法を設計。",
+      [
+        "外見が極めて酷似する64種の害虫において91.20%の高精度を達成。",
+        "脚部や触角に個別のバウンディングボックスを描くコストなしに、局所特徴を自動学習。",
+        "中国の小麦および綿花圃場の大規模実地データで有効性を検証。"
+      ],
+      {
+        "fine-grained visual classification":
+          "微細視覚分類（Fine-Grained Visual Classification - FGVC）: 同一生物科に属し極めて酷似した対象（メイガ類やコガネムシ類等）を高精度に識別するタスク。",
+        "discriminative patch mining":
+          "判別パッチマイニング（Discriminative Patch Mining）: 昆虫の身体上で種を特定する唯一の生体シグナルを保持する局所領域を自動探索するアルゴリズム。"
+      },
+      {
+        "fine-grained visual classification": "高解像度・微細視覚分類",
+        "discriminative patch mining": "判別パッチマイニング技術"
+      },
+      "SCIE Q1 · IF: 12.3"
     );
 
     // ====================================================
@@ -326,7 +394,24 @@ export class ResearchTopicRepository {
         "Tăng 8.4% AP trên các tập dữ liệu vật thể nhỏ mật độ dày so với mô hình FPN thông thường.",
         "Được xuất bản trên IEEE TPAMI - tạp chí số 1 thế giới về Trí tuệ nhân tạo và Thị giác máy tính (IF: 24.5)."
       ],
-      "Giải pháp kỹ thuật nền tảng để giải quyết tình huống rệp vừng, nhện đỏ hoặc trứng sâu kích thước siêu nhỏ trên mặt lá cây."
+      "Giải pháp kỹ thuật nền tảng để giải quyết tình huống rệp vừng, nhện đỏ hoặc trứng sâu kích thước siêu nhỏ trên mặt lá cây.",
+      "浅層の高解像度特徴と深層の意味論的情報を並列に双方向統合し、微小標的（micro-targets）の見失いを根本的に克服。",
+      [
+        "深層ネットワークの伝播過程においても、浅層のピクセル輪郭詳細を完全に保持。",
+        "高密度微小物体データセットにおいて、従来のFPNと比較してAPが8.4%向上。",
+        "AI・コンピュータビジョン分野の最高峰ジャーナル IEEE TPAMI（IF: 24.5）に採択。"
+      ],
+      {
+        "micro-target localization":
+          "微小標的局所位置特定（Micro-Target Localization）: 高解像度画像上でわずか数ピクセルしか占めない孵化直後の幼虫やアブラムシを正確に検出する能力。",
+        "spatial details":
+          "浅層空間詳細（Spatial Details）: 初期の畳み込み層に存在する輪郭、翅脈、微小斑点などの幾何学的情報。"
+      },
+      {
+        "micro-target localization": "微小標的の局所位置特定",
+        "spatial details": "浅層の空間幾何学詳細"
+      },
+      "Core A* · SCIE Q1 · IF: 24.5"
     );
 
     // ====================================================
@@ -361,7 +446,24 @@ export class ResearchTopicRepository {
         "Tăng tốc độ hội tụ mô hình học sâu nhanh hơn 20% so với CIoU trên các kịch bản chồng lấn dày đặc.",
         "Được tích hợp trực tiếp vào thuật toán Pest-RTDetr để định vị sâu hại chen chúc ngoài đồng ruộng."
       ],
-      "Lựa chọn hàm mất mát tối ưu nhất để thay thế cho CIoU/GIoU khi mô hình gặp bài toán đối tượng dính chùm hoặc che khuất lẫn nhau."
+      "Lựa chọn hàm mất mát tối ưu nhất để thay thế cho CIoU/GIoU khi mô hình gặp bài toán đối tượng dính chùm hoặc che khuất lẫn nhau.",
+      "極値点の距離に基づくバウンディングボックス目的関数を定義し、害虫同士の密集や重なり合いによる検出失敗を克服。",
+      [
+        "IoU計算の幾何学的定式化を簡素化し、アスペクト比への依存による歪みを解消。",
+        "高密度重なりシナリオにおいて、従来のCIoU比で学習収束速度が20%以上高速化。",
+        "圃場での密集害虫検出アルゴリズムPest-RTDetrに直接統合されて実証。"
+      ],
+      {
+        "bounding box regression":
+          "バウンディングボックス回帰（Bounding Box Regression）: 予測枠の4隅の座標を微調整し、実際の虫体輪郭へ厳密にフィットさせる最適化処理。",
+        "convergence":
+          "モデル収束速度（Convergence）: 深層学習の訓練過程において、損失関数の重みが安定して最適値へと収束するスピード。"
+      },
+      {
+        "bounding box regression": "バウンディングボックス回帰最適化",
+        "convergence": "学習収束速度"
+      },
+      "SCIE Q1 · IF: 6.0"
     );
 
     // ====================================================
@@ -396,7 +498,24 @@ export class ResearchTopicRepository {
         "Bộ mã hóa lai (Hybrid Encoder) tối ưu hóa độ phức tạp tính toán Transformer về mức thời gian thực.",
         "Đạt 53.0% AP ở tốc độ 114 FPS trên card GPU T4, trở thành chuẩn mực mới cho Object Detection thời gian thực."
       ],
-      "Công trình kiến trúc bắt buộc phải trích dẫn để làm bệ phóng lý thuyết cho toàn bộ thuật toán phát hiện thời gian thực trong đề tài."
+      "Công trình kiến trúc bắt buộc phải trích dẫn để làm bệ phóng lý thuyết cho toàn bộ thuật toán phát hiện thời gian thực trong đề tài.",
+      "NMS後処理を不要としながら、速度（114 FPS）と精度（53.0% AP）の双方でYOLO系を全面的に上回る初の実時間Transformerを実現。",
+      [
+        "Non-Maximum Suppression (NMS) 後処理を完全排除し、推論時の不確定な遅延分散を解消。",
+        "ハイブリッドエンコーダにより、Transformer特有の計算量を実時間推論可能な線形水準へと最適化。",
+        "T4 GPU上で114 FPS・53.0% APを達成し、実時間物体検出の新たな国際標準を確立。"
+      ],
+      {
+        "Non-Maximum Suppression":
+          "非最大値抑制（NMS - Non-Maximum Suppression）: 重複する検出枠を削減する従来の後処理手法。順次計算のため実時間推論の深刻な遅延ボトルネックとなっていた。",
+        "hybrid encoder":
+          "ハイブリッドエンコーダ（Hybrid Encoder）: スケール内特徴相互作用とスケール間統合を分離し、Transformerの計算量を大幅削減するアーキテクチャ。"
+      },
+      {
+        "Non-Maximum Suppression": "非最大値抑制後処理（NMS）",
+        "hybrid encoder": "高効率ハイブリッドエンコーダ"
+      },
+      "Core A* · Baidu Research"
     );
 
     // ====================================================
@@ -431,7 +550,24 @@ export class ResearchTopicRepository {
         "Mức tiêu thụ điện năng cực thấp dưới 10W, cho phép vận hành liên tục 24/7 bằng nguồn pin năng lượng mặt trời.",
         "Độ chính xác kiểm chứng thực địa đạt 94.6% so với phương pháp đặt bẫy keo thủ công của kỹ sư bảo vệ thực vật."
       ],
-      "Hình mẫu thực nghiệm lý tưởng cho việc triển khai ứng dụng thực tế (Productization / Deployment) của đề tài tốt nghiệp."
+      "Hình mẫu thực nghiệm lý tưởng cho việc triển khai ứng dụng thực tế (Productization / Deployment) của đề tài tốt nghiệp.",
+      "圃場への実機実装: NVIDIA Jetsonとソーラー給電スマート害虫トラップを組み合わせ、エッジ端末での完全自律推論を実現。",
+      [
+        "TensorRTによる最適化により、NVIDIA Jetson Orin Nano上で45 FPSの安定推論を達成。",
+        "消費電力を10W未満に抑制し、太陽光パネルによる24時間365日の連続自律稼働を実現。",
+        "2作期にわたる実地試験において、手動捕獲トラップ対比で94.6%の高精度計数を実証。"
+      ],
+      {
+        "edge devices":
+          "エッジデバイス（Edge Devices）: クラウドへ画像を送信することなく、圃場現地でAI推論を直接実行可能な小型組み込みコンピュータ。",
+        "TensorRT engine":
+          "TensorRTハードウェア最適化エンジン: NVIDIA製GPUにおいて深層学習モデルの推論を2〜5倍高速化するコンパイラツールキット。"
+      },
+      {
+        "edge devices": "野外組み込みエッジデバイス",
+        "TensorRT engine": "TensorRT推論加速エンジン"
+      },
+      "SCIE Q1 · IF: 8.3"
     );
 
     // ====================================================
@@ -458,7 +594,8 @@ export class ResearchTopicRepository {
           "多種農業病害虫の実時間高精度検出（IPD）",
           "野外の自然な農地環境下で、102種に及ぶ農作物病害虫を自動検出・高精度同定するための基礎的研究分野。",
           "ユーザーの「コンピュータビジョンによる多種農業病害虫の識別」という初期アイデアに基づき、AIは国際標準学術用語「Multi-Species Insect Pest Detection」を選定しました。単一種の検出にとどまらず、多種害虫を対象とすることでIP102等の国際標準ベンチマークや最新SOTAモデルへ直結します。",
-          "野外環境下での病害虫識別は、微小サイズ、天候による照度変化、葉による遮蔽、そして種間類似性と成長段階ごとの形態変化が重なる高難度タスクです。トップカンファレンス（CVPR、TPAMI）では、NMS不要のRT-DETR構造やマルチスケール特徴抽出が主要トレンドとなっています。"
+          "野外環境下での病害虫識別は、微小サイズ、天候による照度変化、葉による遮蔽、そして種間類似性と成長段階ごとの形態変化が重なる高難度タスクです。トップカンファレンス（CVPR、TPAMI）では、NMS不要のRT-DETR構造やマルチスケール特徴抽出が主要トレンドとなっています。",
+          "多種害虫検出"
         ),
         new KeywordNode(
           "kw-finegrained",
@@ -474,7 +611,8 @@ export class ResearchTopicRepository {
           "害虫の微細解剖学的特徴抽出（触角・脚部・翅脈）",
           "外見が酷似する害虫種間（種間差異の極小性）や、幼虫・成虫間の形態変化を正確に識別するための生体解剖学的特徴抽出技術。",
           "害虫識別の高精度化には、微細な生体パーツの観察が不可欠です。AIはこの要件を先端学術キーワード「Fine-Grained Pest Feature Extraction」にマッピングし、CVPR等で評価の高いDeformable Attention（変形可能アテンション）手法へと接続します。",
-          "一般的な物体認識と異なり、害虫は極めて微小で複雑な構造を持ちます。益虫と害虫の差異が触角の節数や翅の斑点のみに現れることも珍しくありません。膨大な手動アノテーションなしに局所解剖特徴を自動学習させることが技術的要所となります。"
+          "一般的な物体認識と異なり、害虫は極めて微小で複雑な構造を持ちます。益虫と害虫の差異が触角の節数や翅の斑点のみに現れることも珍しくありません。膨大な手動アノテーションなしに局所解剖特徴を自動学習させることが技術的要所となります。",
+          "形態特徴抽出"
         ),
         new KeywordNode(
           "kw-occlusion",
@@ -490,7 +628,8 @@ export class ResearchTopicRepository {
           "葉の遮蔽および高密度微小害虫の局所位置特定",
           "浅層・深層のマルチスケール特徴量統合と極値点最小距離損失（MPDIoU）を組み合わせ、重なり合う微小害虫の見失いを根本的に解決する技術体系。",
           "自然農地では害虫が葉陰に隠れ、群生して密集します。AIは遮蔽処理（Occlusion Handling）と微小密集物体検出（Dense Small Object Detection）の学術知見を提案し、研究の実用性を高めます。",
-          "対象が30%以上遮蔽された場合やバウンディングボックスが重なり合った場合、従来のCNNとNMSでは検出精度が急落します。Cross-Scale Feature FusionやMPDIoU回帰損失により、高密度重なり環境下での堅牢な局所化を実現します。"
+          "対象が30%以上遮蔽された場合やバウンディングボックスが重なり合った場合、従来のCNNとNMSでは検出精度が急落します。Cross-Scale Feature FusionやMPDIoU回帰損失により、高密度重なり環境下での堅牢な局所化を実現します。",
+          "遮蔽・密集対策"
         ),
         new KeywordNode(
           "kw-realtime-edge",
@@ -506,7 +645,8 @@ export class ResearchTopicRepository {
           "実時間エッジAIによる野外病害虫検出",
           "NMS後処理を完全排除した実時間Transformerアーキテクチャを活用し、ソーラー給電のスマート害虫トラップや農業用ドローンへ80 FPS以上でモデルを実装する応用研究。",
           "理論モデルにとどまらず、省電力エッジデバイスでの実時間推論可能性を実証することで、実用化・社会実装（Productization）に直結するキーワードです。",
-          "組み込みチップ（NVIDIA Jetson等）の限られた計算資源とバッテリー駆動（15W未満）の中で、モデル複雑度、推論遅延（<20ms）、野外消費電力の最適なトレードオフを確立します。"
+          "組み込みチップ（NVIDIA Jetson等）の限られた計算資源とバッテリー駆動（15W未満）の中で、モデル複雑度、推論遅延（<20ms）、野外消費電力の最適なトレードオフを確立します。",
+          "エッジAI実装"
         ),
       ],
     });

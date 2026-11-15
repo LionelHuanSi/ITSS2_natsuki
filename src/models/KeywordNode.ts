@@ -19,8 +19,13 @@ export class KeywordNode {
     public readonly labelJa: string = "",
     public readonly explanationJa: string = "",
     public readonly selectionReasonJa: string = "",
-    public readonly academicContextJa: string = ""
+    public readonly academicContextJa: string = "",
+    public readonly levelJa: string = ""
   ) {}
+
+  public getLevel(lang: "vi" | "ja"): string {
+    return lang === "ja" && this.levelJa ? this.levelJa : this.level;
+  }
 
   public getLabel(lang: "vi" | "ja"): string {
     return lang === "ja" && this.labelJa ? this.labelJa : this.labelVi;

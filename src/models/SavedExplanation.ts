@@ -9,6 +9,9 @@ export interface SavedExplanationDTO {
   selectedText: string;
   explanation: string;
   createdAt: string;
+  explanationJa?: string;
+  createdAtJa?: string;
+  keywordLabelJa?: string;
 }
 
 export class SavedExplanation {
@@ -19,8 +22,28 @@ export class SavedExplanation {
     public readonly keywordLabel: string,
     public readonly selectedText: string,
     public readonly explanation: string,
-    public readonly createdAt: string
+    public readonly createdAt: string,
+    public readonly explanationJa: string = "",
+    public readonly createdAtJa: string = "",
+    public readonly keywordLabelJa: string = ""
   ) {}
+
+  public getExplanation(lang: "vi" | "ja"): string {
+    return lang === "ja" && this.explanationJa ? this.explanationJa : this.explanation;
+  }
+
+  public getCreatedAt(lang: "vi" | "ja"): string {
+    if (lang === "ja") {
+      if (this.createdAtJa) return this.createdAtJa;
+      if (this.createdAt === "Trích dẫn nền tảng") return "基盤文献の引用";
+      return this.createdAt.replace("hôm nay", "今日");
+    }
+    return this.createdAt;
+  }
+
+  public getKeywordLabel(lang: "vi" | "ja"): string {
+    return lang === "ja" && this.keywordLabelJa ? this.keywordLabelJa : this.keywordLabel;
+  }
 
   public toDTO(): SavedExplanationDTO {
     return {
@@ -31,6 +54,9 @@ export class SavedExplanation {
       selectedText: this.selectedText,
       explanation: this.explanation,
       createdAt: this.createdAt,
+      explanationJa: this.explanationJa,
+      createdAtJa: this.createdAtJa,
+      keywordLabelJa: this.keywordLabelJa,
     };
   }
 
@@ -42,7 +68,10 @@ export class SavedExplanation {
       dto.keywordLabel,
       dto.selectedText,
       dto.explanation,
-      dto.createdAt
+      dto.createdAt,
+      dto.explanationJa || "",
+      dto.createdAtJa || "",
+      dto.keywordLabelJa || ""
     );
   }
 }
