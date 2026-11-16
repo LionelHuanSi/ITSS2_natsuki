@@ -22,6 +22,9 @@ import { KeywordNode } from "@/models/KeywordNode";
 import { AcademicPaper } from "@/models/AcademicPaper";
 import { SavedExplanation } from "@/models/SavedExplanation";
 import { InteractiveKeywordTree } from "@/components/InteractiveKeywordTree";
+import { JournalPaperViewer } from "@/components/JournalPaperViewer";
+import { RTDetrPaperViewer } from "@/components/RTDetrPaperViewer";
+import { IP102PaperViewer } from "@/components/IP102PaperViewer";
 import { LanguageProvider, useLanguage } from "@/i18n/LanguageContext";
 
 export type ScreenId = "S1" | "S2" | "S3" | "S4" | "S6";
@@ -62,6 +65,7 @@ function NatsukiScholarContent() {
   const [sidebarMode, setSidebarMode] = useState<"explain" | "translate">("explain");
   const [customPrompt, setCustomPrompt] = useState<string>("");
   const [isProcessingPrompt, setIsProcessingPrompt] = useState<boolean>(false);
+  const [readerViewMode, setReaderViewMode] = useState<"journal" | "pdf">("journal");
 
   // State: Kho lưu trữ
   const [savedExplanations, setSavedExplanations] = useState<SavedExplanation[]>([]);
@@ -195,6 +199,7 @@ function NatsukiScholarContent() {
     setExplanationText("");
     setTranslationText("");
     setExplanationNotice(null);
+    setReaderViewMode("journal");
     setActiveScreen("S4");
   };
 
@@ -781,6 +786,36 @@ function NatsukiScholarContent() {
               </div>
 
               <div className="flex items-center gap-3">
+                {["paper-pest-rtdetr-2025", "paper-rtdetr-cvpr-2023", "paper-ip102-cvpr-2019"].includes(selectedPaper.id) && (
+                  <div className="inline-flex items-center rounded-md border border-slate-200 p-0.5 bg-slate-100 mr-1">
+                    <button
+                      type="button"
+                      onClick={() => setReaderViewMode("journal")}
+                      className={`px-2.5 py-1 text-xs font-medium rounded transition flex items-center gap-1.5 ${
+                        readerViewMode === "journal"
+                          ? "bg-white text-slate-900 shadow-sm font-semibold"
+                          : "text-slate-600 hover:text-slate-900"
+                      }`}
+                      title={language === "ja" ? "ジャーナル・学会形式（2列組、全図表・数式埋め込み）" : "Bố cục học thuật 2 cột, nhúng đầy đủ toàn bộ hình ảnh & bảng biểu"}
+                    >
+                      <IconBookOpen size={12} />
+                      <span>{language === "ja" ? "学術形式 (2列・図表)" : "Bố cục Học thuật (2 cột + Hình ảnh & Bảng)"}</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setReaderViewMode("pdf")}
+                      className={`px-2.5 py-1 text-xs font-medium rounded transition flex items-center gap-1.5 ${
+                        readerViewMode === "pdf"
+                          ? "bg-white text-slate-900 shadow-sm font-semibold"
+                          : "text-slate-600 hover:text-slate-900"
+                      }`}
+                      title={language === "ja" ? "原本PDFビューアー" : "Xem file PDF gốc qua trình xem tài liệu"}
+                    >
+                      <IconDocument size={12} />
+                      <span>{language === "ja" ? "原本 PDF" : "Bản PDF Gốc"}</span>
+                    </button>
+                  </div>
+                )}
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   className="inline-flex items-center gap-1.5 px-2.5 py-1 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 rounded-md transition text-xs"
@@ -800,74 +835,213 @@ function NatsukiScholarContent() {
               {/* BÊN TRÁI: NỘI DUNG BÀI BÁO (60%) */}
               <section
                 onMouseUp={handleTextSelection}
-                className="flex-1 overflow-y-auto px-8 py-10 bg-white border-r border-slate-200"
+                className={`flex-1 overflow-y-auto border-r border-slate-200 ${
+                  ["paper-pest-rtdetr-2025", "paper-rtdetr-cvpr-2023", "paper-ip102-cvpr-2019"].includes(selectedPaper.id) && readerViewMode === "pdf"
+                    ? "p-0 bg-slate-100 flex flex-col"
+                    : ["paper-pest-rtdetr-2025", "paper-rtdetr-cvpr-2023", "paper-ip102-cvpr-2019"].includes(selectedPaper.id)
+                    ? "p-3 md:p-6 bg-slate-100/70"
+                    : "px-8 py-10 bg-white"
+                }`}
               >
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <div className="border-b border-slate-200 pb-5">
-                    <div className="flex items-center gap-2 mb-2 flex-wrap">
-                      <span
-                        className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded border ${
-                          selectedPaper.id.startsWith("upload-")
-                            ? "bg-slate-100 text-slate-700 border-slate-200"
-                            : selectedPaper.ranking.includes("A*")
-                            ? "bg-slate-900 text-white border-slate-900"
-                            : "bg-slate-100 text-slate-800 border-slate-200"
-                        }`}
+                {["paper-pest-rtdetr-2025", "paper-rtdetr-cvpr-2023", "paper-ip102-cvpr-2019"].includes(selectedPaper.id) && readerViewMode === "pdf" ? (
+                  <div className="w-full h-full flex flex-col">
+                    <div className="px-4 py-2 bg-slate-200/90 border-b border-slate-300 flex items-center justify-between text-xs text-slate-700 shrink-0">
+                      <span className="font-medium">
+                        {selectedPaper.id === "paper-pest-rtdetr-2025"
+                          ? language === "ja"
+                            ? "Multi-species insect recognition (Elsevier 2025, 12ページ)"
+                            : "Tài liệu PDF gốc: Ecological Informatics 88 (2025) 103125 (12 trang PDF)"
+                          : selectedPaper.id === "paper-rtdetr-cvpr-2023"
+                          ? language === "ja"
+                            ? "DETRs Beat YOLOs on Real-time Object Detection (CVPR 2024, 10ページ)"
+                            : "Tài liệu PDF gốc: CVPR 2024 · Baidu Research (10 trang PDF)"
+                          : language === "ja"
+                            ? "IP102: Benchmark Dataset for Insect Pest Recognition (CVPR 2019, 10ページ)"
+                            : "Tài liệu PDF gốc: CVPR 2019 · Nankai & Cardiff (10 trang PDF)"}
+                      </span>
+                      <a
+                        href={
+                          selectedPaper.id === "paper-pest-rtdetr-2025"
+                            ? "/papers/pest-rtdetr/paper.pdf"
+                            : selectedPaper.id === "paper-rtdetr-cvpr-2023"
+                            ? "/papers/rtdetr/paper.pdf"
+                            : "/papers/ip102/paper.pdf"
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline hover:text-blue-600 font-mono text-[11px]"
                       >
-                        {selectedPaper.id.startsWith("upload-")
-                          ? t.s4.userUploadBadge
-                          : selectedPaper.getRanking(language)}
-                      </span>
-                      <span className="text-xs font-mono uppercase text-slate-500">
-                        {selectedPaper.venue} ({selectedPaper.year})
-                      </span>
-                      {selectedPaper.citations > 0 && (
-                        <span className="text-xs font-mono text-slate-400">
-                          • {selectedPaper.citations} {t.s4.citationsLabel}
-                        </span>
-                      )}
+                        {language === "ja" ? "別タブで開く ↗" : "Mở tab mới ↗"}
+                      </a>
                     </div>
-                    <h1 className="text-xl md:text-2xl font-bold text-slate-900 leading-snug">
-                      {selectedPaper.title}
-                    </h1>
-                    <p className="text-xs text-slate-600 mt-2">
-                      <span className="font-semibold text-slate-700">
-                        {t.s4.authorsLabel}
-                      </span>{" "}
-                      {selectedPaper.authors}
-                    </p>
+                    <iframe
+                      src={
+                        selectedPaper.id === "paper-pest-rtdetr-2025"
+                          ? "/papers/pest-rtdetr/paper.pdf#toolbar=1&navpanes=0"
+                          : selectedPaper.id === "paper-rtdetr-cvpr-2023"
+                          ? "/papers/rtdetr/paper.pdf#toolbar=1&navpanes=0"
+                          : "/papers/ip102/paper.pdf#toolbar=1&navpanes=0"
+                      }
+                      className="w-full flex-1 border-0"
+                      title="Original PDF Document"
+                    />
                   </div>
-
-                  {/* Thanh gợi ý từ khóa */}
-                  <div className="p-3 bg-slate-50 border border-slate-200 rounded text-xs text-slate-600 flex flex-col gap-2">
-                    <div className="flex items-center justify-between font-medium">
-                      <span>{t.s4.highlightHint}</span>
-                    </div>
-                    <div className="flex flex-wrap gap-1.5">
-                      {Object.keys(selectedPaper.getDictionary(language)).map((term) => (
-                        <button
-                          type="button"
-                          onMouseDown={(e) => e.preventDefault()}
-                          key={term}
-                          onClick={() => triggerExplanation(term)}
-                          className="academic-highlight text-xs font-medium text-slate-900"
-                          title={language === "ja" ? "クリックして翻訳・解説を表示" : "Bấm để dịch và giải thích ngữ cảnh"}
+                ) : selectedPaper.id === "paper-pest-rtdetr-2025" ? (
+                  <div className="max-w-5xl mx-auto shadow-sm border border-slate-200/80 rounded bg-white">
+                    <JournalPaperViewer
+                      paper={selectedPaper}
+                      highlightedText={highlightedText}
+                      renderHighlightedParagraph={renderHighlightedParagraph}
+                      language={language}
+                      onSelectTerm={triggerExplanation}
+                    />
+                  </div>
+                ) : selectedPaper.id === "paper-rtdetr-cvpr-2023" ? (
+                  <div className="max-w-5xl mx-auto shadow-sm border border-slate-200/80 rounded bg-white">
+                    <RTDetrPaperViewer
+                      paper={selectedPaper}
+                      highlightedText={highlightedText}
+                      renderHighlightedParagraph={renderHighlightedParagraph}
+                      language={language}
+                      onSelectTerm={triggerExplanation}
+                    />
+                  </div>
+                ) : selectedPaper.id === "paper-ip102-cvpr-2019" ? (
+                  <div className="max-w-5xl mx-auto shadow-sm border border-slate-200/80 rounded bg-white">
+                    <IP102PaperViewer
+                      paper={selectedPaper}
+                      highlightedText={highlightedText}
+                      renderHighlightedParagraph={renderHighlightedParagraph}
+                      language={language}
+                      onSelectTerm={triggerExplanation}
+                    />
+                  </div>
+                ) : (
+                  <div className="max-w-2xl mx-auto space-y-6">
+                    <div className="border-b border-slate-200 pb-5">
+                      <div className="flex items-center gap-2 mb-2 flex-wrap">
+                        <span
+                          className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded border ${
+                            selectedPaper.id.startsWith("upload-")
+                              ? "bg-slate-100 text-slate-700 border-slate-200"
+                              : selectedPaper.ranking.includes("A*")
+                              ? "bg-slate-900 text-white border-slate-900"
+                              : "bg-slate-100 text-slate-800 border-slate-200"
+                          }`}
                         >
-                          {term}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Đoạn văn bản bài báo */}
-                  <article className="paper-body space-y-5 text-slate-800 text-justify">
-                    {selectedPaper.paragraphs.map((p, idx) => (
-                      <p key={idx} className="leading-relaxed">
-                        {renderHighlightedParagraph(p, highlightedText)}
+                          {selectedPaper.id.startsWith("upload-")
+                            ? t.s4.userUploadBadge
+                            : selectedPaper.getRanking(language)}
+                        </span>
+                        <span className="text-xs font-mono uppercase text-slate-500">
+                          {selectedPaper.venue} ({selectedPaper.year})
+                        </span>
+                        {selectedPaper.citations > 0 && (
+                          <span className="text-xs font-mono text-slate-400">
+                            • {selectedPaper.citations} {t.s4.citationsLabel}
+                          </span>
+                        )}
+                      </div>
+                      <h1 className="text-xl md:text-2xl font-bold text-slate-900 leading-snug">
+                        {selectedPaper.title}
+                      </h1>
+                      <p className="text-xs text-slate-600 mt-2">
+                        <span className="font-semibold text-slate-700">
+                          {t.s4.authorsLabel}
+                        </span>{" "}
+                        {selectedPaper.authors}
                       </p>
-                    ))}
-                  </article>
-                </div>
+                    </div>
+
+                    {/* Thanh gợi ý từ khóa */}
+                    <div className="p-3 bg-slate-50 border border-slate-200 rounded text-xs text-slate-600 flex flex-col gap-2">
+                      <div className="flex items-center justify-between font-medium">
+                        <span>{t.s4.highlightHint}</span>
+                        <span className="font-mono text-[10px] text-slate-400">
+                          {Object.keys(selectedPaper.getDictionary(language)).length > 14
+                            ? language === "ja" ? "主要キーワード 14選" : "14 từ khóa trọng tâm"
+                            : ""}
+                        </span>
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {Object.keys(selectedPaper.getDictionary(language))
+                          .slice(0, 14)
+                          .map((term) => (
+                            <button
+                              type="button"
+                              onMouseDown={(e) => e.preventDefault()}
+                              key={term}
+                              onClick={() => triggerExplanation(term)}
+                              className="academic-highlight text-xs font-medium text-slate-900"
+                              title={language === "ja" ? "クリックして翻訳・解説を表示" : "Bấm để dịch và giải thích ngữ cảnh"}
+                            >
+                              {term}
+                            </button>
+                          ))}
+                      </div>
+                    </div>
+
+                    {/* Đoạn văn bản bài báo (Format chuẩn Journal Paper: Tiêu đề mục, bảng biểu, đoạn văn) */}
+                    <article className="paper-body space-y-4 text-slate-800 text-justify">
+                      {selectedPaper.paragraphs.map((p, idx) => {
+                        const trimmed = p.trim();
+                        // 1. Tiêu đề mục chính (Section level 1)
+                        if (/^[1-5]\.\s+[A-Z]/.test(trimmed) || /^(?:Introduction|Materials and methods|Results|Discussion|Conclusion)$/i.test(trimmed)) {
+                          return (
+                            <h2
+                              key={idx}
+                              className="text-base md:text-lg font-bold font-sans text-slate-900 pt-5 pb-1 border-b border-slate-200 mt-6 tracking-tight first:mt-2 first:pt-0"
+                            >
+                              {renderHighlightedParagraph(p, highlightedText)}
+                            </h2>
+                          );
+                        }
+                        // 2. Tiêu đề mục phụ (Section level 2 & 3: e.g. 2.1. Datasets, 2.3.1. The backbone network)
+                        if (/^(?:\d\.\d\.|\d\.\d\.\d\.)\s+[A-Z]/.test(trimmed)) {
+                          return (
+                            <h3
+                              key={idx}
+                              className="text-sm md:text-base font-semibold font-sans text-slate-900 pt-3 pb-0.5 mt-4 tracking-tight"
+                            >
+                              {renderHighlightedParagraph(p, highlightedText)}
+                            </h3>
+                          );
+                        }
+                        // 3. Chú thích Hình / Bảng biểu (Figure / Table captions)
+                        if (/^(?:Fig\.|Table|Algorithm)\s+\d+/i.test(trimmed)) {
+                          return (
+                            <div
+                              key={idx}
+                              className="text-[11px] font-mono text-slate-600 bg-slate-50 border border-slate-200 p-2.5 rounded my-2 leading-relaxed"
+                            >
+                              <span className="font-bold text-slate-800">
+                                {trimmed.split(":")[0]?.split(".")[0]}.{" "}
+                              </span>
+                              {renderHighlightedParagraph(p, highlightedText)}
+                            </div>
+                          );
+                        }
+                        // 4. Các điểm đóng góp chính đánh số (Contributions)
+                        if (/^[1-4]\.\s+We\s+/i.test(trimmed)) {
+                          return (
+                            <div
+                              key={idx}
+                              className="pl-4 border-l-2 border-slate-400 text-slate-800 text-xs md:text-sm leading-relaxed my-1.5 italic bg-slate-50/60 py-1"
+                            >
+                              {renderHighlightedParagraph(p, highlightedText)}
+                            </div>
+                          );
+                        }
+                        // 5. Đoạn văn nội dung thông thường
+                        return (
+                          <p key={idx} className="leading-relaxed">
+                            {renderHighlightedParagraph(p, highlightedText)}
+                          </p>
+                        );
+                      })}
+                    </article>
+                  </div>
+                )}
               </section>
 
               {/* BÊN PHẢI: KHUNG DỊCH THUẬT & GIẢI THÍCH NGỮ CẢNH (40%) */}
